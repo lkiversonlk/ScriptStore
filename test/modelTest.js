@@ -12,10 +12,11 @@ describe("mongoose model schema test", function(){
     describe("scriptConfActive", function(){
 
         it("one simple active script conf", function(done){
-            var activeConf = new models.ScriptConfActive();
+            var activeConf = new models.ScriptActive();
             activeConf.adid = "adid234";
             activeConf.hid = "tsetid";
             activeConf.creation = Date.now();
+            activeConf.script = "console.log(\"hello world\");";
             activeConf.validate(function(error){
                 should.not.exist(error, "script should be able to be created");
                 done();
@@ -23,9 +24,10 @@ describe("mongoose model schema test", function(){
         });
 
         it("adid is required", function(done){
-            var activeConf = new models.ScriptConfActive();
+            var activeConf = new models.ScriptActive();
             activeConf.hid = "tsetid";
             activeConf.creation = Date.now();
+            activeConf.script = "console.log(\"hello world\");";
             activeConf.validate(function(error){
                 should.exist(error);
                 activeConf.adid = "testadid";
@@ -37,9 +39,10 @@ describe("mongoose model schema test", function(){
         });
 
         it("hid is required", function(done){
-            var activeConf = new models.ScriptConfActive();
+            var activeConf = new models.ScriptActive();
             activeConf.adid = "adid234";
             activeConf.creation = Date.now();
+            activeConf.script = "console.log(\"hello world\");";
             activeConf.validate(function(error){
                 should.exist(error);
                 activeConf.hid = "testhid";
@@ -51,9 +54,10 @@ describe("mongoose model schema test", function(){
         });
 
         it("creation is required", function(done){
-            var activeConf = new models.ScriptConfActive();
+            var activeConf = new models.ScriptActive();
             activeConf.hid = "testhid";
             activeConf.adid = "adid234";
+            activeConf.script = "console.log(\"hello world\");";
             activeConf.validate(function(error){
                 should.exist(error);
                 activeConf.creation = Date.now();
@@ -66,26 +70,20 @@ describe("mongoose model schema test", function(){
         });
 
 
-        it("script configuration schema", function(done){
+        it("script is required", function(done){
             var scriptConfitem = {};
-            var activeConf = new models.ScriptConfActive();
+            var activeConf = new models.ScriptActive();
             activeConf.adid = "adid234";
             activeConf.hid = "tsetid";
             activeConf.creation = Date.now();
-            activeConf.scripts.push(scriptConfitem);
 
             activeConf.validate(function(error){
                 should.exist(error, "script item should be invalid");
-                scriptConfitem.script = "testscript";
+                activeConf.script = "console.log(\"hello world\");";
                 activeConf.validate(function(error){
-                    should.exist(error, "script item still needs rules");
-                    scriptConfitem.trigger = {};
-                    activeConf.validate(function(error){
-                        should.exist(error);
-                    });
+                    should.not.exist(error, "add script should make it valid");
+                    done();
                 });
-
-                done();
             });
         });
     });

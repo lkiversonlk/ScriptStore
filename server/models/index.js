@@ -2,13 +2,13 @@
  * Created by jerry on 2/29/16.
  */
 
-var ScriptConfHistory = require("./scriptConfHistory");
-var ScriptConfActive = require("./scriptConfActive");
+var ScriptHistory = require("./scriptHistory");
+var ScriptActive = require("./scriptActive");
 var Trigger = require("./trigger");
 
 
 module.exports = {
-    ScriptConfHistory : ScriptConfHistory,
-    ScriptConfActive : ScriptConfActive,
+    ScriptHistory : ScriptHistory,
+    ScriptActive : ScriptActive,
     Trigger : Trigger
 };

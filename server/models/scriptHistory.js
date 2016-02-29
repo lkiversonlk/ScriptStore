@@ -12,12 +12,15 @@ var scriptUnitSchema = new Schema({
     },
 
     triggers : {
-        type : [String],
+        type : [{
+            type : String,
+            ref : "trigger"
+        }],
         required : true
     }
 });
 
-var scriptConfHistorySchema = new Schema({
+var scriptHistorySchema = new Schema({
 
     adid : {
         type : String,
@@ -45,6 +48,6 @@ var scriptConfHistorySchema = new Schema({
     },
 });
 
-var ScriptConfHistory = mongoose.model("scriptConfHistory", scriptConfHistorySchema);
+var scriptHistory = mongoose.model("scriptConfHistory", scriptHistorySchema);
 
-module.exports = ScriptConfHistory;
+module.exports = scriptHistory;
