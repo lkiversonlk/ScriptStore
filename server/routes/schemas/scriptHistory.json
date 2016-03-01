@@ -1,0 +1,44 @@
+{
+    "type" : "object",
+    "required" : [
+        "adid",
+        "description",
+        "createBy",
+        "scripts"
+    ],
+    "properties" : {
+        "adid" : {
+            "type" : "string"
+        },
+        "description" : {
+            "type" : "string"
+        },
+        "createBy" : {
+            "type" : "string"
+        },
+        "scripts" : {
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "required" : [
+                    "script",
+                    "triggers"
+                ],
+                "properties" : {
+                    "script" : {
+                        "type" : "string"
+                    },
+                    "triggers" : {
+                        "type" : "array",
+                        "items" : {
+                            "type" : "array",
+                            "items" : {
+                                "type" : "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

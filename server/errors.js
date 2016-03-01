@@ -3,15 +3,20 @@
  */
 var util = require("util");
 
-
-var SsiErrors = {
-    static : {
-
-    },
-
-    factory : {
-
-    }
+var SsiError = function(code, msg){
+    this.code = code;
+    this.message = msg;
+    Error.captureStackTrace(this, SsiError);
 };
 
-module.exports = SsiErrors;
+var errorLib = {
+    SsiError : SsiError,
+
+    ParameterInvalidError : function(msg){
+        return new SsiError(2, msg);
+    },
+
+
+};
+
+module.exports = errorLib;

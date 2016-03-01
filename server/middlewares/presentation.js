@@ -5,6 +5,7 @@
 /*******************************************
  * presentation
  */
+var SsiError = require("../errors");
 
 function present(req, res, next){
     res.json({
@@ -14,7 +15,17 @@ function present(req, res, next){
 }
 
 function presentError(error, req, res, next){
-    res.json()
+    if(error instanceof SsiError.SsiError){
+        res.json({
+            code : error.code,
+            data : error.message
+        })
+    }else{
+        res.json({
+            code : 1,
+            data : error.message
+        });
+    }
 }
 
 module.exports = {
