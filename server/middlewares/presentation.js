@@ -2,18 +2,23 @@
  * Created by jerry on 2/29/16.
  */
 
-function present(req, res, next){
+/*******************************************
+ * presentation
+ */
 
+function present(req, res, next){
+    res.json({
+        code : 0,
+        data : req.SsiData.result
+    });
 }
 
 function presentError(error, req, res, next){
-
+    res.json()
 }
 
-function serve(app){
-    app.use(present);
-    app.use(presentError);
-}
-
-module.exports = serve;
+module.exports = {
+    present : present,
+    presentError : presentError
+};
 
