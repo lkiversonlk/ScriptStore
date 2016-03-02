@@ -13,58 +13,100 @@ var DATA_KEY = "data";
  *
  * this middleware assumes that data structure defined below are put in req.SsiData.SsiOperation
  * {
- *    operation : OPERATION,  ['get', 'create', 'active']
+ *    operation : OPERATION,  ['getOne', 'getAll', 'create', 'active', 'debug']
  *    model : MODEL,          ['scriptAcitve', 'scriptHistory', 'trigger']
- *    data : DATA             [according to operation and model]
+ *    data : {
+ *              query :
+ *              select :
+ *              populate :
+ *              data :
+ *              ...
+*            }
  * }
  *
  */
 
 var operates = {
 
-    get_scriptActive : function(data, callback){
-        Dao.readOneDoc("scriptConfActive", data, callback);
+    getOne_scriptActive : function(data, context, callback){
+        Dao.readOneDoc("scriptActive", data, callback);
     },
 
-    get_scriptHistory : function(data, callback){
-        Dao.readDocById("scriptConfHistory", data.id, callback);
+    getAll_scriptActive : function(data, context, callback){
+        Dao.readDoc("scriptActive", data, callback);
     },
 
-    create_scriptHistory : function(data, callback){
-        Dao.createDoc("scriptConfHistory", callback);
+    getOne_scriptHistory : function(data, context, callback){
+        Dao.readOneDoc("scriptHistory", data, callback);
     },
 
-    create_trigger : function(data, callback){
-        Dao.createDoc("trigger", data, callback);
+    getAll_scriptHistory : function(data, context, callback){
+        Dao.readDoc("scriptHistory", data, callback);
     },
 
-    activate_scriptHistory : function(data, callback){
-        Dao.scriptHistoryDao.getScriptHistoryWithTriggerById(data.id, function(error, scriptHistory){
-            //not sure the implementation
+
+    create_scriptHistory : function(data, context, callback){
+        //should check the triggers
+        Dao.createDoc("scriptHistory", data.data, callback);
+    },
+
+    create_trigger : function(data, context, callback){
+        //
+        Dao.createDoc("trigger", data.data, callback);
+    },
+
+    activate_scriptHistory : function(data, context, callback){
+        var scriptHistoryId = data.query.id;
+        Dao.readOneDoc("scriptHistory", { query : { id : scriptHistoryId}}, function(error, doc){
+            if(error){
+
+            }else{
+                Dao.updateDoc("scriptActive",
+                    {
+                        query : { adid : doc.adid},
+                        data : doc
+                    },
+
+                    function(error, result){
+
+                    }
+                );
+            }
         });
     },
 
-    set_scriptActive : function(data, callback){
+    debug_scriptHistory : function(data, callback){
+        Dao.readOneDoc("scriptHistory", data, function(error, scriptHistory){
+           if(error){
 
+           } else{
+               var adid = scriptHistory.adid;
+               var id = scriptHistory.id;
+
+               //set cookie adid : adid , id
+           }
+        });
     }
 }
 
 /**
  *
- * @param operation should only be 'create', 'get', 'activate'
+ * @param operation should only be 'create', 'getOne', 'getAll', 'debug', 'activate'
  * @param model should only be 'scriptConfActive'
  * @param data
  * @param callback
  * @private
  */
-function _oper(operation, model, data, callback){
-    operates[operation+"_" + model](data, callback);
+function _oper(operation, model, data, context, callback){
+    //console.log(operation + ": " + model + ": " + JSON.stringify(data));
+    //callback(null, "success");
+    operates[operation+"_" + model](data, context, callback);
 }
 
 function operation(req, res, next){
-    var operationData = req.SsiData.SsiOperation;
+    var operationData = req.SsiData;
 
-    _oper(operationData.operation, operationData.model, operationData.data, function(error, ret){
+    _oper(operationData.operation, operationData.model, operationData.data, [req, res, next], function(error, ret){
         if(error){
             next(error);
         }else{

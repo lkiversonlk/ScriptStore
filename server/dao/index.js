@@ -6,23 +6,29 @@ var scriptHistoryDao = require("./scriptHistoryDao");
 var models = require("../models");
 
 var Dao = {
-    readDocById : function(model, id, callback){
-        models[model].findById(id, callback);
+    readDoc : function(resource, data){
+        var query = models[resource].find(data.query);
+        if(data.select){
+            query.select(data.select.join(" "));
+        }
+        
     },
 
-    readOneDoc : function(model, query, callback){
-        models[model].findOne(query, callback);
-    },
-
-    createDoc : function(model, callback){
+    readOneDoc : function(){
 
     },
 
-    createOrUpdateDoc : function(model, query, doc, callback){
-        models[model].findOneAndUpdate(query, doc, { upsert : true }, callback);
+    createDoc : function(){
+
     },
 
-    scriptHistoryDao : scriptHistoryDao
+    deleteDoc : function(){
+
+    },
+
+    updateDoc : function(){
+
+    }
 };
 
 module.exports = Dao;

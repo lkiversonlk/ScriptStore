@@ -4,8 +4,10 @@
 
 var operation = require("./operation");
 var presentation = require("./presentation");
+var restfulRegistry = require("./restful");
 
 module.exports = {
     operation : operation,
-    presentation : presentation
+    presentation : presentation,
+    restfulRegistry : restfulRegistry
 }
