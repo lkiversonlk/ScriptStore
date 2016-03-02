@@ -50,6 +50,10 @@ var operates = {
         Dao.createDoc("scriptHistory", data.data, callback);
     },
 
+    getAll_trigger : function(data, context, callback){
+        Dao.readDoc("trigger", data, callback);
+    },
+
     create_trigger : function(data, context, callback){
         //
         Dao.createDoc("trigger", data.data, callback);

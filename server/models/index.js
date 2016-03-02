@@ -8,7 +8,7 @@ var Trigger = require("./trigger");
 
 
 module.exports = {
-    ScriptHistory : ScriptHistory,
-    ScriptActive : ScriptActive,
-    Trigger : Trigger
+    scriptHistory : ScriptHistory,
+    scriptActive : ScriptActive,
+    trigger : Trigger.Trigger
 };

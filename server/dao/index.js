@@ -2,27 +2,41 @@
  * Created by jerry on 2/29/16.
  */
 
-var scriptHistoryDao = require("./scriptHistoryDao");
 var models = require("../models");
 
 var Dao = {
-    readDoc : function(resource, data){
+    readDoc : function(resource, data, callback){
         var query = models[resource].find(data.query);
         if(data.select){
             query.select(data.select.join(" "));
         }
-        
+        if(data.populate){
+            data.populate.forEach(function(property){
+                query.populate(property);
+            });
+        }
+        query.exec(callback);
     },
 
-    readOneDoc : function(){
-
+    readOneDoc : function (resource, data, callback){
+        Dao.readDoc(resource, data, function(error, docs){
+            if(error){
+                callback(error);
+            }else{
+                if(docs.length != 1){
+                    callback(null, null);
+                }else {
+                    callback(null, docs[0]);
+                }
+            }
+        });
     },
 
-    createDoc : function(){
-
+    createDoc : function(resource, data, callback){
+        new models[resource](data).save(callback);
     },
 
-    deleteDoc : function(){
+    deleteDoc : function(resource, data, callback){
 
     },
 
