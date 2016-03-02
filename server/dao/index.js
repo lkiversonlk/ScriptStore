@@ -3,6 +3,18 @@
  */
 
 var models = require("../models");
+var mongooseError = require("mongoose").Error;
+var SsiError = require("../errors");
+
+function _mongooseErrorHandler(error){
+    if(!error || error instanceof SsiError.SsiError) return error;
+    if(error instanceof mongooseError){
+        console.log("mongoose error: " + error.name + " : " + error.message);
+        return SsiError.DBOperationError(error.message);
+    }else{
+        return SsiError.ServerError();
+    }
+}
 
 var Dao = {
     readDoc : function(resource, data, callback){
@@ -15,13 +27,15 @@ var Dao = {
                 query.populate(property);
             });
         }
-        query.exec(callback);
+        query.exec(function(error, result){
+            callback(_mongooseErrorHandler(error), result);
+        });
     },
 
     readOneDoc : function (resource, data, callback){
         Dao.readDoc(resource, data, function(error, docs){
             if(error){
-                callback(error);
+                callback(_mongooseErrorHandler(error));
             }else{
                 if(docs.length != 1){
                     callback(null, null);
@@ -33,7 +47,9 @@ var Dao = {
     },
 
     createDoc : function(resource, data, callback){
-        new models[resource](data).save(callback);
+        new models[resource](data).save(function(error, doc){
+            callback(_mongooseErrorHandler(error), doc);
+        });
     },
 
     deleteDoc : function(resource, data, callback){

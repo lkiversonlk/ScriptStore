@@ -24,13 +24,18 @@ var dbModelResources = [
 dbModelResources.forEach(function(resource){
     var restfulRegistry = new middlewares.restfulRegistry(resource, restDataPath);
     restfulRegistry.registerSearchById(function(req, res, next){
-        req.SsiData = _forOperationMiddleware("getOne", restfulRegistry.name, {query : {id : req.params.id}});
+        var data = req[restDataPath];
+        if(!data.query) {
+            data.query = {}
+        }
+        data.query._id = req.params.id;
+        req.SsiData = _forOperationMiddleware("getOne", restfulRegistry.name, data);
         next();
     });
 
     restfulRegistry.registerSearch(function(req, res, next){
         req.SsiData = _forOperationMiddleware("getAll", restfulRegistry.name, req[restDataPath]);
-        next();
+        return next();
     });
 
     restfulRegistry.registerCreate(function(req, res, next){
@@ -40,6 +45,7 @@ dbModelResources.forEach(function(resource){
         }
         req.SsiData = _forOperationMiddleware("create", restfulRegistry.name, req[restDataPath]);
         _forOperationMiddleware(req, "create", restfulRegistry.name, req.body);
+        return next();
     });
 
     //doesn't register update
@@ -50,14 +56,14 @@ dbModelResources.forEach(function(resource){
 
 var activeResource = new middlewares.restfulRegistry("active");
 activeResource.registerSearchById(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("active", "scriptHistory", { query : { id : req.params.id }});
+    req.SsiData = _forOperationMiddleware("active", "scriptHistory", { query : { _id : req.params.id }});
     next();
 });
 activeResource.serve(router);
 
 var debugResource = new middlewares.restfulRegistry("debug");
 debugResource.registerSearchById(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("debug", "scriptHistory", { query : { id : req.params.id }});
+    req.SsiData = _forOperationMiddleware("debug", "scriptHistory", { query : { _id : req.params.id }});
 });
 debugResource.serve(router);
 

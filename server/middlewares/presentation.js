@@ -21,10 +21,8 @@ function presentError(error, req, res, next){
             data : error.message
         })
     }else{
-        res.json({
-            code : 1,
-            data : error.message
-        });
+        console.log("unknown error : " + error.message);
+        res.json(SsiError.ServerError());
     }
 }
 

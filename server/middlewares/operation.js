@@ -60,12 +60,21 @@ var operates = {
 
     create_trigger : function(data, context, callback){
         //
-        Dao.createDoc("trigger", data.data, callback);
+        Dao.createDoc("trigger", data.data, function(error, doc){
+           if(error) {
+               callback(error);
+           } else{
+               if(doc){
+                   doc = doc.toJSON()
+               }
+               callback(null, doc);
+           }
+        });
     },
 
     activate_scriptHistory : function(data, context, callback){
         var scriptHistoryId = data.query.id;
-        Dao.readOneDoc("scriptHistory", { query : { id : scriptHistoryId}}, function(error, doc){
+        Dao.readOneDoc("scriptHistory", { query : { _id : scriptHistoryId}}, function(error, doc){
             if(error){
 
             }else{
