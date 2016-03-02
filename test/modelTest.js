@@ -12,7 +12,7 @@ describe("mongoose model schema test", function(){
     describe("scriptConfActive", function(){
 
         it("one simple active script conf", function(done){
-            var activeConf = new models.ScriptActive();
+            var activeConf = new models.scriptActive();
             activeConf.adid = "adid234";
             activeConf.hid = "tsetid";
             activeConf.creation = Date.now();
@@ -24,7 +24,7 @@ describe("mongoose model schema test", function(){
         });
 
         it("adid is required", function(done){
-            var activeConf = new models.ScriptActive();
+            var activeConf = new models.scriptActive();
             activeConf.hid = "tsetid";
             activeConf.creation = Date.now();
             activeConf.script = "console.log(\"hello world\");";
@@ -39,7 +39,7 @@ describe("mongoose model schema test", function(){
         });
 
         it("hid is required", function(done){
-            var activeConf = new models.ScriptActive();
+            var activeConf = new models.scriptActive();
             activeConf.adid = "adid234";
             activeConf.creation = Date.now();
             activeConf.script = "console.log(\"hello world\");";
@@ -54,7 +54,7 @@ describe("mongoose model schema test", function(){
         });
 
         it("creation is required", function(done){
-            var activeConf = new models.ScriptActive();
+            var activeConf = new models.scriptActive();
             activeConf.hid = "testhid";
             activeConf.adid = "adid234";
             activeConf.script = "console.log(\"hello world\");";
@@ -72,7 +72,7 @@ describe("mongoose model schema test", function(){
 
         it("script is required", function(done){
             var scriptConfitem = {};
-            var activeConf = new models.ScriptActive();
+            var activeConf = new models.scriptActive();
             activeConf.adid = "adid234";
             activeConf.hid = "tsetid";
             activeConf.creation = Date.now();
