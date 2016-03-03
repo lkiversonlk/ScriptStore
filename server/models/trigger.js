@@ -47,7 +47,7 @@ var triggerSchema = new Schema({
 
     creation : {
         type : Number,
-        default : Date.now()
+        default : Date.now
     }
 });
 

@@ -58,6 +58,19 @@ var Dao = {
 
     updateDoc : function(){
 
+    },
+
+    updateOrInsertDoc : function(resource, query, updates, callback){
+        var options = {
+            safe : true,
+            upsert : true
+        };
+
+        delete updates._id;
+
+        models[resource].update(query, updates, options, function(error, result){
+            callback(_mongooseErrorHandler(error), result);
+        });
     }
 };
 

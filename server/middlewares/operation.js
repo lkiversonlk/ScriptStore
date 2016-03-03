@@ -64,19 +64,20 @@ var operates = {
            if(error) {
                callback(error);
            } else{
+               /*
                if(doc){
                    doc = doc.toJSON()
-               }
+               }*/
                callback(null, doc);
            }
         });
     },
 
     activate_scriptHistory : function(data, context, callback){
-        var scriptHistoryId = data.query.id;
-        Dao.readOneDoc("scriptHistory", { query : { _id : scriptHistoryId}}, function(error, doc){
+        var scriptHistoryId = data.query._id;
+        Dao.readOneDoc("scriptHistory", data.query, function(error, doc){
             if(error){
-
+                callback(error);
             }else{
                 Dao.updateDoc("scriptActive",
                     {

@@ -53,19 +53,14 @@ describe("mongoose model schema test", function(){
             });
         });
 
-        it("creation is required", function(done){
+        it("creation will be created automatically", function(done){
             var activeConf = new models.scriptActive();
             activeConf.hid = "testhid";
             activeConf.adid = "adid234";
             activeConf.script = "console.log(\"hello world\");";
             activeConf.validate(function(error){
-                should.exist(error);
-                activeConf.creation = Date.now();
-                activeConf.validate(function(error){
-                    should.not.exist(error, "add creation should make this doc valid");
-                    done();
-                });
-
+                should.not.exist(error);
+                done();
             });
         });
 

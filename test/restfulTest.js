@@ -9,6 +9,60 @@ var mongoose = require("mongoose");
 var chai = require("chai");
 var should = chai.should();
 
+var validTriggers = [
+    {
+        adid : "testadid1",
+        description : "testTrigger1",
+        createBy : "testUser",
+        rules : [
+            {
+                ruleType : 0,
+                op : 2,
+                value : "testtrigger1"
+            }
+        ]
+    },
+    {
+        adid : "testaid2",
+        description : "testTrigger2",
+        createBy : "testUser",
+        rules : [
+            {
+                ruleType : 1,
+                op : 3,
+                value : "testtrigger2"
+            }
+        ]
+    }
+];
+var triggerId1, triggerId2;
+
+var scriptUnits = [
+    {
+        script : "console.log('hello world');",
+        triggers : []
+    },
+    {
+        script : "alert('this is a test');",
+        triggers : []
+    }
+];
+
+var validScriptHistorys = [
+    {
+        adid : "testadid1",
+        description : "",
+        scripts : [],
+        createBy : ""
+    },
+    {
+        adid : "testadid2",
+        description : "",
+        scripts : [],
+        createBy : ""
+    }
+];
+
 describe("test restful interface", function(){
     before("clear the database", function(done){
         mongoose.connection.db.dropDatabase(done);
@@ -99,31 +153,23 @@ describe("test restful interface", function(){
                 });
         });
 
-        var validTrigger = {
-            adid : "testadid",
-            description : "testTrigger",
-            createBy : "testUser",
-            rules : [
-                {
-                    ruleType : 0,
-                    op : 2,
-                    value : "test"
-                }
-            ]
-        };
+
 
         it("create a valid trigger", function(done){
             request(app)
                 .post(restBasePath + "/trigger")
                 .set("Content-Type", "Application/json")
-                .send(validTrigger)
+                .send(validTriggers[0])
                 .expect(200)
                 .end(function (err, res) {
                     if (err) done(err);
                     res.body.code.should.equal(0);
+                    triggerId1 = res.body.data._id;
                     done();
                 });
         });
+
+
 
         it("we should be able to retrive the trigger", function(done){
             request(app)
@@ -136,10 +182,8 @@ describe("test restful interface", function(){
                     res.body.data.length.should.equal(1);
                     Object.keys(res.body.data[0]).length.should.equal(3);   //should only contain 3 properties
 
-                    var trigger = res.body.data[0];
-
                     request(app)
-                        .get(restBasePath + "/trigger/" + trigger._id + "?select=[\"adid\", \"description\"]")
+                        .get(restBasePath + "/trigger/" + triggerId1 + "?select=[\"adid\", \"description\"]")
                         .set("Content-Type", "Application/json")
                         .expect(200)
                         .end(function (err, res) {
@@ -150,5 +194,51 @@ describe("test restful interface", function(){
                         });
                 });
         });
+
+        it("create another trigger", function(done){
+            request(app)
+                .post(restBasePath + "/trigger")
+                .set("Content-Type", "Application/json")
+                .send(validTriggers[1])
+                .expect(200)
+                .end(function (err, res) {
+                    if (err) done(err);
+                    res.body.code.should.equal(0);
+                    triggerId2 = res.body.data._id;
+                    request(app)
+                        .get(restBasePath + "/trigger?select=[\"adid\", \"description\", \"creation\"]")
+                        .set("Content-Type", "Application/json")
+                        .expect(200)
+                        .end(function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, "rect code should be 0");
+                            res.body.data.length.should.equal(2, "now there should be 2 triggers");
+                            done();
+                        });
+
+                });
+        });
+    });
+
+    describe.skip("scriptHistory creation test", function(){
+        it("create invalid scriptHistory", function(done){
+
+        });
+
+        it("create first scriptHistory", function(done){
+
+        });
+
+        it("now we can retrive this scriptHistory", function(done){
+
+        });
+
+        it("create anothre scriptHistory", function(done){
+
+        });
+    });
+
+    describe("active scriptHistory test", function(){
+
     });
 });

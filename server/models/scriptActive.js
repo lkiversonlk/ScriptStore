@@ -33,7 +33,7 @@ var scriptActiveSchema = new Schema({
 
     creation : {
         type : Number,
-        required : true
+        default : Date.now
     }
 });
 

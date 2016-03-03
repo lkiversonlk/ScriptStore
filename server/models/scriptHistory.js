@@ -39,7 +39,7 @@ var scriptHistorySchema = new Schema({
 
     creation : {
         type : Number,
-        required : true
+        default : Date.now
     },
 
     createBy : {
