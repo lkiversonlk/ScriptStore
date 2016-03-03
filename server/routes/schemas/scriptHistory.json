@@ -16,7 +16,7 @@
         "createBy" : {
             "type" : "string"
         },
-        "scripts" : {
+        "tags": {
             "type" : "array",
             "items" : {
                 "type" : "object",

@@ -2,7 +2,7 @@
   "name": "ScriptStore",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
+  "tags": {
     "start": "node ./bin/www",
     "test": "mocha test"
   },

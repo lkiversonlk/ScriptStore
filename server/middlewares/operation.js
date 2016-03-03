@@ -14,7 +14,7 @@ var DATA_KEY = "data";
  * this middleware assumes that data structure defined below are put in req.SsiData.SsiOperation
  * {
  *    operation : OPERATION,  ['getOne', 'getAll', 'create', 'active', 'debug']
- *    model : MODEL,          ['scriptAcitve', 'scriptHistory', 'trigger']
+ *    model : MODEL,          ['scriptAcitve', 'version', 'trigger']
  *    data : {
  *              query :
  *              select :
@@ -28,26 +28,26 @@ var DATA_KEY = "data";
 
 var operates = {
 
-    getOne_scriptActive : function(data, context, callback){
-        Dao.readOneDoc("scriptActive", data, callback);
+    getOne_active : function(data, context, callback){
+        Dao.readOneDoc("active", data, callback);
     },
 
-    getAll_scriptActive : function(data, context, callback){
-        Dao.readDoc("scriptActive", data, callback);
+    getAll_active : function(data, context, callback){
+        Dao.readDoc("active", data, callback);
     },
 
-    getOne_scriptHistory : function(data, context, callback){
-        Dao.readOneDoc("scriptHistory", data, callback);
+    getOne_version : function(data, context, callback){
+        Dao.readOneDoc("version", data, callback);
     },
 
-    getAll_scriptHistory : function(data, context, callback){
-        Dao.readDoc("scriptHistory", data, callback);
+    getAll_version : function(data, context, callback){
+        Dao.readDoc("version", data, callback);
     },
 
 
-    create_scriptHistory : function(data, context, callback){
+    create_version : function(data, context, callback){
         //should check the triggers
-        Dao.createDoc("scriptHistory", data.data, callback);
+        Dao.createDoc("version", data.data, callback);
     },
 
     getOne_trigger : function(data, context, callback){
@@ -73,13 +73,13 @@ var operates = {
         });
     },
 
-    activate_scriptHistory : function(data, context, callback){
-        var scriptHistoryId = data.query._id;
-        Dao.readOneDoc("scriptHistory", data.query, function(error, doc){
+    release_version : function(data, context, callback){
+        var vid = data.query._id;
+        Dao.readOneDoc("version", data.query, function(error, doc){
             if(error){
                 callback(error);
             }else{
-                Dao.updateDoc("scriptActive",
+                Dao.updateDoc("active",
                     {
                         query : { adid : doc.adid},
                         data : doc
@@ -94,7 +94,7 @@ var operates = {
     },
 
     debug_scriptHistory : function(data, callback){
-        Dao.readOneDoc("scriptHistory", data, function(error, scriptHistory){
+        Dao.readOneDoc("version", data, function(error, scriptHistory){
            if(error){
 
            } else{

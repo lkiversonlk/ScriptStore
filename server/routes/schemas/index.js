@@ -8,5 +8,5 @@ var jsen = require("jsen");
 
 module.exports = {
     trigger : jsen(trigger),
-    scriptHistory : jsen(scriptHistory)
+    version : jsen(scriptHistory)
 };

@@ -5,7 +5,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var scriptUnitSchema = new Schema({
+var tagSchema = new Schema({
     script : {
         type : String,
         required : true
@@ -20,7 +20,7 @@ var scriptUnitSchema = new Schema({
     }
 });
 
-var scriptHistorySchema = new Schema({
+var versionSchema = new Schema({
 
     adid : {
         type : String,
@@ -32,8 +32,8 @@ var scriptHistorySchema = new Schema({
         default : ""
     },
 
-    scripts : {
-        type : [scriptUnitSchema],
+    tags : {
+        type : [tagSchema],
         required : true
     },
 
@@ -48,6 +48,6 @@ var scriptHistorySchema = new Schema({
     },
 });
 
-var scriptHistory = mongoose.model("scriptConfHistory", scriptHistorySchema);
+var version = mongoose.model("scriptConfHistory", versionSchema);
 
-module.exports = scriptHistory;
+module.exports = version;

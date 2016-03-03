@@ -5,7 +5,8 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var scriptActiveSchema = new Schema({
+var activeSchema = new Schema({
+
     adid : {
         type : String,
         required : true
@@ -16,7 +17,7 @@ var scriptActiveSchema = new Schema({
         default : ""
     },
 
-    hid : {
+    vid : {
         type : String,
         required : true
     },
@@ -37,6 +38,6 @@ var scriptActiveSchema = new Schema({
     }
 });
 
-var scriptActive = mongoose.model("scriptActive", scriptActiveSchema);
+var active = mongoose.model("active", activeSchema);
 
-module.exports = scriptActive;
+module.exports = active;

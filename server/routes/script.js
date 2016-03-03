@@ -15,8 +15,8 @@ function _forOperationMiddleware(operation, model, data){
 };
 
 var dbModelResources = [
-    "scriptHistory",
-    "scriptActive",
+    "version",
+    "active",
     "trigger"
 ];
 
@@ -54,16 +54,16 @@ dbModelResources.forEach(function(resource){
 });
 
 
-var activeResource = new middlewares.restfulRegistry("active");
-activeResource.registerSearchById(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("active", "scriptHistory", { query : { _id : req.params.id }});
+var releaseResource = new middlewares.restfulRegistry("release");
+releaseResource.registerSearchById(function(req, res, next){
+    req.SsiData = _forOperationMiddleware("release", "version", { query : { _id : req.params.id }});
     next();
 });
-activeResource.serve(router);
+releaseResource.serve(router);
 
 var debugResource = new middlewares.restfulRegistry("debug");
 debugResource.registerSearchById(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("debug", "scriptHistory", { query : { _id : req.params.id }});
+    req.SsiData = _forOperationMiddleware("debug", "version", { query : { _id : req.params.id }});
 });
 debugResource.serve(router);
 

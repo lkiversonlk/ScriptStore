@@ -74,7 +74,7 @@ describe("test restful interface", function(){
 
     var restBasePath = "/script";
 
-    var resources = ["trigger", "scriptActive", "scriptHistory"];
+    var resources = ["trigger", "active", "version"];
 
     resources.forEach(function (resource) {
         it(resource + " should be empty", function (done) {
@@ -220,25 +220,25 @@ describe("test restful interface", function(){
         });
     });
 
-    describe.skip("scriptHistory creation test", function(){
-        it("create invalid scriptHistory", function(done){
+    describe.skip("version creation test", function(){
+        it("create invalid version", function(done){
 
         });
 
-        it("create first scriptHistory", function(done){
+        it("create first version", function(done){
 
         });
 
-        it("now we can retrive this scriptHistory", function(done){
+        it("now we can retrive this version", function(done){
 
         });
 
-        it("create anothre scriptHistory", function(done){
+        it("create anothre version", function(done){
 
         });
     });
 
-    describe("active scriptHistory test", function(){
+    describe("active version test", function(){
 
     });
 });
