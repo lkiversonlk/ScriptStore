@@ -109,21 +109,34 @@ function _oper(operation, model, data, context, callback){
 }
 
 function operation(req, res, next){
-    var operationData = req.SsiData;
+    var operations = req.SsiData.operations;
+    var ret = null;
 
-    if(operationData.operation){
-        _oper(operationData.operation, operationData.model, operationData.data, [req, res, next], function(error, ret){
-            if(error){
-                next(error);
+    async.mapSeries(
+        operations,
+        function(operation, callback){
+            if(operation.operation){
+                _oper(operation.operation, operation.model, operation.data, [req, res, next], function(error, result){
+                    if(error){
+                        callback(error);
+                    }else{
+                        callback(null, result);
+                    }
+                });
             }else{
-                req.SsiData.result = ret;
+                logger.log("debug", "receive invalid path " + req.originalUrl);
+                callback(SsiError.PathInvalidError(req.originalUrl));
+            }
+        },
+        function(error, results){
+            if(error){
+                return next(error);
+            }else{
+                req.SsiData.result = results.length > 0 ? results[results.length - 1] : null;
                 return next();
             }
-        });
-    }else{
-        logger.log("debug", "receive invalid path " + req.originalUrl);
-        return next(SsiError.PathInvalidError(req.originalUrl));
-    }
+        }
+    );
 }
 
 module.exports = operation;

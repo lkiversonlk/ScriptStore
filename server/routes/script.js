@@ -6,6 +6,13 @@ var schemas = require("./schemas");
 var logger = require("../log").getLogger("routes.script");
 var restDataPath = "restfulData";
 
+router.use(function(req, res, next){
+    req.SsiData = {
+        operations : []
+    };
+    return next();
+});
+
 function _forOperationMiddleware(operation, model, data){
     var ret = {};
     ret.operation = operation;
@@ -28,12 +35,12 @@ dbModelResources.forEach(function(resource){
             data.query = {}
         }
         data.query._id = req.params.id;
-        req.SsiData = _forOperationMiddleware("getOne", restfulRegistry.name, data);
+        req.SsiData.operations.push(_forOperationMiddleware("getOne", restfulRegistry.name, data));
         next();
     });
 
     restfulRegistry.registerSearch(function(req, res, next){
-        req.SsiData = _forOperationMiddleware("getAll", restfulRegistry.name, req[restDataPath]);
+        req.SsiData.operations.push(_forOperationMiddleware("getAll", restfulRegistry.name, req[restDataPath]));
         return next();
     });
 
@@ -47,7 +54,7 @@ dbModelResources.forEach(function(resource){
             }
             next(SsiErrors.ParameterInvalidError("failed to create with invalid data"));
         }
-        req.SsiData = _forOperationMiddleware("create", restfulRegistry.name, req[restDataPath]);
+        req.SsiData.operations.push(_forOperationMiddleware("create", restfulRegistry.name, req[restDataPath]));
         _forOperationMiddleware(req, "create", restfulRegistry.name, req.body);
         return next();
     });
@@ -58,7 +65,7 @@ dbModelResources.forEach(function(resource){
             data.query = {}
         }
         data.query._id = req.params.id;
-        req.SsiData = _forOperationMiddleware("update", restfulRegistry.name, data);
+        req.SsiData.operations.push(_forOperationMiddleware("update", restfulRegistry.name, data));
         next();
     });
 
@@ -74,12 +81,12 @@ activeResource.registerSearchById(function(req, res, next){
         data.query = {}
     }
     data.query._id = req.params.id;
-    req.SsiData = _forOperationMiddleware("getOne", "active", data);
+    req.SsiData.operations.push(_forOperationMiddleware("getOne", "active", data));
     next();
 });
 
 activeResource.registerSearch(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("getAll", "active", req[restDataPath]);
+    req.SsiData.operations.push(_forOperationMiddleware("getAll", "active", req[restDataPath]));
     return next();
 });
 
@@ -87,14 +94,14 @@ activeResource.serve(router);
 
 var releaseResource = new middlewares.restfulRegistry("release");
 releaseResource.registerSearchById(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("release", "version", { query : { _id : req.params.id }});
+    req.SsiData.operations.push(_forOperationMiddleware("release", "version", { query : { _id : req.params.id }}));
     next();
 });
 releaseResource.serve(router);
 
 var debugResource = new middlewares.restfulRegistry("debug");
 debugResource.registerSearchById(function(req, res, next){
-    req.SsiData = _forOperationMiddleware("debug", "version", { query : { _id : req.params.id }});
+    req.SsiData.operations.push(_forOperationMiddleware("debug", "version", { query : { _id : req.params.id }}));
 });
 
 debugResource.serve(router);
