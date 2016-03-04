@@ -6,13 +6,6 @@ var schemas = require("./schemas");
 var logger = require("../log").getLogger("routes.script");
 var restDataPath = "restfulData";
 
-router.use(function(req, res, next){
-    req.SsiData = {
-        operations : []
-    };
-    return next();
-});
-
 function _forOperationMiddleware(operation, model, data){
     var ret = {};
     ret.operation = operation;
@@ -105,9 +98,5 @@ debugResource.registerSearchById(function(req, res, next){
 });
 
 debugResource.serve(router);
-
-router.use(middlewares.operation);
-router.use(middlewares.presentation.present);
-
 
 module.exports = router;

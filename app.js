@@ -4,9 +4,9 @@ var path = require('path');
 var logger = require('morgan');
 //var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var errorHandler = require("./server/middlewares").presentation.presentError;
 
-var scriptRouter = require('./server/routes/script');
+var scriptRouter = require('./server/routes/rest');
+var middlewares = require("./server/middlewares");
 //var users = require('./routes/users');
 
 
@@ -57,17 +57,18 @@ app.use(function(req, res, next){
     next();
 });
 
-app.use('/script', scriptRouter);
-//app.use('/users', users);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+app.use(function(req, res, next){
+    req.SsiData = {
+        operations : []
+    };
+    return next();
 });
 
-// error handlers
-app.use(errorHandler);
+app.use('/rest', scriptRouter);
+//app.use('/users', users);
+
+app.use(middlewares.operation);
+app.use(middlewares.presentation.present);
+app.use(middlewares.presentation.presentError);
 
 module.exports = app;

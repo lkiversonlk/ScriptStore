@@ -74,7 +74,7 @@ describe("test restful interface", function(){
         mongoose.connection.db.dropDatabase(done);
     });
 
-    var restBasePath = "/script";
+    var restBasePath = "/rest";
 
     var resources = ["version"];
 
