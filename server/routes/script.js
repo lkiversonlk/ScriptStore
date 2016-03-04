@@ -38,12 +38,12 @@ dbModelResources.forEach(function(resource){
     });
 
     restfulRegistry.registerCreate(function(req, res, next){
-        var schema = schemas[restfulRegistry.name];
+        var schema = schemas["create_" + restfulRegistry.name];
         if(!schema || !schema(req[restDataPath].data)){
             if(schema){
                 logger.log("debug", "create " + restfulRegistry.name + " failed, error is " + JSON.stringify(schema.errors));
             }else{
-                logger.log("debug", "creation josn schema for " + restfulRegistry.name + " not existed");
+                logger.log("debug", "creation json schema for " + restfulRegistry.name + " not existed");
             }
             next(SsiErrors.ParameterInvalidError("failed to create with invalid data"));
         }
@@ -52,7 +52,15 @@ dbModelResources.forEach(function(resource){
         return next();
     });
 
-    //doesn't register update
+    restfulRegistry.registerUpdateById(function(req, res, next){
+        var data = req[restDataPath];
+        if(!data.query) {
+            data.query = {}
+        }
+        data.query._id = req.params.id;
+        req.SsiData = _forOperationMiddleware("update", restfulRegistry.name, data);
+        next();
+    });
 
     restfulRegistry.serve(router);
 });

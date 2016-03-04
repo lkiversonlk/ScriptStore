@@ -3,20 +3,7 @@
  */
 
 var models = require("../models");
-var mongooseError = require("mongoose").Error;
-var SsiError = require("../errors");
 var logger = require("../log").getLogger("dao");
-
-function _mongooseErrorHandler(error){
-    if(!error || error instanceof SsiError.SsiError) return error;
-    if(error instanceof mongooseError){
-        logger.log("debug", "mongoose error [" + error.name + " " + error.toString() + "]");
-        return SsiError.DBOperationError(error.message);
-    }else{
-        logger.log("error", "unknown error [" + error.name + " " + error.message + "]");
-        return SsiError.ServerError();
-    }
-}
 
 var Dao = {
     readDoc : function(resource, data, callback){
@@ -29,17 +16,16 @@ var Dao = {
                 query.populate(property);
             });
         }
-        query.exec(function(error, result){
-            callback(_mongooseErrorHandler(error), result);
-        });
+        query.exec(callback);
     },
 
     readOneDoc : function (resource, data, callback){
         Dao.readDoc(resource, data, function(error, docs){
             if(error){
-                callback(_mongooseErrorHandler(error));
+                callback(error);
             }else{
                 if(docs.length != 1){
+                    //TODO: if there are multiple docs?
                     callback(null, null);
                 }else {
                     callback(null, docs[0]);
@@ -49,17 +35,15 @@ var Dao = {
     },
 
     createDoc : function(resource, data, callback){
-        models[resource](data).save(function(error, doc){
-            callback(_mongooseErrorHandler(error), doc);
-        });
+        models[resource](data).save(callback);
     },
 
     deleteDoc : function(resource, data, callback){
 
     },
 
-    updateDoc : function(){
-
+    updateDoc : function(resource, data, callback){
+        models[resource].update(data.query, data.data, callback);
     },
 
     updateOrInsertDoc : function(resource, query, updates, callback){
@@ -70,9 +54,7 @@ var Dao = {
 
         delete updates._id;
 
-        models[resource].update(query, updates, options, function(error, result){
-            callback(_mongooseErrorHandler(error), result);
-        });
+        models[resource].update(query, updates, options, callback);
     }
 };
 

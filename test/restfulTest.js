@@ -61,6 +61,10 @@ var validVersions = [
     }
 ];
 
+var versionIds = [
+
+];
+
 describe("test restful interface", function(){
     before("clear the database", function(done){
         mongoose.connection.db.dropDatabase(done);
@@ -236,7 +240,6 @@ describe("test restful interface", function(){
         });
 
         it("now we can retrive this version", function(done){
-            //TODO: finish this test
             request(app)
                 .get(restBasePath + "/version?select=[\"adid\"]")
                 .set("Content-Type", "Application/json")
@@ -246,6 +249,7 @@ describe("test restful interface", function(){
                     res.body.code.should.equal(0, "ret code should be 0");
                     res.body.data.length.should.equal(1);
                     var vid = res.body.data[0]._id;
+                    versionIds.push(vid);
                     request(app)
                         .get(restBasePath + "/version/" + vid)
                         .set("Content-Type", "Application/json")
@@ -256,6 +260,29 @@ describe("test restful interface", function(){
                             done();
                         });
                 });
+        });
+
+        it("update the version we just created", function(done){
+            var modifiedAdid = "testAntherAdid";
+            request(app)
+                .put(restBasePath+"/version/" + versionIds[0])
+                .set("Content-Type", "Application/json")
+                .send({adid : modifiedAdid})
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, "ret code should be 0");
+                    request(app)
+                        .get(restBasePath + "/version/" + versionIds[0])
+                        .set("Content-Type", "Application/json")
+                        .expect(200)
+                        .end(function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, "ret code should be 0");
+                            res.body.data.adid.should.equal(modifiedAdid, "adid should be modified")
+                            done();
+                        });
+                })
         });
 
         it("create anothre version", function(done){

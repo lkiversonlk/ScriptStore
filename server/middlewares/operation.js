@@ -6,6 +6,7 @@ var Dao = require("../dao");
 var OPERATION_KEY = "operation";
 var MODEL_KEY = "model";
 var DATA_KEY = "data";
+var mongooseError = require("mongoose").Error;
 var SsiError = require("../errors");
 var logger = require("../log").getLogger("middlewares.operation");
 
@@ -27,51 +28,49 @@ var logger = require("../log").getLogger("middlewares.operation");
  *
  */
 
+
+function _mongooseErrorHandler(error){
+    if(!error) return error;
+    if(error instanceof mongooseError){
+        logger.log("debug", "mongoose error [" + error.name + " " + error.toString() + "]");
+        return SsiError.DBOperationError(error.message);
+    }else{
+        logger.log("error", "unknown error [" + error.name + " " + error.message + "]");
+        return SsiError.ServerError();
+    }
+}
+
+function _wrapCallback(callback){
+    return function (error, result){
+        callback(_mongooseErrorHandler(error), result);
+    }
+}
+
 var operates = {
 
     getOne_active : function(data, context, callback){
-        Dao.readOneDoc("active", data, callback);
+        Dao.readOneDoc("active", data, _wrapCallback(callback));
     },
 
     getAll_active : function(data, context, callback){
-        Dao.readDoc("active", data, callback);
+        Dao.readDoc("active", data, _wrapCallback(callback));
     },
 
     getOne_version : function(data, context, callback){
-        Dao.readOneDoc("version", data, callback);
+        Dao.readOneDoc("version", data, _wrapCallback(callback));
     },
 
     getAll_version : function(data, context, callback){
-        Dao.readDoc("version", data, callback);
+        Dao.readDoc("version", data, _wrapCallback(callback));
     },
 
+    update_version : function(data, context, callback){
+        Dao.updateDoc("version", data, _wrapCallback(callback));
+    },
 
     create_version : function(data, context, callback){
         //should check the triggers
-        Dao.createDoc("version", data.data, callback);
-    },
-
-    getOne_trigger : function(data, context, callback){
-        Dao.readOneDoc("trigger", data, callback);
-    },
-
-    getAll_trigger : function(data, context, callback){
-        Dao.readDoc("trigger", data, callback);
-    },
-
-    create_trigger : function(data, context, callback){
-        //
-        Dao.createDoc("trigger", data.data, function(error, doc){
-           if(error) {
-               callback(error);
-           } else{
-               /*
-               if(doc){
-                   doc = doc.toJSON()
-               }*/
-               callback(null, doc);
-           }
-        });
+        Dao.createDoc("version", data.data, _wrapCallback(callback));
     },
 
     release_version : function(data, context, callback){
@@ -92,21 +91,8 @@ var operates = {
                 );
             }
         });
-    },
-
-    debug_scriptHistory : function(data, callback){
-        Dao.readOneDoc("version", data, function(error, scriptHistory){
-           if(error){
-
-           } else{
-               var adid = scriptHistory.adid;
-               var id = scriptHistory.id;
-
-               //set cookie adid : adid , id
-           }
-        });
     }
-}
+};
 
 /**
  *

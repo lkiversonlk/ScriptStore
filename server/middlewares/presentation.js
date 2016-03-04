@@ -22,6 +22,7 @@ function presentError(error, req, res, next){
         })
     }else{
         console.log("unknown error : " + error.message);
+        console.log(error.stack);
         res.json(SsiError.ServerError());
     }
 }
