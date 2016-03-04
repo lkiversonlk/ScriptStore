@@ -2,11 +2,9 @@
  * Created by jerry on 3/1/16.
  */
 
-var trigger = require("./trigger.json");
-var scriptHistory = require("./scriptHistory");
+var version = require("./version");
 var jsen = require("jsen");
 
 module.exports = {
-    trigger : jsen(trigger),
-    version : jsen(scriptHistory)
+    version : jsen(version)
 };

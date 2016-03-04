@@ -4,6 +4,7 @@
 
 var jsen = require("jsen");
 var SsiErrors = require("../errors");
+var logger = require("../log").getLogger("middleware.restful");
 
 var restDataSchema = {
     "type" : "object",
@@ -99,17 +100,20 @@ RestfulRegistry.prototype.wrap = function(routerHandler){
         var data;
 
         if(!req.headers['content-type'] || req.headers['content-type'].toLowerCase() != "application/json"){
+            logger.log("debug", "content-type not exist or not valid");
             return next(SsiErrors.ContentTypeInvalidError());
         }
         try{
             data = _extractDataForReq(req);
         }catch (error){
+            logger.log("debug", "parameter parsing exception:" + error.name + " " + error.message);
             return next(SsiErrors.ParameterInvalidError("rest parameter parsing error"));
         }
         if(validate(data)){
             req[self.dataPath] = data;
             routerHandler(req, res, next);
         }else{
+            logger.log("debug", "parameter not restful " + JSON.stringify(validate.errors));
             return next(SsiErrors.ParameterInvalidError("rest parameter parsing error"));
         }
 

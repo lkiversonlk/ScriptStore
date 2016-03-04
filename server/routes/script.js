@@ -15,9 +15,8 @@ function _forOperationMiddleware(operation, model, data){
 };
 
 var dbModelResources = [
-    "version",
-    "active",
-    "trigger"
+    "version"
+    //"active"
 ];
 
 //register restful method

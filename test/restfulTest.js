@@ -37,7 +37,7 @@ var validTriggers = [
 ];
 var triggerId1, triggerId2;
 
-var scriptUnits = [
+var validTags = [
     {
         script : "console.log('hello world');",
         triggers : []
@@ -48,17 +48,17 @@ var scriptUnits = [
     }
 ];
 
-var validScriptHistorys = [
+var validVersions = [
     {
         adid : "testadid1",
         description : "",
-        scripts : [],
+        tags : [],
         createBy : ""
     },
     {
         adid : "testadid2",
         description : "",
-        scripts : [],
+        tags : [],
         createBy : ""
     }
 ];
@@ -127,7 +127,7 @@ describe("test restful interface", function(){
 
 
 
-    describe("trigger creation test", function () {
+    describe.skip("trigger creation test", function () {
         it("try create invalid trigger", function (done) {
             var invalidTrigger = {
                 adid : "testadid",
@@ -220,20 +220,36 @@ describe("test restful interface", function(){
         });
     });
 
-    describe.skip("version creation test", function(){
-        it("create invalid version", function(done){
 
+    describe("version creation test", function(){
+        it("create invalid version", function(done){
+            //TODO: finish this test
+            done();
         });
 
         it("create first version", function(done){
-
+            validTags[0].triggers.push(triggerId1);
+            validVersions[0].tags.push(validTags[0]);
+            request(app)
+                .post(restBasePath + "/version")
+                .send(validVersions[0])
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, "ret code should be 0");
+                    done();
+                });
         });
 
         it("now we can retrive this version", function(done){
+            //TODO: finish this test
+            done();
 
         });
 
         it("create anothre version", function(done){
+            //TODO: finish this test
+            done();
 
         });
     });

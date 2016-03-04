@@ -3,10 +3,10 @@
  */
 var async = require("async");
 var Dao = require("../dao");
-var generateScript = require("./scriptGenerator");
 var OPERATION_KEY = "operation";
 var MODEL_KEY = "model";
 var DATA_KEY = "data";
+var logger = require("../log").getLogger("operationMiddleware");
 
 /**********************************************
  * operation middleware

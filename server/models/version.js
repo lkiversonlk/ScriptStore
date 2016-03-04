@@ -5,7 +5,39 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+var triggerSchema = new Schema({
+    name : {
+        type : String,
+        required : true
+    },
+
+    ruleType : {
+        type : Number,
+        required : true
+    },
+
+    op : {
+        type : Number,
+        required : true
+    },
+
+    value : {
+        type : String,
+        required :true
+    },
+
+    deleted : {
+        type : Boolean,
+        default : false
+    }
+});
+
 var tagSchema = new Schema({
+    name : {
+        type : String,
+        required : true
+    },
+
     script : {
         type : String,
         required : true
@@ -13,10 +45,14 @@ var tagSchema = new Schema({
 
     triggers : {
         type : [{
-            type : String,
-            ref : "trigger"
+            type : Number
         }],
-        required : true
+        default : []
+    },
+
+    deleted : {
+        type : Boolean,
+        default : false
     }
 });
 
@@ -34,7 +70,7 @@ var versionSchema = new Schema({
 
     tags : {
         type : [tagSchema],
-        required : true
+        default : []
     },
 
     creation : {
@@ -46,8 +82,18 @@ var versionSchema = new Schema({
         type : String,
         default : ""
     },
+
+    triggers : {
+        type : [triggerSchema],
+        default : []
+    },
+
+    deleted : {
+        type : Boolean,
+        default : false
+    }
 });
 
-var version = mongoose.model("scriptConfHistory", versionSchema);
+var version = mongoose.model("version", versionSchema);
 
 module.exports = version;

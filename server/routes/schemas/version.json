@@ -1,10 +1,12 @@
 {
     "type" : "object",
     "required" : [
+        "description",
         "adid",
+        "triggers",
         "description",
         "createBy",
-        "scripts"
+        "tags"
     ],
     "properties" : {
         "adid" : {
@@ -15,6 +17,32 @@
         },
         "createBy" : {
             "type" : "string"
+        },
+        "triggers" : {
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "required" : [
+                    "name",
+                    "ruleType",
+                    "op",
+                    "value"
+                ],
+                "properties" : {
+                    "ruleType" : {
+                        "type" : "integer"
+                    },
+                    "op" : {
+                        "type" : "integer"
+                    },
+                    "value" : {
+                        "type" : "string"
+                    },
+                    "name" : {
+                        "type" : "string"
+                    }
+                }
+            }
         },
         "tags": {
             "type" : "array",
@@ -31,10 +59,7 @@
                     "triggers" : {
                         "type" : "array",
                         "items" : {
-                            "type" : "array",
-                            "items" : {
-                                "type" : "string"
-                            }
+                            "type" : "string"
                         }
                     }
                 }

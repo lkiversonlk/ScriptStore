@@ -5,13 +5,15 @@
 var models = require("../models");
 var mongooseError = require("mongoose").Error;
 var SsiError = require("../errors");
+var logger = require("../log").getLogger("dao");
 
 function _mongooseErrorHandler(error){
     if(!error || error instanceof SsiError.SsiError) return error;
     if(error instanceof mongooseError){
-        console.log("mongoose error: " + error.name + " : " + error.message);
+        logger.log("error", "mongoose error> " + error.name + ">" + error.message);
         return SsiError.DBOperationError(error.message);
     }else{
+        logger.log("error", "unknown error> " + error.name + ">" + error.message);
         return SsiError.ServerError();
     }
 }
@@ -47,7 +49,7 @@ var Dao = {
     },
 
     createDoc : function(resource, data, callback){
-        new models[resource](data).save(function(error, doc){
+        models[resource](data).save(function(error, doc){
             callback(_mongooseErrorHandler(error), doc);
         });
     },
