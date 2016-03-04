@@ -94,7 +94,7 @@ releaseResource.serve(router);
 
 var debugResource = new middlewares.restfulRegistry("debug");
 debugResource.registerSearchById(function(req, res, next){
-    req.SsiData.operations.push(_forOperationMiddleware("debug", "version", { query : { _id : req.params.id }}));
+    req.SsiData.operations.push(_forOperationMiddleware("getOne", "", { query : { _id : req.params.id }}));
 });
 
 debugResource.serve(router);

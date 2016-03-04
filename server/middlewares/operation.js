@@ -6,93 +6,15 @@ var Dao = require("../dao");
 var OPERATION_KEY = "operation";
 var MODEL_KEY = "model";
 var DATA_KEY = "data";
-var mongooseError = require("mongoose").Error;
 var SsiError = require("../errors");
 var logger = require("../log").getLogger("middlewares.operation");
 
-/**********************************************
- * operation middleware
- *
- * this middleware assumes that data structure defined below are put in req.SsiData.SsiOperation
- * {
- *    operation : OPERATION,  ['getOne', 'getAll', 'create', 'active', 'debug']
- *    model : MODEL,          ['scriptAcitve', 'version', 'trigger']
- *    data : {
- *              query :
- *              select :
- *              populate :
- *              data :
- *              ...
-*            }
- * }
- *
- */
-
-
-function _mongooseErrorHandler(error){
-    if(!error) return error;
-    if(error instanceof mongooseError){
-        logger.log("debug", "mongoose error [" + error.name + " " + error.toString() + "]");
-        return SsiError.DBOperationError(error.message);
-    }else{
-        logger.log("error", "unknown error [" + error.name + " " + error.message + "]");
-        return SsiError.ServerError();
-    }
+try{
+    var operators = require("./operators");
+}catch(error){
+    logger.log("error", "duplicate operators found [" + error.message + "]");
+    process.exit(-1);
 }
-
-function _wrapCallback(callback){
-    return function (error, result){
-        callback(_mongooseErrorHandler(error), result);
-    }
-}
-
-var operates = {
-
-    getOne_active : function(data, context, callback){
-        Dao.readOneDoc("active", data, _wrapCallback(callback));
-    },
-
-    getAll_active : function(data, context, callback){
-        Dao.readDoc("active", data, _wrapCallback(callback));
-    },
-
-    getOne_version : function(data, context, callback){
-        Dao.readOneDoc("version", data, _wrapCallback(callback));
-    },
-
-    getAll_version : function(data, context, callback){
-        Dao.readDoc("version", data, _wrapCallback(callback));
-    },
-
-    update_version : function(data, context, callback){
-        Dao.updateDoc("version", data, _wrapCallback(callback));
-    },
-
-    create_version : function(data, context, callback){
-        //should check the triggers
-        Dao.createDoc("version", data.data, _wrapCallback(callback));
-    },
-
-    release_version : function(data, context, callback){
-        var vid = data.query._id;
-        Dao.readOneDoc("version", data.query, function(error, doc){
-            if(error){
-                callback(error);
-            }else{
-                Dao.updateDoc("active",
-                    {
-                        query : { adid : doc.adid},
-                        data : doc
-                    },
-
-                    function(error, result){
-
-                    }
-                );
-            }
-        });
-    }
-};
 
 /**
  *
@@ -105,22 +27,24 @@ var operates = {
 function _oper(operation, model, data, context, callback){
     //console.log(operation + ": " + model + ": " + JSON.stringify(data));
     //callback(null, "success");
-    operates[operation+"_" + model](data, context, callback);
+    operators[operation+"_" + model](data, context, callback);
 }
 
 function operation(req, res, next){
     var operations = req.SsiData.operations;
     var ret = null;
 
-    async.mapSeries(
+    async.reduce(
         operations,
-        function(operation, callback){
-            if(operation.operation){
-                _oper(operation.operation, operation.model, operation.data, [req, res, next], function(error, result){
-                    if(error){
+        [],
+        function(results, operation, callback){
+            if(operation.operation) {
+                _oper(operation.operation, operation.model, operation.data, [req, res, next, results], function (error, result) {
+                    if (error) {
                         callback(error);
-                    }else{
-                        callback(null, result);
+                    } else {
+                        results.push(result);
+                        callback(null, results);
                     }
                 });
             }else{
@@ -128,6 +52,7 @@ function operation(req, res, next){
                 callback(SsiError.PathInvalidError(req.originalUrl));
             }
         },
+
         function(error, results){
             if(error){
                 return next(error);
