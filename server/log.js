@@ -9,10 +9,14 @@ function Logger(module){
 }
 
 Logger.prototype.log = function(level, msg){
-    var msg = Date.now().toLocaleString() + ": " + "<" + this.module + ">" + ":::" + msg;
+    var msg = new Date().toLocaleString() + ": " + "<" + this.module + ">" + ":::" + msg;
     winston.log(level, msg);
 };
 
 module.exports.getLogger = function(module){
     return new Logger(module)
 };
+
+module.exports.setLogLevel = function(level){
+    winston.level = level;
+}

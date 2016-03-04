@@ -6,7 +6,8 @@ var Dao = require("../dao");
 var OPERATION_KEY = "operation";
 var MODEL_KEY = "model";
 var DATA_KEY = "data";
-var logger = require("../log").getLogger("operationMiddleware");
+var SsiError = require("../errors");
+var logger = require("../log").getLogger("middlewares.operation");
 
 /**********************************************
  * operation middleware
@@ -124,14 +125,19 @@ function _oper(operation, model, data, context, callback){
 function operation(req, res, next){
     var operationData = req.SsiData;
 
-    _oper(operationData.operation, operationData.model, operationData.data, [req, res, next], function(error, ret){
-        if(error){
-            next(error);
-        }else{
-            req.SsiData.result = ret;
-            next();
-        }
-    });
+    if(operationData.operation){
+        _oper(operationData.operation, operationData.model, operationData.data, [req, res, next], function(error, ret){
+            if(error){
+                next(error);
+            }else{
+                req.SsiData.result = ret;
+                return next();
+            }
+        });
+    }else{
+        logger.log("debug", "receive invalid path " + req.originalUrl);
+        return next(SsiError.PathInvalidError(req.originalUrl));
+    }
 }
 
 module.exports = operation;

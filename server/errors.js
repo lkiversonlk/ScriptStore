@@ -29,6 +29,10 @@ var errorLib = {
 
     DBOperationError : function(msg){
         return new SsiError(4, msg);
+    },
+
+    PathInvalidError : function(msg){
+        return new SsiError(5, msg);
     }
 };
 

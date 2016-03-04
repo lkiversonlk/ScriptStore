@@ -10,10 +10,10 @@ var logger = require("../log").getLogger("dao");
 function _mongooseErrorHandler(error){
     if(!error || error instanceof SsiError.SsiError) return error;
     if(error instanceof mongooseError){
-        logger.log("error", "mongoose error> " + error.name + ">" + error.message);
+        logger.log("debug", "mongoose error [" + error.name + " " + error.toString() + "]");
         return SsiError.DBOperationError(error.message);
     }else{
-        logger.log("error", "unknown error> " + error.name + ">" + error.message);
+        logger.log("error", "unknown error [" + error.name + " " + error.message + "]");
         return SsiError.ServerError();
     }
 }

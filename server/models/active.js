@@ -5,36 +5,46 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var activeSchema = new Schema({
-
-    adid : {
+var activeTagSchema = new Schema({
+    script : {
         type : String,
         required : true
     },
 
-    description : {
-        type : String,
-        default : ""
-    },
+    triggers : {
+        type : [{
+            ruleType : {
+                type : Number,
+                required : true
+            },
+            op : {
+                type : Number,
+                required : true
+            },
+            value : {
+                type : String,
+                required : true
+            }
+        }],
+        default : []
+    }
+});
+
+var activeSchema = new Schema({
 
     vid : {
         type : String,
         required : true
     },
 
-    script : {
+    adid : {
         type : String,
         required : true
     },
 
-    createBy : {
-        type : String,
-        default : ""
-    },
-
-    creation : {
-        type : Number,
-        default : Date.now
+    tags : {
+        type : [activeTagSchema],
+        default : []
     }
 });
 

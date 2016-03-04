@@ -23,6 +23,13 @@ var restDataSchema = {
             "items" : {
                 "type" : "string"
             }
+        },
+        "overwrite" : {
+            "type" : "string",
+            "enum" : [
+                "true",
+                "false"
+            ]
         }
     }
 };
@@ -43,12 +50,16 @@ function _extractDataForReq(req){
         ret.pupulate = JSON.parse(req.query.populate);
     }
 
+    if(req.query.overwrite){
+        ret.overwrite = req.query.overwrite;
+    }
+
     if(req.body){
         ret.data = req.body;
     }
 
     return ret;
-};
+}
 
 function RestfulRegistry(name, dataPath){
     this.name = name;

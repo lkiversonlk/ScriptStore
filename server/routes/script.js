@@ -3,11 +3,11 @@ var router = express.Router();
 var middlewares = require("../middlewares");
 var SsiErrors = require("../errors");
 var schemas = require("./schemas");
-
+var logger = require("../log").getLogger("routes.script");
 var restDataPath = "restfulData";
 
 function _forOperationMiddleware(operation, model, data){
-    ret = {};
+    var ret = {};
     ret.operation = operation;
     ret.model = model;
     ret.data = data;
@@ -40,6 +40,11 @@ dbModelResources.forEach(function(resource){
     restfulRegistry.registerCreate(function(req, res, next){
         var schema = schemas[restfulRegistry.name];
         if(!schema || !schema(req[restDataPath].data)){
+            if(schema){
+                logger.log("debug", "create " + restfulRegistry.name + " failed, error is " + JSON.stringify(schema.errors));
+            }else{
+                logger.log("debug", "creation josn schema for " + restfulRegistry.name + " not existed");
+            }
             next(SsiErrors.ParameterInvalidError("failed to create with invalid data"));
         }
         req.SsiData = _forOperationMiddleware("create", restfulRegistry.name, req[restDataPath]);
@@ -52,6 +57,25 @@ dbModelResources.forEach(function(resource){
     restfulRegistry.serve(router);
 });
 
+//active only read
+var activeResource = new middlewares.restfulRegistry("active");
+
+activeResource.registerSearchById(function(req, res, next){
+    var data = req[restDataPath];
+    if(!data.query) {
+        data.query = {}
+    }
+    data.query._id = req.params.id;
+    req.SsiData = _forOperationMiddleware("getOne", "active", data);
+    next();
+});
+
+activeResource.registerSearch(function(req, res, next){
+    req.SsiData = _forOperationMiddleware("getAll", "active", req[restDataPath]);
+    return next();
+});
+
+activeResource.serve(router);
 
 var releaseResource = new middlewares.restfulRegistry("release");
 releaseResource.registerSearchById(function(req, res, next){
@@ -64,6 +88,7 @@ var debugResource = new middlewares.restfulRegistry("debug");
 debugResource.registerSearchById(function(req, res, next){
     req.SsiData = _forOperationMiddleware("debug", "version", { query : { _id : req.params.id }});
 });
+
 debugResource.serve(router);
 
 router.use(middlewares.operation);

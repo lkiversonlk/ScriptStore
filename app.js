@@ -25,6 +25,14 @@ var validate= jsen(configurationSchema);
 if(validate(configuration)){
     console.log("configuration validation passed");
     app.set("SsiConfiguration", configuration);
+
+    if(configuration.app){
+        if(configuration.app.log){
+            if(configuration.app.log.level){
+                require("./server/log").setLogLevel("debug");
+            }
+        }
+    }
 }else{
     console.log("configuration file invalid : ");
     validate.errors.forEach(function(error){

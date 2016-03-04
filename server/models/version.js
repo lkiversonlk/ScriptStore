@@ -58,8 +58,18 @@ var tagSchema = new Schema({
 
 var versionSchema = new Schema({
 
+    creation : {
+        type : Number,
+        default : Date.now
+    },
+
     adid : {
         type : String,
+        required : true
+    },
+
+    name : {
+        type :String,
         required : true
     },
 
@@ -68,23 +78,13 @@ var versionSchema = new Schema({
         default : ""
     },
 
-    tags : {
-        type : [tagSchema],
+    triggers : {
+        type : [triggerSchema],
         default : []
     },
 
-    creation : {
-        type : Number,
-        default : Date.now
-    },
-
-    createBy : {
-        type : String,
-        default : ""
-    },
-
-    triggers : {
-        type : [triggerSchema],
+    tags : {
+        type : [tagSchema],
         default : []
     },
 

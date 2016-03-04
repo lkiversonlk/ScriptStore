@@ -9,7 +9,7 @@ var models = require("../server/models");
 
 describe("mongoose model schema test", function(){
 
-    describe("scriptConfActive", function(){
+    describe.skip("active", function(){
 
         it("one simple active script conf", function(done){
             var activeConf = new models.active();
@@ -83,7 +83,7 @@ describe("mongoose model schema test", function(){
         });
     });
 
-    describe("scriptConfHistory", function(){
+    describe("version", function(){
 
     });
 

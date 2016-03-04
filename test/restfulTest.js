@@ -9,56 +9,54 @@ var mongoose = require("mongoose");
 var chai = require("chai");
 var should = chai.should();
 
+var adids = [
+    "adid1",
+    "adid2",
+    "adid3"
+];
+
 var validTriggers = [
     {
-        adid : "testadid1",
-        description : "testTrigger1",
-        createBy : "testUser",
-        rules : [
-            {
-                ruleType : 0,
-                op : 2,
-                value : "testtrigger1"
-            }
-        ]
+        name : "testTrigger1",
+        ruleType : 0,
+        op : 2,
+        value : "testtrigger1"
     },
     {
-        adid : "testaid2",
-        description : "testTrigger2",
-        createBy : "testUser",
-        rules : [
-            {
-                ruleType : 1,
-                op : 3,
-                value : "testtrigger2"
-            }
-        ]
+        name : "testTrigger2",
+        ruleType : 1,
+        op : 3,
+        value : "testtrigger2"
     }
 ];
-var triggerId1, triggerId2;
 
 var validTags = [
     {
+        name : "tag1",
         script : "console.log('hello world');",
-        triggers : []
+        triggers : [0, 1]
     },
     {
+        name : "tag2",
         script : "alert('this is a test');",
-        triggers : []
+        triggers : [1]
     }
 ];
 
 var validVersions = [
     {
         adid : "testadid1",
+        name : "version1",
         description : "",
-        tags : [],
+        triggers : validTriggers,
+        tags : validTags,
         createBy : ""
     },
     {
         adid : "testadid2",
-        description : "",
-        tags : [],
+        name : "version2",
+        triggers : validTriggers,
+        tags : validTags,
         createBy : ""
     }
 ];
@@ -74,7 +72,7 @@ describe("test restful interface", function(){
 
     var restBasePath = "/script";
 
-    var resources = ["trigger", "active", "version"];
+    var resources = ["version"];
 
     resources.forEach(function (resource) {
         it(resource + " should be empty", function (done) {
@@ -124,8 +122,6 @@ describe("test restful interface", function(){
                 })
         })
     });
-
-
 
     describe.skip("trigger creation test", function () {
         it("try create invalid trigger", function (done) {
@@ -221,15 +217,13 @@ describe("test restful interface", function(){
     });
 
 
-    describe("version creation test", function(){
+    describe("version CURD test", function(){
         it("create invalid version", function(done){
             //TODO: finish this test
             done();
         });
 
         it("create first version", function(done){
-            validTags[0].triggers.push(triggerId1);
-            validVersions[0].tags.push(validTags[0]);
             request(app)
                 .post(restBasePath + "/version")
                 .send(validVersions[0])
@@ -243,8 +237,25 @@ describe("test restful interface", function(){
 
         it("now we can retrive this version", function(done){
             //TODO: finish this test
-            done();
-
+            request(app)
+                .get(restBasePath + "/version?select=[\"adid\"]")
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.data.length.should.equal(1);
+                    var vid = res.body.data[0]._id;
+                    request(app)
+                        .get(restBasePath + "/version/" + vid)
+                        .set("Content-Type", "Application/json")
+                        .expect(200)
+                        .end(function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, "ret code should be 0");
+                            done();
+                        });
+                });
         });
 
         it("create anothre version", function(done){

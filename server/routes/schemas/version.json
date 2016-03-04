@@ -1,15 +1,17 @@
 {
     "type" : "object",
     "required" : [
-        "description",
+        "name",
         "adid",
         "triggers",
         "description",
-        "createBy",
         "tags"
     ],
     "properties" : {
         "adid" : {
+            "type" : "string"
+        },
+        "name" : {
             "type" : "string"
         },
         "description" : {
@@ -49,17 +51,21 @@
             "items" : {
                 "type" : "object",
                 "required" : [
+                    "name",
                     "script",
                     "triggers"
                 ],
                 "properties" : {
+                    "name" : {
+                        "type" : "string"
+                    },
                     "script" : {
                         "type" : "string"
                     },
                     "triggers" : {
                         "type" : "array",
                         "items" : {
-                            "type" : "string"
+                            "type" : "integer"
                         }
                     }
                 }
