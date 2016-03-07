@@ -46,12 +46,11 @@ function operation(req, res, next){
         [],
         function(results, operation, callback){
             if(operation.operation) {
-                var data = null;
-                if(operation.data){
-                    data = operation.data;
-                }else{
-                    data = results.length ? results[results.length - 1] : null;
+                var data = operation.data;
+                if(!data.data){
+                    data.data = results.length ? results[results.length - 1] : null;
                 }
+
                 _oper(operation.type, operation.operation, operation.model, data, [req, res, next, results], function (error, result) {
                     if (error) {
                         callback(error);

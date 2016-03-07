@@ -74,7 +74,7 @@ var OperationBuilder = {
             type : "db",
             operation : "create",
             model : model,
-            data : data? data.data : null
+            data : data
         }];
     },
 
@@ -93,19 +93,6 @@ var OperationBuilder = {
             operation : "delete",
             model : model,
             data : data
-        }];
-    },
-
-    scriptGetRelease : function(adid){
-        return [{
-            type : "db",
-            operation : "getOne",
-            model : "release",
-            data : {
-                query : {
-                    adid : "adid"
-                }
-            }
         }];
     },
 
@@ -180,19 +167,6 @@ var OperationBuilder = {
 
     /**
      * save current draft to a new version
-     * @param adid
-     * @returns {Array}
-     */
-    publishDraftByAdid : function(adid){
-        var ret = [];
-        //get draft, and save it no a new version
-        ret = ret.concat(OperationBuilder.getDraftByAdid(adid));
-        ret = ret.concat(OperationBuilder.DbCreate("version", null));
-        return ret;
-    },
-
-    /**
-     * save current draft to a new version
      * @param draftId
      * @returns {Array}
      */
@@ -200,7 +174,7 @@ var OperationBuilder = {
         var ret = [];
 
         ret = ret.concat(OperationBuilder.getDraft(query));
-        ret = ret.concat(OperationBuilder.DbCreate("version", null));
+        ret = ret.concat(OperationBuilder.DbCreate("version", { data : null}));
 
         return ret;
     },

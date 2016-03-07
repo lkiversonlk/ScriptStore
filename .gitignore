@@ -21,12 +21,11 @@ node_modules
 .project
 
 # Logs
-logs
-*.log
+
 npm-debug.log*
 
 # Runtime data
-pids
+
 *.pid
 *.seed
 
@@ -46,7 +45,7 @@ coverage
 build/Release
 
 # Dependency directory
-node_modules
+
 
 # Optional npm cache directory
 .npm
@@ -55,3 +54,5 @@ node_modules
 .node_repl_history
 
 config.json
+
+bower_components

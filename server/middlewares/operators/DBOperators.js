@@ -37,8 +37,8 @@ var operators = {
 
     db_create_version : function(data, context, callback){
         //should check the triggers
-        data.creation = Date.now();
-        Dao.createDoc("version", data, _wrapCallback(callback));
+        data.data.creation = Date.now();
+        Dao.createDoc("version", data.data, _wrapCallback(callback));
     },
 
     db_getOne_draft : function(data, context, callback){
@@ -50,8 +50,8 @@ var operators = {
     },
 
     db_create_draft : function(data, context, callback){
-        data.creation = Date.now();
-        Dao.createDoc("draft", data, _wrapCallback(callback));
+        data.data.creation = Date.now();
+        Dao.createDoc("draft", data.data, _wrapCallback(callback));
     }
     /*
     db_createOrUpdate_draft : function(data, context, callback){
