@@ -10,24 +10,24 @@ var SsiError = require("../errors");
 var logger = require("../log").getLogger("middlewares.operation");
 
 try{
-    var operators = require("./operators");
+    var operators = require("./operators").operators;
 }catch(error){
     logger.log("error", "duplicate operators found [" + error.message + "]");
     process.exit(-1);
 }
 
 /**
- *
- * @param operation should only be 'create', 'getOne', 'getAll', 'debug', 'activate'
- * @param model should only be 'scriptConfActive'
+ * will call operation_model in sync sequence
+ * @param operation
+ * @param model
  * @param data
  * @param callback
  * @private
  */
-function _oper(operation, model, data, context, callback){
+function _oper(type, operation, model, data, context, callback){
     //console.log(operation + ": " + model + ": " + JSON.stringify(data));
     //callback(null, "success");
-    operators[operation+"_" + model](data, context, callback);
+    operators[type + "_" + operation+"_" + model](data, context, callback);
 }
 
 function operation(req, res, next){
@@ -39,7 +39,7 @@ function operation(req, res, next){
         [],
         function(results, operation, callback){
             if(operation.operation) {
-                _oper(operation.operation, operation.model, operation.data, [req, res, next, results], function (error, result) {
+                _oper(operation.type, operation.operation, operation.model, operation.data, [req, res, next, results], function (error, result) {
                     if (error) {
                         callback(error);
                     } else {

@@ -51,17 +51,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));
+var SsiData = require("./server/SsiData");
 
 app.use(function(req, res, next){
-    req.SsiData = {};
+    req.SsiData = new SsiData();
     next();
-});
-
-app.use(function(req, res, next){
-    req.SsiData = {
-        operations : []
-    };
-    return next();
 });
 
 app.use('/rest', scriptRouter);

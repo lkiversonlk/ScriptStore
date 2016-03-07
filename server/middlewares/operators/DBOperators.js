@@ -3,54 +3,39 @@
  */
 
 var Dao = require("../../dao");
-var mongooseError = require("mongoose").Error;
+
 var logger = require("../../log").getLogger("middlewares.operators.DBOperators");
-var SsiError = require("../../errors");
+var _wrapCallback = require("./utils").wrapCallback;
 
-function _mongooseErrorHandler(error){
-    if(!error) return error;
-    if(error instanceof mongooseError){
-        logger.log("debug", "mongoose error [" + error.name + " " + error.toString() + "]");
-        return SsiError.DBOperationError(error.message);
-    }else{
-        logger.log("error", "unknown error [" + error.name + " " + error.message + "]");
-        return SsiError.ServerError();
-    }
-}
 
-function _wrapCallback(callback){
-    return function (error, result){
-        callback(_mongooseErrorHandler(error), result);
-    }
-}
 
 var operators = {
-    getOne_active : function(data, context, callback){
+    db_getOne_active : function(data, context, callback){
         Dao.readOneDoc("active", data, _wrapCallback(callback));
     },
 
-    getAll_active : function(data, context, callback){
+    db_getAll_active : function(data, context, callback){
         Dao.readDoc("active", data, _wrapCallback(callback));
     },
 
-    getOne_version : function(data, context, callback){
+    db_getOne_version : function(data, context, callback){
         Dao.readOneDoc("version", data, _wrapCallback(callback));
     },
 
-    getAll_version : function(data, context, callback){
+    db_getAll_version : function(data, context, callback){
         Dao.readDoc("version", data, _wrapCallback(callback));
     },
 
-    update_version : function(data, context, callback){
+    db_update_version : function(data, context, callback){
         Dao.updateDoc("version", data, _wrapCallback(callback));
     },
 
-    create_version : function(data, context, callback){
+    db_create_version : function(data, context, callback){
         //should check the triggers
         Dao.createDoc("version", data.data, _wrapCallback(callback));
     },
 
-    release_version : function(data, context, callback){
+    db_release_version : function(data, context, callback){
         var vid = data.query._id;
         Dao.readOneDoc("version", data.query, function(error, doc){
             if(error){

@@ -4,6 +4,19 @@
 
 var logger = require("../../log").getLogger("middlewares.operators");
 
+/**********************************************
+ * Operators are the basic operations that can be chained together to complete a task
+ *
+ * every operator is a function:
+ *
+ * operator(data, context, callback)
+ *
+ * data are left by higher middlewares.
+ * context is an array of  [req, res, next, results], req, res, next are from express, results are left by operators ahead in the operation chain
+ *
+ * *Cautions: do not change the results, if operator needs to pass result to next operator, just callback(null, result), it will be automatically added into the results chain
+ *
+ */
 var operatorJSList = [
     "DBOperators",
     "scriptOperators"
@@ -33,4 +46,7 @@ operatorJSList.forEach(function(operatorJS){
     })
 });
 
-module.exports = ret;
+module.exports.operators = ret;
+
+var utils = require("./utils");
+module.exports.utils = utils;
