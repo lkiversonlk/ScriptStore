@@ -27,7 +27,14 @@ try{
 function _oper(type, operation, model, data, context, callback){
     //console.log(operation + ": " + model + ": " + JSON.stringify(data));
     //callback(null, "success");
-    operators[type + "_" + operation+"_" + model](data, context, callback);
+    var method = type + "_" + operation+"_" + model;
+    if(operators.hasOwnProperty(method)){
+        logger.log("debug", "calling operation " + method);
+        operators[method](data, context, callback);
+    }else{
+        logger.log("error", "no method for " + method);
+        callback(SsiError.ServerError());
+    }
 }
 
 function operation(req, res, next){

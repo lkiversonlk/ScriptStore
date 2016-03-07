@@ -59,39 +59,4 @@ dbModelResources.forEach(function(resource){
     restfulRegistry.serve(router);
 });
 
-//active only read
-var activeResource = new middlewares.restfulRegistry("active");
-
-activeResource.registerSearchById(function(req, res, next){
-    var data = req[restDataPath];
-    if(!data.query) {
-        data.query = {}
-    }
-    data.query._id = req.params.id;
-    req.SsiData.addOperations(operBuilder.DbGetOne("active", data));
-    next();
-});
-
-activeResource.registerSearch(function(req, res, next){
-    req.SsiData.addOperations(operBuilder.DbGetAll("active", req[restDataPath]));
-    return next();
-});
-
-activeResource.serve(router);
-
-var releaseResource = new middlewares.restfulRegistry("release");
-releaseResource.registerSearchById(function(req, res, next){
-    req.SsiData.addOperations(operBuilder.ScriptRelease(req.params.id));
-    next();
-});
-
-releaseResource.serve(router);
-
-var debugResource = new middlewares.restfulRegistry("debug");
-debugResource.registerSearchById(function(req, res, next){
-    req.SsiData.addOperations(_forOperationMiddleware("getOne", "", { query : { _id : req.params.id }}));
-});
-
-debugResource.serve(router);
-
 module.exports = router;

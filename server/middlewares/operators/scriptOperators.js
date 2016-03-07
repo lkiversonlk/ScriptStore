@@ -4,21 +4,58 @@
 
 var Dao = require("../../dao");
 var _wrapCallback = require("./utils").wrapCallback;
+var _transformOriginToRelease = require("./utils").transformOriginToRelease;
+
 var logger = require("../../log").getLogger("middlewares.operators.scriptOperators");
 var SsiError = require('../../errors');
 
 var ret = {};
 
-ret.script_draft = function(data, callback){
-    Dao.readOneDoc("draft", data, _wrapCallback(callback));
-};
+/**
+ * release specified version
+ * @param data
+ * @param context
+ * @param callback
+ * @returns {*}
+ */
+ret.script_release_version = function(data, context, callback){
+    if(data._id){
+        Dao.readOneDoc("version", { query : { _id : data._id}}, _wrapCallback(function(error, version){
+            if(error){
+                return callback(error);
+            }else{
+                if(version){
+                    version = version.toJSON();
+                    var released = null;
+                    try{
+                        released  = _transformOriginToRelease(version);
+                    }catch (error){
+                        logger.log("error", "fail to transform origin version " + version._id + " to release, " + error.message);
+                        return callback(SsiError.ServerError());
+                    }
 
-ret.script_release = function(versionid, callback){
+                    delete version._id;
 
-};
-
-ret.script_create_emptyDraft = function(callback){
-
+                    Dao.updateOrInsertDoc(
+                        "release",
+                        {
+                            query : {
+                                adid : version.adid
+                            },
+                            updates : version
+                        },
+                        _wrapCallback(callback)
+                    );
+                }else{
+                    logger.log("debug", "can't find version with id " + data._id);
+                    return callback(SsiError.LogicError("trying to release an not existed version"));
+                }
+            }
+        }));
+    }else{
+        logger.log("error", "release version without version id");
+        return callback(SsiError.ServerError());
+    }
 };
 
 /**
@@ -90,47 +127,6 @@ ret.script_publish_draft = function(adid, context, callback){
     )
 };
 
-/**
- *
- * @param data
- * @param context
- * @param callback
- */
-ret.script_transform_version = function(options, context, callback){
-    var results = context[3];  //the result feed by last operation
-    if(results.length == 0){
-        logger.log("error", "script_transform_version needs data from last operation");
-        callback(new SsiError.ServerError(""));
-    }
 
-    try{
-        var result = results[results.length - 1];
-        if(result.toJSON) {
-            result = result.toJSON();
-        }
-        var triggers = result.triggers;
-        delete result.triggers;
-        delete result.deleted;
-        delete result.description;
-        delete result.name;
-        delete result.creation;
-
-        var originTags = result.tags;
-        result.tags = [];
-
-        originTags.forEach(function(tag){
-            if(tag.deleted){
-
-            }else{
-                delete tag.deleted;
-                var originTagTrigger = tag.triggers;
-                tag.triggers = [];
-                originTagTrigger.forEach(function(index){
-                    tag.triggers.push(triggers[index]);
-                });
-            }
-        });
-    }
-}
 
 module.exports = ret;

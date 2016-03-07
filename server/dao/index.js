@@ -39,7 +39,7 @@ var Dao = {
     },
 
     deleteDoc : function(resource, data, callback){
-
+        models[resource].remove(data.query, callback);
     },
 
     updateDoc : function(resource, data, callback){

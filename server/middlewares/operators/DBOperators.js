@@ -26,35 +26,39 @@ var operators = {
         Dao.readDoc("version", data, _wrapCallback(callback));
     },
 
+    db_delete_version : function(data, context, callback){
+        Dao.deleteDoc("version", data, _wrapCallback(callback));
+    },
+
     db_update_version : function(data, context, callback){
+        data.data.creation = Date.now();
         Dao.updateDoc("version", data, _wrapCallback(callback));
     },
 
     db_create_version : function(data, context, callback){
         //should check the triggers
-        Dao.createDoc("version", data.data, _wrapCallback(callback));
+        data.creation = Date.now();
+        Dao.createDoc("version", data, _wrapCallback(callback));
+    },
+
+    db_getOne_draft : function(data, context, callback){
+        Dao.readOneDoc("draft", data, _wrapCallback(callback));
+    },
+
+    db_delete_draft : function(data, context, callback){
+        Dao.deleteDoc("draft", data, _wrapCallback(callback));
+    },
+
+    db_create_draft : function(data, context, callback){
+        data.creation = Date.now();
+        Dao.createDoc("draft", data, _wrapCallback(callback));
     }
-
     /*
-    db_release_version : function(data, context, callback){
-        var vid = data.query._id;
-        Dao.readOneDoc("version", data.query, function(error, doc){
-            if(error){
-                callback(error);
-            }else{
-                Dao.updateDoc("active",
-                    {
-                        query : { adid : doc.adid},
-                        data : doc
-                    },
-
-                    function(error, result){
-
-                    }
-                );
-            }
-        });
-    }*/
+    db_createOrUpdate_draft : function(data, context, callback){
+        data.data.creation = Date.now();
+        Dao.updateOrInsertDoc("draft", data, _wrapCallback(callback));
+    }
+    */
 };
 
 module.exports = operators;

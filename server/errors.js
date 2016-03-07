@@ -33,6 +33,10 @@ var errorLib = {
 
     PathInvalidError : function(msg){
         return new SsiError(5, msg);
+    },
+
+    LogicError : function(msg){
+        return new SsiError(6, msg);
     }
 };
 

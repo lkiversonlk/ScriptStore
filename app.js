@@ -5,7 +5,8 @@ var logger = require('morgan');
 //var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var scriptRouter = require('./server/routes/rest');
+var restRouter = require('./server/routes/rest');
+var configurationRouter = require("./server/routes/configuration");
 var middlewares = require("./server/middlewares");
 //var users = require('./routes/users');
 
@@ -58,7 +59,8 @@ app.use(function(req, res, next){
     next();
 });
 
-app.use('/rest', scriptRouter);
+app.use('/rest', restRouter);
+app.use('/configuration', configurationRouter);
 //app.use('/users', users);
 
 app.use(middlewares.operation);

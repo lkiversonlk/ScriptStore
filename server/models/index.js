@@ -3,10 +3,11 @@
  */
 
 var version = require("./version");
-var active = require("./release");
-
+var release = require("./release");
+var draft = require("./draft");
 
 module.exports = {
     version : version,
-    active : active
+    release : release,
+    draft : draft
 };

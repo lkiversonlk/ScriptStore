@@ -60,7 +60,7 @@ var draftSchema = new Schema({
 
     creation : {
         type : Number,
-        default : Date.now
+        required : true
     },
 
     adid : {
@@ -70,7 +70,7 @@ var draftSchema = new Schema({
 
     name : {
         type :String,
-        required : true
+        default : ""
     },
 
     description : {
@@ -86,14 +86,9 @@ var draftSchema = new Schema({
     tags : {
         type : [tagSchema],
         default : []
-    },
-
-    deleted : {
-        type : Boolean,
-        default : false
     }
 });
 
 var draft = mongoose.model("draft", draftSchema);
 
-module.exports = version;
+module.exports = draft;

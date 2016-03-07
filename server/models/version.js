@@ -60,7 +60,7 @@ var versionSchema = new Schema({
 
     creation : {
         type : Number,
-        default : Date.now
+        required : true
     },
 
     adid : {
@@ -70,7 +70,7 @@ var versionSchema = new Schema({
 
     name : {
         type :String,
-        required : true
+        default : ""
     },
 
     description : {

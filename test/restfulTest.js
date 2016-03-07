@@ -66,6 +66,8 @@ var versionIds = [
 ];
 
 describe("test restful interface", function(){
+
+
     before("clear the database", function(done){
         mongoose.connection.db.dropDatabase(done);
     });
@@ -73,6 +75,7 @@ describe("test restful interface", function(){
     after("clear the database", function(done){
         mongoose.connection.db.dropDatabase(done);
     });
+
 
     var restBasePath = "/rest";
 

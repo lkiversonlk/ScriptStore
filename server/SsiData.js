@@ -9,7 +9,7 @@ function SsiData(){
 SsiData.prototype.addOperations = function(operations){
     var self = this;
     if(Array.isArray(operations)){
-        self.operations.concat(operations);
+        self.operations = self.operations.concat(operations);
     }else{
         self.operations.push(operations);
     }
