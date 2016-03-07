@@ -17,6 +17,7 @@ var should = chai.should();
 var testAdid = "testAd";
 var testDraft = null;
 var basePath = "/configuration";
+var restBasePath = "/rest";
 
 describe("test configuration interface", function(){
 
@@ -57,6 +58,21 @@ describe("test configuration interface", function(){
                 })
         });
 
+        var currentVersions = 0;
+        it("check the versions currently", function(done){
+            request(app)
+                .get(restBasePath + "/version")
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .expect("Content-Type", /json/)
+                .end(function (err, res) {
+                    if (err) done(err);
+                    res.body.code.should.equal(0, "ret code should be 0");
+                    currentVersions = res.body.data.length;
+                    done();
+                });
+        });
+
         it("publish the draft", function(done){
             request(app)
                 .get(basePath + "/publish?adid=" + testAdid)
@@ -64,7 +80,17 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, "ret code should be 0");
-                    done();
+                    request(app)
+                        .get(restBasePath + "/version")
+                        .set("Content-Type", "Application/json")
+                        .expect(200)
+                        .expect("Content-Type", /json/)
+                        .end(function (err, res) {
+                            if (err) done(err);
+                            res.body.code.should.equal(0, "ret code should be 0");
+                            currentVersions.should.equal(res.body.data.length - 1, "a new version should be published");
+                            done();
+                        });
                 });
         });
     })
