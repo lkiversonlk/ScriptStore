@@ -46,7 +46,7 @@ var Dao = {
         models[resource].update(data.query, data.data, callback);
     },
 
-    updateOrInsertDoc : function(resource, query, updates, callback){
+    updateOrInsertDoc : function(resource, data, callback){
         var options = {
             safe : true,
             upsert : true
@@ -54,7 +54,7 @@ var Dao = {
 
         delete updates._id;
 
-        models[resource].update(query, updates, options, callback);
+        models[resource].update(data.query, data.updates, options, callback);
     }
 };
 

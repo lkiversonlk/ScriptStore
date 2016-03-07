@@ -33,8 +33,9 @@ var operators = {
     db_create_version : function(data, context, callback){
         //should check the triggers
         Dao.createDoc("version", data.data, _wrapCallback(callback));
-    },
+    }
 
+    /*
     db_release_version : function(data, context, callback){
         var vid = data.query._id;
         Dao.readOneDoc("version", data.query, function(error, doc){
@@ -53,7 +54,7 @@ var operators = {
                 );
             }
         });
-    }
+    }*/
 };
 
 module.exports = operators;

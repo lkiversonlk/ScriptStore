@@ -79,7 +79,31 @@ var OperationBuilder = {
         return {
             type : "script",
             operation : "release",
-            model : "version",
+            model : "version"
+        }
+    },
+
+    ScriptGetRelease : function(adid){
+        return {
+            type : "db",
+            operation : "getOne",
+            model : "release",
+            data : {
+                query : {
+                    adid : "adid"
+                }
+            }
+        }
+    },
+
+    ScriptCreateDraft : function(from, overwrite){
+        var ret = [];
+        if(overwrite){
+            //save
+            ret.push({
+                type : "db",
+                operation : "get"
+            })
         }
     }
 };

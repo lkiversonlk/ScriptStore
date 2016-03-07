@@ -3,7 +3,7 @@
  */
 
 var version = require("./version");
-var active = require("./active");
+var active = require("./release");
 
 
 module.exports = {
