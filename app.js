@@ -76,11 +76,11 @@ app.use(function(req, res, next){
     next();
 });
 
-
 app.get("/", function(req, res, next){
     res.render("index", {title : "Smart Picso"});
 });
 
+app.use(middlewares.parameters);
 app.use('/rest', restRouter);
 app.use('/configuration', configurationRouter);
 //app.use('/users', users);

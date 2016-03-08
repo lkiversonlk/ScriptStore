@@ -60,47 +60,11 @@ ret.script_release_version = function(data, context, callback){
 
 /**
  *
- * @param versionid
- * @param context
- * @param callback
- */
-ret.script_edit_version = function(versionid, context, callback){
-    logger.log("debug", "edit version " + versionid);
-    Dao.readDoc(
-        "version",
-        {
-            query : {
-                _id : versionid
-            }
-        },
-        _wrapCallback(function(error, version){
-            if(error){
-                callback(error);
-            }else{
-                var version = version.toJSON();
-                version.creation = Date.now();
-                Dao.updateOrInsertDoc(
-                    "draft",
-                    {
-                        query : {
-                            adid : version.adid
-                        },
-
-                        updates : version
-                    },
-                    _wrapCallback(callback)
-                )
-            }
-        })
-    )
-};
-
-/**
- *
  * @param adid
  * @param context
  * @param callback
  */
+/*
 ret.script_publish_draft = function(adid, context, callback){
     logger.log("debug", "publish draft of adid " + adid);
     Dao.readOneDoc(
@@ -126,32 +90,32 @@ ret.script_publish_draft = function(adid, context, callback){
         })
     )
 };
+*/
+
 
 ret.script_get_configurations = function(data, context, callback){
-    if(data.adid){
+    if(data.query.adid){
         async.parallel(
             [
                 function(callback){
-                    Dao.readDoc("version", {query : { adid : data.adid }}, callback);
+                    Dao.readDoc("version", data, callback);
                 },
                 function(callback){
-                    Dao.readOneDoc("draft", {query : { adid : data.adid }}, callback);
+                    Dao.readOneDoc("draft", data, callback);
                 }
             ],
             _wrapCallback(function(err, results){
                 if(err) {
-                    callback(err)
+                    callback(err);
                 }else{
                     var ret = [];
                     results[0].forEach(function(version, index){
                         var json = version.toJSON();
-
-                        json.ver = "version " + index;
                         ret.push(json);
                     });
                     if(results[1]){
                         var json = results[1].toJSON();
-                        json.ver = "draft";
+                        json.draft = true;
                         ret.push(json);
                     }
                     callback(null, ret);
@@ -160,7 +124,7 @@ ret.script_get_configurations = function(data, context, callback){
         )
     }else{
         logger.log("error", "no adid passed to script_get_configurations");
-        callback(SsiError.ServerError());
+        callback(SsiError.ParameterInvalidError("adid is required to load configurations"));
     }
 }
 

@@ -2,38 +2,39 @@ var express = require('express');
 var router = express.Router();
 var middlewares = require("../middlewares"),
     operBuilder = middlewares.utils.operationBuilder;
-
 var SsiErrors = require("../errors");
 var schemas = require("./schemas");
-var logger = require("../log").getLogger("routes.script");
-var restDataPath = "restfulData";
+var logger = require("../log").getLogger("routes.rest");
 
 var dbModelResources = [
-    "version"
-    //"active"
+    "version",
+    "draft",
+    "release"
 ];
 
-//register restful method
 dbModelResources.forEach(function(resource){
-    var restfulRegistry = new middlewares.restfulRegistry(resource, restDataPath);
+    var restfulRegistry = new middlewares.restfulRegistry(resource);
     restfulRegistry.registerSearchById(function(req, res, next){
-        var data = req[restDataPath];
-        if(!data.query) {
-            data.query = {}
+        var parameters = req.parameters;
+        if(!parameters.query) {
+            parameters.query = {}
         }
-        data.query._id = req.params.id;
-        req.SsiData.addOperations(operBuilder.DbGetOne(restfulRegistry.name, data));
+        parameters.query._id = req.params.id;
+        req.SsiData.addOperations(operBuilder.DbGetOne(restfulRegistry.name, parameters));
+        if(parameters.release){
+            req.SsiData.addOperations()
+        }
         next();
     });
 
     restfulRegistry.registerSearch(function(req, res, next){
-        req.SsiData.addOperations(operBuilder.DbGetAll(restfulRegistry.name, req[restDataPath]));
+        req.SsiData.addOperations(operBuilder.DbGetAll(restfulRegistry.name, req.parameters));
         return next();
     });
 
     restfulRegistry.registerCreate(function(req, res, next){
         var schema = schemas["create_" + restfulRegistry.name];
-        if(!schema || !schema(req[restDataPath].data)){
+        if(!schema || !schema(req.parameters.data)){
             if(schema){
                 logger.log("debug", "create " + restfulRegistry.name + " failed, error is " + JSON.stringify(schema.errors));
             }else{
@@ -41,13 +42,23 @@ dbModelResources.forEach(function(resource){
             }
             next(SsiErrors.ParameterInvalidError("failed to create with invalid data"));
         }
-        req.SsiData.addOperations(operBuilder.DbCreate(restfulRegistry.name, req[restDataPath]));
+        req.SsiData.addOperations(operBuilder.DbCreate(restfulRegistry.name, req.parameters));
         operBuilder.DbCreate(restfulRegistry.name, req.body);
         return next();
     });
 
     restfulRegistry.registerUpdateById(function(req, res, next){
-        var data = req[restDataPath];
+        var schema = schemas["create_" + restfulRegistry.name];
+        if(!schema || !schema(req.parameters.data)){
+            if(schema){
+                logger.log("debug", "update " + restfulRegistry.name + " failed, error is " + JSON.stringify(schema.errors));
+            }else{
+                logger.log("debug", "update json schema for " + restfulRegistry.name + " not existed");
+            }
+            next(SsiErrors.ParameterInvalidError("failed to create with invalid data"));
+        }
+
+        var data = req.parameters;
         if(!data.query) {
             data.query = {}
         }

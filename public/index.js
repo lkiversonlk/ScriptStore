@@ -64,37 +64,56 @@ app.factory("appState", function($rootScope){
 });
 
 app.controller("versionListController", function($scope, appState, restApi){
-    $scope.current = {};
+
     $scope.configurationApi = new restApi("/configuration");
-    $scope.update = function(adid){
+    $scope.versions = [];
+    $scope.versionMap = {};
+
+    $scope.updateAdvertiser = function(adid){
         var selfVersions = [];
         $scope.configurationApi
-            ._handle("GET", adid, null, null)
+            ._handle("GET", "/list/" + adid, null, null)
             .then(function(versions){
                 $scope.versions = versions;
+                versions.forEach(function(version){
+                    $scope.versionMap[version._id] = version;
+                });
             });
     };
 
-
-
     $scope.$on("state.currentAdid", function(event, newState){
-        $scope.update(newState.currentAdid);
+        $scope.updateAdvertiser(newState.currentAdid);
     });
 
     $scope.createDraft = function(){
         var query = {
             adid : appState.state.currentAdid
-        }
+        };
         $scope.configurationApi
             ._handle("GET", "export", query, null)
             .then(function(data){
                 alert("创建成功");
             });
     }
+
+    $scope.updateVersion = function(){
+
+        appState.update("currentVersion", $scope.versionMap[$scope.currentVersionId]);
+    }
 });
 
-app.controller("currentVersionController", function($scope){
+app.controller("currentVersionController", function($scope, restApi){
+    $scope.$on("state.currentVersion", function(event, value){
+        $scope.currentVersion = value;
+    });
 
+    $scope.createTag = function(){
+
+    };
+
+    $scope.createTrigger = function(){
+
+    };
 });
 
 app.controller("advertiserListController", function($scope, appState){
@@ -115,4 +134,12 @@ app.controller("advertiserListController", function($scope, appState){
             id : "23423"
         }
     ]
+});
+
+app.directive("tagsListDirective", function(){
+
+});
+
+app.directive("tagDetailDirective", function(){
+
 });

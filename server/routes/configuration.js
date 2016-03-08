@@ -9,6 +9,17 @@ var middlewares = require("../middlewares"),
     operBuilder = middlewares.utils.operationBuilder;
 var SsiError = require("../errors");
 var schemas = require("./schemas");
+var logger = require("../log").getLogger("routers.configuration");
+
+/**
+ * get version and draft
+ * the versions will be marked 1 - n as time goes late
+ */
+router.get("/", function(req, res, next){
+    res.SsiData.addOperations(operBuilder.getConfigurations(req.parameters));
+    next();
+});
+
 /**
  * checkout specified version to be the current draft of specified adid
  *
@@ -35,18 +46,6 @@ router.get("/export", function(req, res, next){
 });
 
 /**
- * update draft, delete the old one and create a new one
- */
-router.put("/draft", function(req, res, next){
-    var validate = schemas.create_draft;
-    if(validate(req.body)){
-        req.SsiData.addOperations(operBuilder.updateDraft(req.body));
-        return next();
-    }else{
-        next(SsiError.ParameterInvalidError("post data not valid draft"));
-    }
-});
-/**
  * publish specified draft to a new version
  */
 router.get("/publish", function(req, res, next){
@@ -58,11 +57,4 @@ router.get("/publish", function(req, res, next){
     }
 });
 
-/**
- * get all the configurations of specified advertiser including draft
- */
-router.get("/:adid", function(req, res, next){
-    req.SsiData.addOperations(operBuilder.getConfigurations(req.params.adid));
-    return next();
-});
 module.exports = router;

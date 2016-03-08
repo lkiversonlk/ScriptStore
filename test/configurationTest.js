@@ -32,32 +32,36 @@ describe("test configuration interface", function(){
     */
 
     describe("draft CURD", function(){
-        it("create an empty draft for ad " + testAdid, function(done){
+
+        it("create an empty draft", function(done){
             request(app)
                 .get(basePath + "/export?adid=" + testAdid)
+                .set("Content-Type", "Application/json")
                 .expect(200)
                 .end(function(err, res){
                     if(err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.code.should.equal(0, res.body.data);
                     testDraft = res.body.data;
                     done();
                 });
         });
 
+        /*
         it("update the draft", function (done) {
             testDraft.description = "this is a test draft";
             request(app)
                 .put(basePath + "/draft")
+                .set("Content-Type", "Application/json")
                 .send(testDraft)
                 .expect(200)
                 .end(function(err, res){
                     if(err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.code.should.equal(0, res.body.data);
                     res.body.data.description.should.equal(testDraft.description);
                     done();
                 })
         });
-
+       */
         var currentVersions = 0;
         it("check the versions currently", function(done){
             request(app)
@@ -67,7 +71,7 @@ describe("test configuration interface", function(){
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
                     if (err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.code.should.equal(0, res.body.data);
                     currentVersions = res.body.data.length;
                     done();
                 });
@@ -76,6 +80,7 @@ describe("test configuration interface", function(){
         it("publish the draft", function(done){
             request(app)
                 .get(basePath + "/publish?adid=" + testAdid)
+                .set("Content-Type", "Application/json")
                 .expect(200)
                 .end(function(err, res){
                     if(err) done(err);

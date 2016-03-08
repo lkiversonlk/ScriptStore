@@ -97,35 +97,14 @@ var OperationBuilder = {
     },
 
     /**
-     *
-     * @param version
-     * @returns {Array}
-     */
-    getVersion : function(version){
-        var ret = [];
-        ret.push({
-            type : "db",
-            operation : "getOne",
-            model : "version",
-            data : {
-                query : {
-                    _id : version
-                }
-            }
-        });
-        return ret;
-    },
-
-    /**
-     * check out specified version to current draft
+     * check out specified version and update it to current draft
      * @param from
      * @returns {Array}
      */
-    checkOutVersionToDraft : function(from){
+    checkOutVersionToDraft : function(adid, versionId){
         var ret = [];
-        ret = ret.concat(OperationBuilder.DbDelete("draft", { query : {adid : adid}}));
-        ret = ret.concat(OperationBuilder.getVersion(version));
-        ret = ret.concat(OperationBuilder.DbCreate("draft", null));
+        ret = ret.concat(OperationBuilder.DbGetOne("version", {query : {_id : versionId}}));
+        ret = ret.concat(OperationBuilder.DbUpdate("draft", {query : {adid : adid}, data : null}));
         return ret;
     },
 
@@ -152,10 +131,11 @@ var OperationBuilder = {
      * @param overwrite
      * @returns {Array}
      */
+
     exportVersionToDraft : function(adid, version, overwrite){
-        ret = [];
+        var ret = [];
         if(!overwrite){
-            ret = ret.concat(OperationBuilder.publishDraftByAdid(adid));
+            ret = ret.concat(OperationBuilder.publishDraft({adid : adid}));
         }
         if(version){
             ret = ret.concat(OperationBuilder.checkOutVersionToDraft(version))
@@ -172,27 +152,9 @@ var OperationBuilder = {
      */
     publishDraft : function(query){
         var ret = [];
-
-        ret = ret.concat(OperationBuilder.getDraft(query));
+        ret = ret.concat(OperationBuilder.DbGetOne("draft", {query : query}));
         ret = ret.concat(OperationBuilder.DbCreate("version", { data : null}));
-
         return ret;
-    },
-
-    /**
-     * get specified draft
-     * @param query
-     * @returns {*[]}
-     */
-    getDraft : function(query){
-        return [{
-            type : "db",
-            operation : "getOne",
-            model : "draft",
-            data : {
-                query : query
-            }
-        }]
     },
 
     /**
@@ -212,21 +174,17 @@ var OperationBuilder = {
         }];
     },
 
-    updateDraft : function(draft){
-        ret = [];
-        ret = ret.concat(OperationBuilder.DbDelete("draft", { query : {adid : draft.adid}}));
-        ret = ret.concat(OperationBuilder.DbCreate("draft", { data : draft}));
-        return ret;
-    },
-
-    getConfigurations : function(adid){
+    /**
+     * return all the versions and draft according to data.query
+     * @param data
+     * @returns {*[]}
+     */
+    getConfigurations : function(data){
         return [{
             type : "script",
             operation : "get",
             model : "configurations",
-            data : {
-                adid : adid
-            }
+            data : data
         }];
     }
 };

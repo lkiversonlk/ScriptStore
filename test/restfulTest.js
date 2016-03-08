@@ -266,6 +266,7 @@ describe("test restful interface", function(){
                 });
         });
 
+        /*
         it("update the version we just created", function(done){
             var modifiedAdid = "testAntherAdid";
             request(app)
@@ -288,7 +289,8 @@ describe("test restful interface", function(){
                         });
                 })
         });
-
+        */
+        
         it("create anothre version", function(done){
             //TODO: finish this test
             done();

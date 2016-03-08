@@ -23,7 +23,6 @@ var operatorJSList = [
 ];
 
 var ret = {
-
 };
 
 var OperatorError = function(msg){
