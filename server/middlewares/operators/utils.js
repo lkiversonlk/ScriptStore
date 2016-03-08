@@ -217,6 +217,17 @@ var OperationBuilder = {
         ret = ret.concat(OperationBuilder.DbDelete("draft", { query : {adid : draft.adid}}));
         ret = ret.concat(OperationBuilder.DbCreate("draft", { data : draft}));
         return ret;
+    },
+
+    getConfigurations : function(adid){
+        return [{
+            type : "script",
+            operation : "get",
+            model : "configurations",
+            data : {
+                adid : adid
+            }
+        }];
     }
 };
 

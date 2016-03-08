@@ -45,6 +45,23 @@ if(validate(configuration)){
 var mongoose = require("mongoose");
 mongoose.connect(configuration.db.connectString);
 
+/**
+ *
+ * this is a temporary
+ */
+var MariaClient = require("./server/dao/mariaClient");
+app.mariaClient = new MariaClient(configuration.advertiser.mariasql);
+app.get("/advertisers", function(req, res, next){
+    req.app.mariaClient.selectAdverNameId(function(error, rows){
+        if(error){
+            console.log(error);
+            next("error");
+        }else{
+
+        }
+    });
+});
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));

@@ -29,6 +29,20 @@
                     "type" : "string"
                 }
             }
+        },
+        "advertiser" : {
+            "type" : "object",
+            "required" : [
+                "mariasql"
+            ],
+            "properties" : {
+                "mariasql" : {
+                    "type" : "object" ,
+                    "required" : [
+                        "user"
+                    ]
+                }
+            }
         }
     }
 }

@@ -59,4 +59,5 @@ dbModelResources.forEach(function(resource){
     restfulRegistry.serve(router);
 });
 
+
 module.exports = router;

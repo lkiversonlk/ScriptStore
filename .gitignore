@@ -56,3 +56,5 @@ build/Release
 config.json
 
 bower_components
+
+public/lib/*

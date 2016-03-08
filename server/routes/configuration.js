@@ -58,4 +58,11 @@ router.get("/publish", function(req, res, next){
     }
 });
 
+/**
+ * get all the configurations of specified advertiser including draft
+ */
+router.get("/:adid", function(req, res, next){
+    req.SsiData.addOperations(operBuilder.getConfigurations(req.params.adid));
+    return next();
+});
 module.exports = router;

@@ -2,5 +2,39 @@ extends layout
 
 block content
     script(src="/index.js")
-    div(ng-app="scriptStore")
+    nav.navbar.navbar-default
+        div.container-fluid
+            div.navbar-header
+                a.navbar-brand(href="#")
+                    | ScriptStore
+    div.container(ng-app="scriptStore")
+        div.row
+            div.col-md-3
+                select(ng-controller="advertiserListController", ng-change="update();", ng-model="currentAdid").form-control
+                    option(ng-repeat="advertiser in advertisers", value="{{advertiser.id}}")
+                        | {{advertiser.name}}
 
+            div(ng-controller="versionListController")
+                div.col-md-3
+                    select(ng-change="updateVersion();", ng-model="currentVersion", ng-hide=" versions==null || versions.length == 0").form-control
+                        option(ng-repeat="version in versions", value="{{version._id}}")
+                            | {{version.ver}}
+                div.col-md-1
+                    button.btn.btn-success(ng-hide="versions == null || versions.length > 0", ng-click="createDraft();")
+                        | 创建草稿
+
+        div(style="height:20px")
+        div.row(ng-controller="currentVersionController")
+            ul.nav.nav-pills.nav-stacked.col-md-3
+                li.active(role="presentation")
+                    a(href="#tags", data-toggle="tab")
+                        | tags
+                li(role="presentation")
+                    a(href="#triggers", data-toggle="tab")
+                        | triggers
+
+            div.tab-content.col-md-9
+                div#tags.tab-pane.active
+                    | Tags
+                div#triggers.tab-pane
+                    | Triggers

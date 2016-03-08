@@ -6,7 +6,7 @@
  * presentation
  */
 var SsiError = require("../errors");
-
+var logger = require("../log").getLogger("middlewares.presentation");
 function present(req, res, next){
     res.json({
         code : 0,
@@ -16,6 +16,7 @@ function present(req, res, next){
 
 function presentError(error, req, res, next){
     if(error instanceof SsiError.SsiError){
+        logger.log("dubug", "error code " + error.code + " message " + error.message);
         res.json({
             code : error.code,
             data : error.message

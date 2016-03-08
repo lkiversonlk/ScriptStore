@@ -8,7 +8,7 @@ var _transformOriginToRelease = require("./utils").transformOriginToRelease;
 
 var logger = require("../../log").getLogger("middlewares.operators.scriptOperators");
 var SsiError = require('../../errors');
-
+var async = require("async");
 var ret = {};
 
 /**
@@ -127,6 +127,41 @@ ret.script_publish_draft = function(adid, context, callback){
     )
 };
 
+ret.script_get_configurations = function(data, context, callback){
+    if(data.adid){
+        async.parallel(
+            [
+                function(callback){
+                    Dao.readDoc("version", {query : { adid : data.adid }}, callback);
+                },
+                function(callback){
+                    Dao.readOneDoc("draft", {query : { adid : data.adid }}, callback);
+                }
+            ],
+            _wrapCallback(function(err, results){
+                if(err) {
+                    callback(err)
+                }else{
+                    var ret = [];
+                    results[0].forEach(function(version, index){
+                        var json = version.toJSON();
 
+                        json.ver = "version " + index;
+                        ret.push(json);
+                    });
+                    if(results[1]){
+                        var json = results[1].toJSON();
+                        json.ver = "draft";
+                        ret.push(json);
+                    }
+                    callback(null, ret);
+                }
+            })
+        )
+    }else{
+        logger.log("error", "no adid passed to script_get_configurations");
+        callback(SsiError.ServerError());
+    }
+}
 
 module.exports = ret;
