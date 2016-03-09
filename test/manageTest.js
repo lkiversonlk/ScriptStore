@@ -17,6 +17,7 @@ var should = chai.should();
 var testAdid = "testAd";
 var testDraft = null;
 var testVersion = null;
+var testRelease = null;
 var basePath = "/manage";
 var restBasePath = "/rest";
 
@@ -160,7 +161,20 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
-                    done();
+                    var query = {
+                        adid : testAdid
+                    };
+                    request(app)
+                        .get(restBasePath+"/release?query=" + JSON.stringify(query))
+                        .set("Content-Type", "Application/json")
+                        .expect(200)
+                        .end(function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, res.body.data);
+
+                            done();
+                        });
+
                 });
         });
     })
