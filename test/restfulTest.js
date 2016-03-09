@@ -4,7 +4,6 @@
 
 var request = require("supertest"),
     app = require("../app.js");
-
 var mongoose = require("mongoose");
 var chai = require("chai");
 var should = chai.should();
@@ -67,7 +66,6 @@ var versionIds = [
 
 describe("test restful interface", function(){
 
-
     before("clear the database", function(done){
         mongoose.connection.db.dropDatabase(done);
     });
@@ -79,9 +77,10 @@ describe("test restful interface", function(){
 
     var restBasePath = "/rest";
 
-    var resources = ["version"];
+    var resources = ["version", "draft", "release"];
 
     resources.forEach(function (resource) {
+
         it(resource + " should be empty", function (done) {
             request(app)
                 .get(restBasePath + "/" + resource)
@@ -90,7 +89,7 @@ describe("test restful interface", function(){
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
                     if (err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.code.should.equal(0, res.body.data);
                     res.body.data.length.should.equal(0);
                     done();
                 });
@@ -111,7 +110,7 @@ describe("test restful interface", function(){
                 .expect("Content-Type", /json/)
                 .end(function (err, res) {
                     if (err) done(err);
-                    res.body.code.should.equal(4, "ret code should be 4");
+                    res.body.code.should.equal(4, res.body.data);
                     //should.not.exist(res.body.data);
                     done();
                 });
@@ -125,110 +124,24 @@ describe("test restful interface", function(){
                 .expect(200)
                 .end(function (err, res) {
                     if (err) done(err);
-                    res.body.code.should.equal(2);
+                    res.body.code.should.equal(2, res.body.data);
                     done();
                 })
         })
     });
 
-    describe.skip("trigger creation test", function () {
-        it("try create invalid trigger", function (done) {
-            var invalidTrigger = {
-                adid : "testadid",
-                description : "testTrigger",
-                rules : [
-                    {
-                        ruleType : 0,
-                        op : 2,
-                        value : "test"
-                    }
-                ]
-            };
-
-            request(app)
-                .post(restBasePath + "/trigger")
-                .set("Content-Type", "Application/json")
-                .send(invalidTrigger)
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) done(err);
-                    res.body.code.should.equal(1);
-                    done();
-                });
-        });
-
-
-
-        it("create a valid trigger", function(done){
-            request(app)
-                .post(restBasePath + "/trigger")
-                .set("Content-Type", "Application/json")
-                .send(validTriggers[0])
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) done(err);
-                    res.body.code.should.equal(0);
-                    triggerId1 = res.body.data._id;
-                    done();
-                });
-        });
-
-
-
-        it("we should be able to retrive the trigger", function(done){
-            request(app)
-                .get(restBasePath + "/trigger?select=[\"adid\", \"description\"]")
-                .set("Content-Type", "Application/json")
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
-                    res.body.data.length.should.equal(1);
-                    Object.keys(res.body.data[0]).length.should.equal(3);   //should only contain 3 properties
-
-                    request(app)
-                        .get(restBasePath + "/trigger/" + triggerId1 + "?select=[\"adid\", \"description\"]")
-                        .set("Content-Type", "Application/json")
-                        .expect(200)
-                        .end(function (err, res) {
-                            if (err) done(err);
-                            res.body.code.should.equal(0, "ret code should be 0");
-                            Object.keys(res.body.data).length.should.equal(3);   //should only contain 3 properties
-                            done();
-                        });
-                });
-        });
-
-        it("create another trigger", function(done){
-            request(app)
-                .post(restBasePath + "/trigger")
-                .set("Content-Type", "Application/json")
-                .send(validTriggers[1])
-                .expect(200)
-                .end(function (err, res) {
-                    if (err) done(err);
-                    res.body.code.should.equal(0);
-                    triggerId2 = res.body.data._id;
-                    request(app)
-                        .get(restBasePath + "/trigger?select=[\"adid\", \"description\", \"creation\"]")
-                        .set("Content-Type", "Application/json")
-                        .expect(200)
-                        .end(function(err, res){
-                            if(err) done(err);
-                            res.body.code.should.equal(0, "rect code should be 0");
-                            res.body.data.length.should.equal(2, "now there should be 2 triggers");
-                            done();
-                        });
-
-                });
-        });
-    });
-
-
     describe("version CURD test", function(){
         it("create invalid version", function(done){
-            //TODO: finish this test
-            done();
+            request(app)
+                .post(restBasePath + "/version")
+                .set("Content-Type", "Application/json")
+                .send({test: "nothing"})
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(1, res.body.data);
+                    done();
+                });
         });
 
         it("create first version", function(done){
@@ -238,7 +151,7 @@ describe("test restful interface", function(){
                 .expect(200)
                 .end(function(err, res){
                     if(err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.code.should.equal(0, res.body.data);
                     done();
                 });
         });
@@ -250,7 +163,7 @@ describe("test restful interface", function(){
                 .expect(200)
                 .end(function(err, res){
                     if(err) done(err);
-                    res.body.code.should.equal(0, "ret code should be 0");
+                    res.body.code.should.equal(0, res.body.data);
                     res.body.data.length.should.equal(1);
                     var vid = res.body.data[0]._id;
                     versionIds.push(vid);
@@ -290,7 +203,7 @@ describe("test restful interface", function(){
                 })
         });
         */
-        
+
         it("create anothre version", function(done){
             //TODO: finish this test
             done();

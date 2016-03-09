@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var restRouter = require('./server/routes/rest');
-var configurationRouter = require("./server/routes/configuration");
+var manage = require("./server/routes/manage");
 var middlewares = require("./server/middlewares");
 //var users = require('./routes/users');
 
@@ -82,7 +82,7 @@ app.get("/", function(req, res, next){
 
 app.use(middlewares.parameters);
 app.use('/rest', restRouter);
-app.use('/configuration', configurationRouter);
+app.use('/manage', manage);
 //app.use('/users', users);
 
 app.use(middlewares.operation);

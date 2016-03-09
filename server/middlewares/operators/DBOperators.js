@@ -8,6 +8,10 @@ var _wrapCallback = require("./utils").wrapCallback;
 
 var operators = {
 
+    db_getAll_draft : function(data, context, callback){
+        Dao.readDoc("draft", data, _wrapCallback(callback));
+    },
+
     db_getOne_release : function(data, context, callback){
         Dao.readOneDoc("release", data, _wrapCallback(callback));
     },
@@ -45,7 +49,6 @@ var operators = {
         Dao.readOneDoc("draft", data, _wrapCallback(callback));
     },
 
-
     db_delete_draft : function(data, context, callback){
         Dao.deleteDoc("draft", data, _wrapCallback(callback));
     },
@@ -58,8 +61,11 @@ var operators = {
         //TODO:check the trigger validate
         data.data.creation = Date.now();
         Dao.createDoc("draft", data.data, _wrapCallback(callback));
-    }
+    },
 
+    db_updateOrInsert_release : function(data, context, callback){
+        Dao.updateOrInsertDoc()
+    },
 };
 
 module.exports = operators;

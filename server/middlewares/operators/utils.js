@@ -5,6 +5,7 @@
 var SsiError = require("../../errors");
 var mongooseError = require("mongoose").Error;
 var logger = require("../../log").getLogger("middlewares.operators.utils");
+var extend = require("util")._extend;
 
 function _mongooseErrorHandler(error){
     if(!error) return error;
@@ -23,31 +24,6 @@ function _wrapCallback(callback){
     }
 }
 
-function _transformOriginToRelease(result){
-    var triggers = result.triggers;
-    delete result.triggers;
-    delete result.deleted;
-    delete result.description;
-    delete result.name;
-    delete result.creation;
-
-    var originTags = result.tags;
-    result.tags = [];
-
-    originTags.forEach(function(tag){
-        if(tag.deleted){
-
-        }else{
-            delete tag.deleted;
-            var originTagTrigger = tag.triggers;
-            tag.triggers = [];
-            originTagTrigger.forEach(function(index){
-                tag.triggers.push(triggers[index]);
-            });
-        }
-    });
-    return result;
-}
 
 var OperationBuilder = {
     //directly db operation
@@ -96,6 +72,14 @@ var OperationBuilder = {
         }];
     },
 
+    DbUpdateOrInsert : function(model, data){
+        return [{
+            type : "db",
+            operation : "updateOrInsert",
+            model : model,
+            data : data
+        }]
+    },
     /**
      * check out specified version and update it to current draft
      * @param from
@@ -135,7 +119,7 @@ var OperationBuilder = {
     exportVersionToDraft : function(adid, version, overwrite){
         var ret = [];
         if(!overwrite){
-            ret = ret.concat(OperationBuilder.publishDraft({adid : adid}));
+            ret = ret.concat(OperationBuilder.saveDraftToVersion({adid : adid}));
         }
         if(version){
             ret = ret.concat(OperationBuilder.checkOutVersionToDraft(version))
@@ -150,9 +134,9 @@ var OperationBuilder = {
      * @param draftId
      * @returns {Array}
      */
-    publishDraft : function(query){
+    saveDraftToVersion : function(data){
         var ret = [];
-        ret = ret.concat(OperationBuilder.DbGetOne("draft", {query : query}));
+        ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
         ret = ret.concat(OperationBuilder.DbCreate("version", { data : null}));
         return ret;
     },
@@ -186,10 +170,52 @@ var OperationBuilder = {
             model : "configurations",
             data : data
         }];
+    },
+
+    getReleasedContent : function(data){
+        if(!data) {
+            data = {};
+        }
+        data.data = null;
+        return [{
+            type : "script",
+            operation : "transform",
+            model : "version",
+            data : data
+        }]
+    },
+
+    /**
+     *
+     * @param data
+     * @returns {Array}
+     */
+    publishVersion : function(data){
+        var ret = [];
+        var query = data.query;
+        ret = ret.concat(OperationBuilder.DbGetOne("version", data));
+        ret = ret.concat(OperationBuilder.getReleasedContent());
+        //since data.data may be fullfilled by the operation, so we extract the query alone
+        ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
+        return ret;
+    },
+
+    /**
+     *
+     * @param data
+     */
+    publishDraft : function(data){
+        var ret = [];
+        var query = data.query;
+
+        ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
+        ret = ret.concat(OperationBuilder.DbCreate("version", {data : null}));
+        ret = ret.concat(OperationBuilder.getReleasedContent());
+        ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
+        ret = ret.concat(Oper)
     }
 };
 
 module.exports.mongooseWrapper = _mongooseErrorHandler;
 module.exports.wrapCallback = _wrapCallback;
 module.exports.operationBuilder = OperationBuilder;
-module.exports.transformOriginToRelease = _transformOriginToRelease;

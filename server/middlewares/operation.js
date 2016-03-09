@@ -41,6 +41,9 @@ function operation(req, res, next){
     var operations = req.SsiData.operations;
     var ret = null;
 
+    if(operations.length == 0){
+        return next(SsiError.PathInvalidError(req.originalUrl + " is invalid"));
+    }
     async.reduce(
         operations,
         [],

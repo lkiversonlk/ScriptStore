@@ -48,13 +48,35 @@ router.get("/export", function(req, res, next){
 /**
  * publish specified draft to a new version
  */
-router.get("/publish", function(req, res, next){
-    if(req.query.adid || req.query._id){
-        req.SsiData.addOperations(operBuilder.publishDraft(req.query));
+router.get("/toVersion/:id", function(req, res, next){
+    var parameters = req.parameters;
+    if(!parameters.query) {
+        parameters.query = {}
+    }
+    parameters.query._id = req.params.id;
+    req.SsiData.addOperations(operBuilder.saveDraftToVersion(parameters));
+    return next();
+});
+
+/**
+ * publish specified version
+ *
+ */
+router.get("/publish/version", function(req, res, next){
+    var parameters = req.parameters;
+    if(parameters.query.adid && parameters.query._id){
+        req.SsiData.addOperations(operBuilder.publishVersion(parameters));
         return next();
     }else{
-        next(SsiError.ParameterInvalidError("provide adid or _id at least"));
+        return next(SsiError.PathInvalidError("adid and _id are required"));
     }
+});
+
+/**
+ * publish specified draft
+ */
+router.get("/publish/draft/:id", function(req, res, next){
+
 });
 
 module.exports = router;

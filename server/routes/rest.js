@@ -22,7 +22,7 @@ dbModelResources.forEach(function(resource){
         parameters.query._id = req.params.id;
         req.SsiData.addOperations(operBuilder.DbGetOne(restfulRegistry.name, parameters));
         if(parameters.release){
-            req.SsiData.addOperations()
+            req.SsiData.addOperations(operBuilder.getReleasedContent());
         }
         next();
     });

@@ -92,6 +92,44 @@ ret.script_publish_draft = function(adid, context, callback){
 };
 */
 
+function  _transform(version){
+    if(version.toJSON){
+        version = version.toJSON();
+    }
+
+    var oldTriggers = result.triggers;
+    var ret = {
+        tags : []
+    };
+    version.tags.forEach(function(tag){
+        if(!tag.deleted){
+            var newTag = {
+                script : tag.script,
+                triggers : []
+            };
+            tag.triggers.forEach(function(trigger){
+                newTag.triggers.push(oldTriggers[trigger]);
+            });
+        }
+    });
+    return ret;
+}
+
+
+ret.script_transform_version = function(data, context, callback){
+    var versions = data.data;
+    try{
+        if(Array.isArray(versions)) {
+            return versions.map(function(version){
+                return _transform(version);
+            });
+        }else{
+            return _transform(versions);
+        }
+    }catch (error){
+        callback(error);
+    }
+};
 
 ret.script_get_configurations = function(data, context, callback){
     if(data.query.adid){
