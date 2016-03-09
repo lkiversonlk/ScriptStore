@@ -203,16 +203,16 @@ var OperationBuilder = {
     /**
      *
      * @param data
+     * @returns {Array}
      */
     publishDraft : function(data){
         var ret = [];
         var query = data.query;
-
         ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
         ret = ret.concat(OperationBuilder.DbCreate("version", {data : null}));
         ret = ret.concat(OperationBuilder.getReleasedContent());
         ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
-        ret = ret.concat(Oper)
+        return ret;
     }
 };
 

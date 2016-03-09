@@ -68,15 +68,21 @@ router.get("/publish/version", function(req, res, next){
         req.SsiData.addOperations(operBuilder.publishVersion(parameters));
         return next();
     }else{
-        return next(SsiError.PathInvalidError("adid and _id are required"));
+        return next(SsiError.ParameterInvalidError("adid and _id are required"));
     }
 });
 
 /**
- * publish specified draft
+ * publish draft of adid
  */
-router.get("/publish/draft/:id", function(req, res, next){
-
+router.get("/publish/draft", function(req, res, next){
+    var parameters = req.parameters;
+    if(parameters.query.adid){
+        req.SsiData.addOperations(operBuilder.publishDraft(parameters));
+        return next();
+    }else{
+        return next(SsiError.ParameterInvalidError("adid is required"));
+    }
 });
 
 module.exports = router;
