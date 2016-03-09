@@ -64,7 +64,7 @@ var operators = {
     },
 
     db_updateOrInsert_release : function(data, context, callback){
-        Dao.updateOrInsertDoc()
+        Dao.updateOrInsertDoc("release", data,  _wrapCallback(callback));
     },
 };
 

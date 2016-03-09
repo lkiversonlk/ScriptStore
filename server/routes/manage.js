@@ -11,12 +11,12 @@ var SsiError = require("../errors");
 var schemas = require("./schemas");
 var logger = require("../log").getLogger("routers.configuration");
 
-/**
+/**q
  * get version and draft
  * the versions will be marked 1 - n as time goes late
  */
 router.get("/", function(req, res, next){
-    res.SsiData.addOperations(operBuilder.getConfigurations(req.parameters));
+    req.SsiData.addOperations(operBuilder.getConfigurations(req.parameters));
     next();
 });
 

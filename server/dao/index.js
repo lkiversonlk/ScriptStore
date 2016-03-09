@@ -52,9 +52,9 @@ var Dao = {
             upsert : true
         };
 
-        delete updates._id;
+        delete data.data._id;
 
-        models[resource].update(data.query, data.updates, options, callback);
+        models[resource].update(data.query, data.data, options, callback);
     }
 };
 

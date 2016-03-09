@@ -97,7 +97,7 @@ function  _transform(version){
         version = version.toJSON();
     }
 
-    var oldTriggers = result.triggers;
+    var oldTriggers = version.triggers;
     var ret = {
         tags : []
     };
@@ -120,11 +120,11 @@ ret.script_transform_version = function(data, context, callback){
     var versions = data.data;
     try{
         if(Array.isArray(versions)) {
-            return versions.map(function(version){
+            return callback(null, versions.map(function(version){
                 return _transform(version);
-            });
+            }));
         }else{
-            return _transform(versions);
+            return callback(null, _transform(versions));
         }
     }catch (error){
         callback(error);
