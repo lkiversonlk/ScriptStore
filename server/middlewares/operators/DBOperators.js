@@ -5,6 +5,7 @@
 var Dao = require("../../dao");
 var logger = require("../../log").getLogger("middlewares.operators.DBOperators");
 var _wrapCallback = require("./utils").wrapCallback;
+var SsiErrors = require("../../errors");
 
 var operators = {
 
@@ -41,9 +42,17 @@ var operators = {
 
     db_create_version : function(data, context, callback){
         //TODO:check the trigger validate
-        data.data.creation = Date.now();
-        delete data.data._id;
-        Dao.createDoc("version", data.data, _wrapCallback(callback));
+        if(data.data){
+            if(data.data.toJSON){
+                data.data = data.data.toJSON();
+            }
+            data.data.creation = Date.now();
+            delete data.data._id;
+            Dao.createDoc("version", data.data, _wrapCallback(callback));
+        }else {
+            logger.log("warning", "create version without data, maybe deleted by someone else at the same time");
+            callback(SsiErrors.ServerError());
+        }
     },
 
     db_getOne_draft : function(data, context, callback){
@@ -55,7 +64,17 @@ var operators = {
     },
 
     db_update_draft : function(data, context, callback){
-        Dao.updateDoc("draft", data, _wrapCallback(callback));
+        if(data.data){
+            if(data.data.toJSON){
+                data.data = data.data.toJSON();
+            }
+            data.data.creation = Date.now();
+            delete data.data._id;
+            Dao.updateDoc("draft", data, _wrapCallback(callback));
+        }else {
+            logger.log("warning", "update draft without data, maybe deleted by someone else at the same time");
+            callback(SsiErrors.ServerError());
+        }
     },
 
     db_create_draft : function(data, context, callback){

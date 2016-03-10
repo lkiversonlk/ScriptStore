@@ -83,12 +83,13 @@ describe("test restful interface", function(){
                         callback(null);
                     });
             },
-            done
+            function(err){
+                done(err);
+            }
         );
     });
 
     resources.forEach(function (resource) {
-
         it(resource + " should be empty", function (done) {
             request(app)
                 .get(restBasePath + "/" + resource)

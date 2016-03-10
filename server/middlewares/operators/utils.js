@@ -122,7 +122,7 @@ var OperationBuilder = {
             ret = ret.concat(OperationBuilder.saveDraftToVersion({adid : adid}));
         }
         if(version){
-            ret = ret.concat(OperationBuilder.checkOutVersionToDraft(version))
+            ret = ret.concat(OperationBuilder.checkOutVersionToDraft(adid, version))
         }else{
             ret = ret.concat(OperationBuilder.createEmptyDraft(adid));
         }

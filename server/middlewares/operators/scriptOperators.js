@@ -110,6 +110,7 @@ function  _transform(version){
             tag.triggers.forEach(function(trigger){
                 newTag.triggers.push(oldTriggers[trigger]);
             });
+            ret.tags.push(newTag);
         }
     });
     return ret;

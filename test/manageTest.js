@@ -2,8 +2,6 @@
  * Created by jerry on 3/4/16.
  */
 
-
-
 var request = require("supertest"),
     app = require("../app.js");
 
@@ -16,6 +14,8 @@ var testAdid = "testAd";
 var testDraft = null;
 var testVersion = null;
 var testRelease = null;
+var currentVersions = null;
+
 var basePath = "/manage";
 var restBasePath = "/rest";
 
@@ -57,9 +57,33 @@ function getRelease(adid, callback){
         .end(callback);
 }
 
+function getDraft(adid, callback){
+    var query = {
+        adid : adid
+    };
+
+    request(app)
+        .get(restBasePath+"/draft?query=" + JSON.stringify(query))
+        .set("Content-Type", "Application/json")
+        .expect(200)
+        .end(callback);
+}
+
+function getVersions(adid, callback){
+    var query = {
+        adid : adid
+    };
+
+    request(app)
+        .get(restBasePath+"/version?query=" + JSON.stringify(query))
+        .set("Content-Type", "Application/json")
+        .expect(200)
+        .end(callback);
+}
+
 describe("test configuration interface", function(){
 
-    before("clear database", function(done){
+    after("clear database", function(done){
         async.each(
             ["draft", "release", "version"]
             , function(model, callback) {
@@ -72,14 +96,19 @@ describe("test configuration interface", function(){
                         callback(null);
                     });
             },
-            done
+            function(err){
+                done(err);
+            }
         );
     });
 
     describe("draft CURD", function(){
         it("create an empty draft", function(done){
+            var query = {
+                adid : testAdid
+            };
             request(app)
-                .get(basePath + "/export?adid=" + testAdid)
+                .get(basePath + "/export?query=" + JSON.stringify(query))
                 .set("Content-Type", "Application/json")
                 .expect(200)
                 .end(function(err, res){
@@ -107,7 +136,12 @@ describe("test configuration interface", function(){
                             //res.body.data.should.be.a("")
                             res.body.data.length.should.equal(1);
                             res.body.data[0]._id.should.equal(testDraft._id);
-                            done();
+                            getVersions(testAdid, function(err, res){
+                                if(err) done(err);
+                                res.body.code.should.equal(0, res.body.data);
+                                res.body.data.length.should.equal(0);
+                                done();
+                            })
                         });
 
                 });
@@ -226,8 +260,7 @@ describe("test configuration interface", function(){
         });
 
 
-        it("publish the draft", function(){
-
+        it("publish the draft", function(done){
             //first update the draft again
             testDraft.tags.push(testTag);
             request(app)
@@ -238,12 +271,10 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
-
                     var query = {
                         adid : testAdid
                     };
 
-                    done();
                     request(app)
                         .get(basePath + "/publish/draft?query=" + JSON.stringify(query))
                         .set("Content-Type", "Application/json")
@@ -251,18 +282,84 @@ describe("test configuration interface", function(){
                         .end(function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
-                            //before there is one draft, one version, one release
-                            //after publish draft, there should be one draft, two version, one release
+                            //before there is one draft with one trigger, one version with one trigger, one release empty
+                            //after publish draft, there should be one draft with one trigger and one tag
+                            //two version the latter has one trigger and one tag, one release with one tag
                             getAll(testAdid, function(err, res){
                                 if(err) done(err);
                                 res.body.code.should.equal(0, res.body.data);
-                                var versions = res.body.data;
-                                versions.length.should.equal(3);
-                                done();
+                                currentVersions = res.body.data;
+                                currentVersions.length.should.equal(3);
+                                currentVersions[2].draft.should.equal(true);
+                                currentVersions[2].tags.length.should.equal(1);
+                                currentVersions[2].triggers.length.should.equal(1);
+                                currentVersions[1].tags.length.should.equal(1);
+                                currentVersions[0].tags.length.should.equal(0);
+                                getRelease(testAdid, function(err, res){
+                                    if(err) done(err);
+                                    res.body.code.should.equal(0);
+                                    res.body.data[0].tags.length.should.equal(1);
+                                    done();
+                                });
 
                             });
                         });
                 });
         });
-    })
+    });
+
+    describe("export test", function(){
+        //we have one release, two version, and one draft
+        it("export version 0 with overwirte", function(done){
+            var query = {
+                adid : testAdid
+            };
+            request(app)
+                .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[0]._id + "&overwrite=true")
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, res.body.data);
+                    getDraft(testAdid, function(err, res){
+                        if(err) done(err);
+                        res.body.code.should.equal(0, res.body.data);
+                        res.body.data[0].triggers.length.should.equal(1);
+                        res.body.data[0].tags.length.should.equal(0);
+                        getVersions(testAdid, function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, res.body.data);
+                            res.body.data.length.should.equal(2);
+                            done();
+                        });
+                    });
+                });
+        });
+
+        it("export version 1 with overwrite", function(done){
+            var query = {
+                adid : testAdid
+            };
+            request(app)
+                .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[1]._id + "&overwrite=true")
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, res.body.data);
+                    getDraft(testAdid, function(err, res){
+                        if(err) done(err);
+                        res.body.code.should.equal(0, res.body.data);
+                        res.body.data[0].triggers.length.should.equal(1);
+                        res.body.data[0].tags.length.should.equal(1);
+                        getVersions(testAdid, function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, res.body.data);
+                            res.body.data.length.should.equal(2);
+                            done();
+                        });
+                    });
+                });
+        })
+    });
 });

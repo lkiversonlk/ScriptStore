@@ -31,11 +31,7 @@ var restDataSchema = {
             }
         },
         "overwrite" : {
-            "type" : "string",
-            "enum" : [
-                "true",
-                "false"
-            ]
+            "type" : "boolean"
         }
     }
 };
@@ -61,6 +57,10 @@ function _extractDataForReq(req){
 
     if(req.query.release){
         ret.release = (req.query.release == "true");
+    }
+
+    if(req.query.from){
+        ret.from = req.query.from;
     }
 
     if(req.body){

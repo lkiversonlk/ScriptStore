@@ -27,21 +27,14 @@ router.get("/", function(req, res, next){
  * * if not overwrite, previous draft will be saved as a new version
  */
 router.get("/export", function(req, res, next){
-    var from = null, overwrite = true, adid = null;
-
-    if(req.query.adid){
-        adid = req.query.adid;
-    }else{
+    var parameters = req.parameters;
+    if(!parameters.query.adid){
         return next(SsiError.ParameterInvalidError("adid is required"));
     }
-    if(req.query.from){
-        from = req.query.from;
+    if(!parameters.overwrite){
+        parameters.overwrite = true;
     }
-    if(req.query.overwrite){
-        overwrite = !(req.query.overwrite == "false");
-    }
-
-    req.SsiData.addOperations(operBuilder.exportVersionToDraft(adid, from, overwrite));
+    req.SsiData.addOperations(operBuilder.exportVersionToDraft(parameters.query.adid, parameters.from, parameters.overwrite));
     return next();
 });
 
