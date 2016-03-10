@@ -28,7 +28,39 @@ var testTrigger = {
     value : "hello"
 };
 
+var testTag = {
+    name : "testTag",
+    script : "console.log('hellworld');",
+    triggers : [
+        0
+    ]
+};
+
+function getAll(adid, callback){
+    var query = {
+        adid : adid
+    };
+    request(app)
+        .get(basePath + "?query=" + JSON.stringify(query))
+        .set("Content-Type", "Application/json")
+        .expect(200)
+        .end(callback);
+}
+
+function getRelease(adid, callback){
+    var query = {
+        adid : adid
+    };
+
+    request(app)
+        .get(restBasePath+"/release?query=" + JSON.stringify(query))
+        .set("Content-Type", "Application/json")
+        .expect(200)
+        .end(callback);
+}
+
 describe("test configuration interface", function(){
+
     describe("draft CURD", function(){
         it("create an empty draft", function(done){
             request(app)
@@ -175,6 +207,45 @@ describe("test configuration interface", function(){
                             done();
                         });
 
+                });
+        });
+
+        it("publish the draft", function(){
+
+            //first update the draft again
+            testDraft.tags.push(testTag);
+            request(app)
+                .put(restBasePath + "/draft/" + testDraft._id)
+                .set("Content-Type", "Application/json")
+                .send(testDraft)
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, res.body.data);
+
+                    var query = {
+                        adid : testAdid
+                    };
+
+                    request(app)
+                        .get(basePath + "/publish/draft?query=" + JSON.stringify(query))
+                        .set("Content-Type", "Application/json")
+                        .expect(200)
+                        .end(function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, res.body.data);
+
+                            //before there is one draft, one version, one release
+                            //after publish draft, there should be one draft, two version, one release
+                            getAll(testAdid, function(err, res){
+                                if(err) done(err);
+                                res.body.code.should.equal(0, res.body.data);
+                                var versions = res.body.data;
+                                versions.length.should.equal(3);
+
+                                done();
+                            });
+                        });
                 });
         });
     })

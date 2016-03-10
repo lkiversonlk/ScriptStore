@@ -48,6 +48,6 @@ var activeSchema = new Schema({
     }
 });
 
-var active = mongoose.model("active", activeSchema);
+var release = mongoose.model("release", activeSchema);
 
-module.exports = active;
+module.exports = release;

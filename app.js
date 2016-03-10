@@ -30,7 +30,7 @@ if(validate(configuration)){
     if(configuration.app){
         if(configuration.app.log){
             if(configuration.app.log.level){
-                require("./server/log").setLogLevel("debug");
+                require("./server/log").setLogLevel(configuration.app.log.level);
             }
         }
     }
