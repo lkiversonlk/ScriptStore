@@ -42,6 +42,7 @@ var operators = {
     db_create_version : function(data, context, callback){
         //TODO:check the trigger validate
         data.data.creation = Date.now();
+        delete data.data._id;
         Dao.createDoc("version", data.data, _wrapCallback(callback));
     },
 
@@ -60,12 +61,19 @@ var operators = {
     db_create_draft : function(data, context, callback){
         //TODO:check the trigger validate
         data.data.creation = Date.now();
+        delete data.data._id;
         Dao.createDoc("draft", data.data, _wrapCallback(callback));
     },
 
     db_updateOrInsert_release : function(data, context, callback){
+        data.data.creation = Date.now();
+        delete data.data._id;
         Dao.updateOrInsertDoc("release", data,  _wrapCallback(callback));
     },
+
+    db_delete_release : function(data, context, callback){
+        Dao.deleteDoc("release", data, _wrapCallback(callback));
+    }
 };
 
 module.exports = operators;

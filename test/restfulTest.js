@@ -7,6 +7,7 @@ var request = require("supertest"),
 var mongoose = require("mongoose");
 var chai = require("chai");
 var should = chai.should();
+var async = require("async");
 
 var adids = [
     "adid1",
@@ -65,19 +66,26 @@ var versionIds = [
 ];
 
 describe("test restful interface", function(){
-
-    before("clear the database", function(done){
-        mongoose.connection.db.dropDatabase(done);
-    });
-
-    after("clear the database", function(done){
-        mongoose.connection.db.dropDatabase(done);
-    });
-
-
     var restBasePath = "/rest";
 
     var resources = ["version", "draft", "release"];
+
+    before("clear database", function(done){
+        async.each(
+            ["draft", "release", "version"]
+            , function(model, callback) {
+                request(app)
+                    .delete(restBasePath + "/" + model)
+                    .set("Content-Type", "Application/json")
+                    .expect(200)
+                    .end(function (err, res) {
+                        if (err) callback(err);
+                        callback(null);
+                    });
+            },
+            done
+        );
+    });
 
     resources.forEach(function (resource) {
 
@@ -203,16 +211,5 @@ describe("test restful interface", function(){
                 })
         });
         */
-
-        it("create anothre version", function(done){
-            //TODO: finish this test
-            done();
-
-        });
     });
-
-    describe("active version test", function(){
-
-    });
-
 });

@@ -30,7 +30,7 @@ var triggerSchema = new Schema({
         type : Boolean,
         default : false
     }
-});
+}, {_id : false});
 
 var tagSchema = new Schema({
     name : {
@@ -54,7 +54,7 @@ var tagSchema = new Schema({
         type : Boolean,
         default : false
     }
-});
+}, {_id : false});
 
 var draftSchema = new Schema({
 

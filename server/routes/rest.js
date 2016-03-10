@@ -67,6 +67,15 @@ dbModelResources.forEach(function(resource){
         next();
     });
 
+    restfulRegistry.registerDelete(function(req, res, next){
+        var data = req.parameters;
+        if(!data.query){
+            data.query = {};
+        }
+        req.SsiData.addOperations(operBuilder.DbDelete(restfulRegistry.name, data));
+        next();
+    });
+
     restfulRegistry.serve(router);
 });
 

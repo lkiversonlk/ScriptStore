@@ -10,9 +10,7 @@ var request = require("supertest"),
 var mongoose = require("mongoose");
 var chai = require("chai");
 var should = chai.should();
-
-
-
+var async = require("async");
 
 var testAdid = "testAd";
 var testDraft = null;
@@ -60,6 +58,23 @@ function getRelease(adid, callback){
 }
 
 describe("test configuration interface", function(){
+
+    before("clear database", function(done){
+        async.each(
+            ["draft", "release", "version"]
+            , function(model, callback) {
+                request(app)
+                    .delete(restBasePath + "/" + model)
+                    .set("Content-Type", "Application/json")
+                    .expect(200)
+                    .end(function (err, res) {
+                        if (err) callback(err);
+                        callback(null);
+                    });
+            },
+            done
+        );
+    });
 
     describe("draft CURD", function(){
         it("create an empty draft", function(done){
@@ -210,6 +225,7 @@ describe("test configuration interface", function(){
                 });
         });
 
+
         it("publish the draft", function(){
 
             //first update the draft again
@@ -227,6 +243,7 @@ describe("test configuration interface", function(){
                         adid : testAdid
                     };
 
+                    done();
                     request(app)
                         .get(basePath + "/publish/draft?query=" + JSON.stringify(query))
                         .set("Content-Type", "Application/json")
@@ -234,7 +251,6 @@ describe("test configuration interface", function(){
                         .end(function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
-
                             //before there is one draft, one version, one release
                             //after publish draft, there should be one draft, two version, one release
                             getAll(testAdid, function(err, res){
@@ -242,8 +258,8 @@ describe("test configuration interface", function(){
                                 res.body.code.should.equal(0, res.body.data);
                                 var versions = res.body.data;
                                 versions.length.should.equal(3);
-
                                 done();
+
                             });
                         });
                 });

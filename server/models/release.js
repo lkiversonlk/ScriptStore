@@ -28,7 +28,7 @@ var activeTagSchema = new Schema({
         }],
         default : []
     }
-});
+}, {_id : false});
 
 var activeSchema = new Schema({
 

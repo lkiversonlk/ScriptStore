@@ -7,9 +7,9 @@ should = chai.should();
 
 var models = require("../server/models");
 
-describe("mongoose model schema test", function(){
+describe.skip("mongoose model schema test", function(){
 
-    describe.skip("active", function(){
+    describe("active", function(){
 
         it("one simple active script conf", function(done){
             var activeConf = new models.active();
