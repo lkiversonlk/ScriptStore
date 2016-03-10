@@ -360,6 +360,58 @@ describe("test configuration interface", function(){
                         });
                     });
                 });
-        })
+        });
+
+        it("export version 0 without overwrite", function(done){
+            var query = {
+                adid : testAdid
+            };
+            request(app)
+                .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[0]._id + "&overwrite=false")
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, res.body.data);
+                    getDraft(testAdid, function(err, res){
+                        if(err) done(err);
+                        res.body.code.should.equal(0, res.body.data);
+                        res.body.data[0].triggers.length.should.equal(1);
+                        res.body.data[0].tags.length.should.equal(0);
+                        getVersions(testAdid, function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, res.body.data);
+                            res.body.data.length.should.equal(3);
+                            done();
+                        });
+                    });
+                });
+        });
+
+        it("export version 1 without overwrite", function(done){
+            var query = {
+                adid : testAdid
+            };
+            request(app)
+                .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[1]._id + "&overwrite=false")
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err) done(err);
+                    res.body.code.should.equal(0, res.body.data);
+                    getDraft(testAdid, function(err, res){
+                        if(err) done(err);
+                        res.body.code.should.equal(0, res.body.data);
+                        res.body.data[0].triggers.length.should.equal(1);
+                        res.body.data[0].tags.length.should.equal(1);
+                        getVersions(testAdid, function(err, res){
+                            if(err) done(err);
+                            res.body.code.should.equal(0, res.body.data);
+                            res.body.data.length.should.equal(4);
+                            done();
+                        });
+                    });
+                });
+        });
     });
 });

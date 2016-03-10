@@ -31,7 +31,7 @@ router.get("/export", function(req, res, next){
     if(!parameters.query.adid){
         return next(SsiError.ParameterInvalidError("adid is required"));
     }
-    if(!parameters.overwrite){
+    if(!parameters.hasOwnProperty("overwrite")){
         parameters.overwrite = true;
     }
     req.SsiData.addOperations(operBuilder.exportVersionToDraft(parameters.query.adid, parameters.from, parameters.overwrite));
