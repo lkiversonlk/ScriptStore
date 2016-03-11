@@ -45,23 +45,6 @@ if(validate(configuration)){
 var mongoose = require("mongoose");
 mongoose.connect(configuration.db.connectString);
 
-/**
- *
- * this is a temporary
- */
-var MariaClient = require("./server/dao/mariaClient");
-app.mariaClient = new MariaClient(configuration.advertiser.mariasql);
-app.get("/advertisers", function(req, res, next){
-    req.app.mariaClient.selectAdverNameId(function(error, rows){
-        if(error){
-            console.log(error);
-            next("error");
-        }else{
-
-        }
-    });
-});
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -71,13 +54,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 var SsiData = require("./server/SsiData");
 
+app.get("/", function(req, res, next){
+    res.render("index", {title : "Smart Pixel"});
+});
+
 app.use(function(req, res, next){
     req.SsiData = new SsiData();
     next();
-});
-
-app.get("/", function(req, res, next){
-    res.render("index", {title : "Smart Picso"});
 });
 
 app.use(middlewares.parameters);

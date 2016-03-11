@@ -16,13 +16,13 @@ function present(req, res, next){
 
 function presentError(error, req, res, next){
     if(error instanceof SsiError.SsiError){
-        logger.log("dubug", "error code " + error.code + " message " + error.message);
+        logger.log("debug", "error code " + error.code + " message " + error.message);
         res.json({
             code : error.code,
             data : error.message
         })
     }else{
-        console.log("unknown error : " + error.message);
+        console.log("error", "unknown error : " + error.message);
         console.log(error.stack);
         res.json(SsiError.ServerError());
     }

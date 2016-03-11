@@ -119,7 +119,7 @@ var OperationBuilder = {
     exportVersionToDraft : function(adid, version, overwrite){
         var ret = [];
         if(!overwrite){
-            ret = ret.concat(OperationBuilder.saveDraftToVersion({adid : adid}));
+            ret = ret.concat(OperationBuilder.saveDraftToVersion({query : {adid : adid}}));
         }
         if(version){
             ret = ret.concat(OperationBuilder.checkOutVersionToDraft(adid, version))

@@ -1,40 +1,112 @@
 extends layout
 
 block content
-    script(src="/index.js")
+    link(rel="stylesheet", href="/lib/amitava82/angular-multiselect/dist/multiselect.css")
+    script(src="/lib/amitava82/angular-multiselect/dist/multiselect.js")
+    script(src="/app.js")
+    script(src="/controller.js")
+    script(src="/directive.js")
     nav.navbar.navbar-default
         div.container-fluid
             div.navbar-header
                 a.navbar-brand(href="#")
-                    | ScriptStore
+                    | Smart pixel
     div.container(ng-app="scriptStore")
         div.row
-            div.col-md-3
-                select(ng-controller="advertiserListController", ng-change="update();", ng-model="currentAdid").form-control
-                    option(ng-repeat="advertiser in advertisers", value="{{advertiser.id}}")
-                        | {{advertiser.name}}
-
-            div(ng-controller="versionListController")
-                div.col-md-3
-                    select(ng-change="updateVersion();", ng-model="currentVersion", ng-hide=" versions==null || versions.length == 0").form-control
-                        option(ng-repeat="version in versions", value="{{version._id}}")
-                            | {{version.ver}}
+            div(ng-controller="selectAdvertiserController")
+                div.col-md-2
+                   input.form-control(ng-model="input")
                 div.col-md-1
-                    button.btn.btn-success(ng-hide="versions == null || versions.length > 0", ng-click="createDraft();")
+                    button.btn.btn-primary(ng-click="confirm();")
+                        | 确定
+            div(ng-controller="selectVersionController")
+                div.col-md-3
+                    select.form-control(ng-model="select", ng-change="changeVersion();")
+                        option(ng-repeat="version in versions", value="{{version._id}}")
+                            | {{version.draft ? "当前草稿" : "版本 " + $index }}
+                div
+                    button.col-md-1.btn.btn-default(ng-click="createDraft();", ng-hide="!shouldCreateDraft")
                         | 创建草稿
-
+                    button.col-md-1.btn.btn-success(ng-click="toVersion();", ng-hide="!draft")
+                        | 保存为版本
+                    button.col-md-1.btn.btn-success(ng-click="toDraft();", ng-hide="draft")
+                        | 导出为草稿
+                    button.col-md-1.btn.btn-danger(ng-click="delete();", ng-hide="draft")
+                        | 删除该版本
         div(style="height:20px")
-        div.row(ng-controller="currentVersionController")
-            ul.nav.nav-pills.nav-stacked.col-md-3
-                li.active(role="presentation")
-                    a(href="#tags", data-toggle="tab")
-                        | tags
-                li(role="presentation")
-                    a(href="#triggers", data-toggle="tab")
-                        | triggers
+        div
+            div.row
+                ul.nav.nav-pills.nav-stacked.col-md-2
+                    li.active(role="presentation")
+                        a(href="#tags", data-toggle="tab")
+                            | tags
+                    li(role="presentation")
+                        a(href="#triggers", data-toggle="tab")
+                            | triggers
 
-            div.tab-content.col-md-9
-                div#tags.tab-pane.active
-                    | Tags
-                div#triggers.tab-pane
-                    | Triggers
+                div.tab-content.col-md-9.col-md-offset-1
+                    div#tags.tab-pane.active
+                        div.label
+                            | Tags 列表
+                        div(ng-controller="tagsController")
+                            div.row(ng-repeat="tag in status.version.tag")
+                                div.panel.col-md-4
+                                    div.panel-heading
+                                        | {{tag.name}}
+                                    div.panel-body
+                                        div.form-control
+                                            | {{trigger.ruleType}}
+                                        div.form-control
+                                            | {{trigger.op}}
+                                        div.form-control
+                                            | {{trigger.value}}
+                            div.divider
+                            div.row
+                                div.panel.col-md-4(ng-controller="createTagController")
+                                    div.panel-heading
+                                        | 创建新的Tag
+                                    div.panel-body
+                                        input.form-control(placeholder="tag名称", ng-model="tag.name")
+                                        textarea.form-control(placeholder="脚本内容", ng-model="tag.script")
+                                        am-multiselect(class="input-lg", multiple="true", ms-selected = "{{tag.triggers.length}} triggers", ng-model="tag.triggers", ms-header="选择触发器", options="c.name for c in status.version.triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
+
+                                    div.panel-footer
+                                        button.btn-success(ng-click="createTrigger();")
+                                            | 创建
+
+                    div#triggers.tab-pane
+                        div.label
+                            | Triggers 列表
+                        div(ng-controller="triggersController")
+                            div.row(ng-repeat="trigger in triggers")
+                                div.panel.col-md-4
+                                    div.panel-heading
+                                        | {{trigger.name}}
+                                    div.panel-body
+                                        div.form-group
+                                            div.form-control
+                                                | {{trigger.ruleType}}
+                                        div.form-group
+                                            div.form-control
+                                                | {{trigger.op}}
+                                        div.form-group
+                                            div.form-control
+                                                | {{trigger.value}}
+                            div.divider
+
+                            div.row
+                                div.panel.col-md-4(ng-controller="createTriggerController")
+                                    div.panel-heading
+                                        | 创建新的Trigger
+                                    div.panel-body
+                                        div.form-group
+                                            input.form-control(placeholder="trigger名称", ng-model="trigger.name")
+                                        div.form-group
+                                            input.form-control(type="number", placeholder="trigger类型", ng-model="trigger.ruleType")
+                                        div.form-group
+                                            input.form-control(type="number", placeholder="匹配方式", ng-model="trigger.op")
+                                        div.form-group
+                                            input.form-control(placeholder="匹配值", ng-model="trigger.value")
+                                    div.panel-footer
+                                        button.btn-success(ng-click="createTrigger();", ng-hide="!allowEditing")
+                                            | 创建

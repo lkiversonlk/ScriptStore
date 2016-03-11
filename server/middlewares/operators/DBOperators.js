@@ -50,7 +50,7 @@ var operators = {
             delete data.data._id;
             Dao.createDoc("version", data.data, _wrapCallback(callback));
         }else {
-            logger.log("warning", "create version without data, maybe deleted by someone else at the same time");
+            logger.log("error", "create version without data, maybe deleted by someone else at the same time");
             callback(SsiErrors.ServerError());
         }
     },
