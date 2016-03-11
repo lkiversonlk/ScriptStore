@@ -3,6 +3,7 @@ extends layout
 block content
     link(rel="stylesheet", href="/lib/amitava82/angular-multiselect/dist/multiselect.css")
     script(src="/lib/amitava82/angular-multiselect/dist/multiselect.js")
+    script(src="/constants.js")
     script(src="/app.js")
     script(src="/controller.js")
     script(src="/directive.js")
@@ -14,11 +15,12 @@ block content
     div.container(ng-app="scriptStore")
         div.row
             div(ng-controller="selectAdvertiserController")
-                div.col-md-2
-                   input.form-control(ng-model="input")
-                div.col-md-1
-                    button.btn.btn-primary(ng-click="confirm();")
-                        | 确定
+                div.col-md-3
+                    div.input-group
+                        input.form-control(ng-model="input", type="number", placeholder="请输入广告主ID")
+                        span.input-group-btn
+                            button.btn(ng-click="confirm();")
+                                span.glyphicon.glyphicon-ok
             div(ng-controller="selectVersionController")
                 div.col-md-3
                     select.form-control(ng-model="select", ng-change="changeVersion();")
@@ -54,21 +56,27 @@ block content
                                     div.panel-heading
                                         | {{tag.name}}
                                     div.panel-body
-                                        div.form-control
-                                            | {{trigger.ruleType}}
-                                        div.form-control
-                                            | {{trigger.op}}
-                                        div.form-control
-                                            | {{trigger.value}}
+                                        div.form-group
+                                            div.form-control
+                                                | {{trigger.ruleType}}
+                                        div.form-group
+                                            div.form-control
+                                                | {{trigger.op}}
+                                        div.form-group
+                                            div.form-control
+                                                | {{trigger.value}}
                             div.divider
                             div.row
                                 div.panel.col-md-4(ng-controller="createTagController")
                                     div.panel-heading
                                         | 创建新的Tag
                                     div.panel-body
-                                        input.form-control(placeholder="tag名称", ng-model="tag.name")
-                                        textarea.form-control(placeholder="脚本内容", ng-model="tag.script")
-                                        am-multiselect(class="input-lg", multiple="true", ms-selected = "{{tag.triggers.length}} triggers", ng-model="tag.triggers", ms-header="选择触发器", options="c.name for c in status.version.triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
+                                        div.form-group
+                                            input.form-control(placeholder="tag名称", ng-model="tag.name")
+                                        div.form-group
+                                            textarea.form-control(placeholder="脚本内容", ng-model="tag.script")
+                                        div.form-group
+                                            am-multiselect(class="input-lg", multiple="true", ms-selected = "{{tag.triggers.length}} triggers", ng-model="tag.triggers", ms-header="选择触发器", options="c.name for c in status.version.triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
 
                                     div.panel-footer
                                         button.btn-success(ng-click="createTrigger();")
@@ -102,9 +110,9 @@ block content
                                         div.form-group
                                             input.form-control(placeholder="trigger名称", ng-model="trigger.name")
                                         div.form-group
-                                            input.form-control(type="number", placeholder="trigger类型", ng-model="trigger.ruleType")
+                                            select.form-control(ng-model="trigger.ruleType", ng-options="c.value as c.name for c in TRIGGER_TYPES")
                                         div.form-group
-                                            input.form-control(type="number", placeholder="匹配方式", ng-model="trigger.op")
+                                            select.form-control(ng-model="trigger.op", ng-options="c.value as c.name for c in OPS")
                                         div.form-group
                                             input.form-control(placeholder="匹配值", ng-model="trigger.value")
                                     div.panel-footer

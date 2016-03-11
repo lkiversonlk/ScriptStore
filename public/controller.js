@@ -47,7 +47,7 @@ app.controller("statusController", function($scope, httpApi){
 */
 
 app.controller("selectAdvertiserController", function($scope, appControl){
-    $scope.input = "请输入广告主ID";
+    $scope.input = null;
     $scope.confirm = function(){
         appControl.setAdvertiser($scope.input)
             .then(function(){}, function(error){
@@ -125,6 +125,9 @@ app.controller("selectVersionController", function($scope, appControl){
 app.controller("createTriggerController", function($scope, appControl){
 
     $scope.trigger = {};
+
+    $scope.TRIGGER_TYPES = TRIGGER_TYPES;
+    $scope.OPS = OPS;
 
     $scope.createTrigger = function(){
         appControl.getCurrentVersionData()
