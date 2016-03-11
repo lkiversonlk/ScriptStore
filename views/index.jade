@@ -51,20 +51,26 @@ block content
                         div.label
                             | Tags 列表
                         div(ng-controller="tagsController")
-                            div.row(ng-repeat="tag in status.version.tag")
+                            div.row(ng-repeat="tag in tags")
                                 div.panel.col-md-4
-                                    div.panel-heading
-                                        | {{tag.name}}
                                     div.panel-body
                                         div.form-group
+                                            label
+                                                | tag名称
                                             div.form-control
-                                                | {{trigger.ruleType}}
+                                                | {{tag.name}}
                                         div.form-group
-                                            div.form-control
-                                                | {{trigger.op}}
+                                            label
+                                                | 脚本内容
+                                            textarea.form-control
+                                                | {{tag.script}}
                                         div.form-group
-                                            div.form-control
-                                                | {{trigger.value}}
+                                            label
+                                                | 触发器
+                                            div(ng-repeat="trigger in tag.triggers")
+                                                h2.label.label-info
+                                                    | {{triggers[trigger].name}}
+
                             div.divider
                             div.row
                                 div.panel.col-md-4(ng-controller="createTagController")
@@ -76,10 +82,10 @@ block content
                                         div.form-group
                                             textarea.form-control(placeholder="脚本内容", ng-model="tag.script")
                                         div.form-group
-                                            am-multiselect(class="input-lg", multiple="true", ms-selected = "{{tag.triggers.length}} triggers", ng-model="tag.triggers", ms-header="选择触发器", options="c.name for c in status.version.triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
+                                            am-multiselect(class="input-lg", multiple="true", ms-selected = "选择了{{triggerNames.length}}个triggers", ng-model="triggerNames", ms-header="选择触发器", options="c.name for c in triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
 
                                     div.panel-footer
-                                        button.btn-success(ng-click="createTrigger();")
+                                        button.btn-success(ng-click="createTag();")
                                             | 创建
 
                     div#triggers.tab-pane
@@ -88,16 +94,25 @@ block content
                         div(ng-controller="triggersController")
                             div.row(ng-repeat="trigger in triggers")
                                 div.panel.col-md-4
-                                    div.panel-heading
-                                        | {{trigger.name}}
                                     div.panel-body
                                         div.form-group
+                                            label
+                                                | 触发器名称
                                             div.form-control
-                                                | {{trigger.ruleType}}
+                                                | {{trigger.name}}
                                         div.form-group
+                                            label
+                                                | 触发器类型
                                             div.form-control
-                                                | {{trigger.op}}
+                                                | {{TRIGGER_TYPES[trigger.ruleType].name}}
                                         div.form-group
+                                            label
+                                                | 匹配方式
+                                            div.form-control
+                                                | {{OPS[trigger.op + 1].name}}
+                                        div.form-group
+                                            label
+                                                | 匹配值
                                             div.form-control
                                                 | {{trigger.value}}
                             div.divider

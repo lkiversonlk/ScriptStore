@@ -157,8 +157,51 @@ app.controller("createTriggerController", function($scope, appControl){
     });
 });
 
-app.controller("createTagController", function($scope){
+app.controller("createTagController", function($scope, appControl){
 
+    $scope.tag = {
+        triggers : []
+    };
+    $scope.triggers = [];
+    $scope.triggerNames = [];
+
+    /*
+    $scope.TRIGGER_TYPES = TRIGGER_TYPES;
+    $scope.OPS = OPS;
+    */
+
+    $scope.createTag = function(){
+        appControl.getCurrentVersionData()
+            .then(function(version){
+                if(version.draft){
+                    for(var i = 0; i < $scope.triggers.length; i++){
+                        if($scope.triggerNames.indexOf($scope.triggers[i].name) > -1){
+                            $scope.tag.triggers.push(i);
+                        }
+                    }
+                    version.tags.push($scope.tag);
+                    return appControl.updateDraft(version);
+                }else{
+                    //TODO: reject it!
+                }
+            })
+            .then(function(){
+                return appControl.reloadVersions();
+            })
+            .then(function(){}, function(error){
+                alert(error);
+            });
+    };
+
+    $scope.allowEditing = false;
+
+    $scope.$on(appControl.Events.VERSION_CHANGE, function(){
+        appControl.getCurrentVersionData()
+            .then(function(version){
+                $scope.allowEditing = version.draft;
+                $scope.triggers = version.triggers;
+            });
+    });
 });
 
 app.controller("tagsController", function($scope, appControl){
@@ -168,6 +211,7 @@ app.controller("tagsController", function($scope, appControl){
             .then(
                 function(version){
                     $scope.tags = version.tags;
+                    $scope.triggers = version.triggers;
                 },
                 function(error){
                     $scope.tags = [];
@@ -178,11 +222,15 @@ app.controller("tagsController", function($scope, appControl){
 
 app.controller("triggersController", function($scope, appControl){
     $scope.triggers = [];
+    $scope.TRIGGER_TYPES = TRIGGER_TYPES;
+    $scope.OPS = OPS;
+
     $scope.$on(appControl.Events.VERSION_CHANGE, function(){
         appControl.getCurrentVersionData()
             .then(
                 function(version){
                     $scope.triggers = version.triggers;
+
                 },
                 function(error){
                     $scope.triggers = [];
