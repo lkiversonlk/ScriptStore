@@ -170,7 +170,7 @@ ret.script_get_configurations = function(data, context, callback){
 var COOKIE_KEY = "scriptStore";
 ret.script_set_cookie = function(data, context, callback){
     var res = context[1];
-    res.cookie(COOKIE_KEY, data.data);
+    res.cookie(COOKIE_KEY, JSON.stringify(data));
     callback(null);
 };
 

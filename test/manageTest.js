@@ -9,6 +9,7 @@ var mongoose = require("mongoose");
 var chai = require("chai");
 var should = chai.should();
 var async = require("async");
+var queryString = require("querystring");
 
 var testAdid = "testAd";
 var testDraft = null;
@@ -411,6 +412,67 @@ describe("test configuration interface", function(){
                             done();
                         });
                     });
+                });
+        });
+    });
+
+    describe("cookie test", function(){
+        var query = {
+            adid : testAdid
+        };
+
+        it("debug draft", function(done){
+            var cookieHead = "scriptStore";
+            request(app)
+                .get(basePath + "/debug/draft?query=" + JSON.stringify(query))
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err){
+                        done(err);
+                    }else{
+                        var cookies = res.headers['set-cookie'];
+                        cookies.forEach(function(cookie){
+                            if(cookie.substr(0, cookieHead.length) == cookieHead){
+                                var end = cookie.indexOf(";");
+                                var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
+                                var textJson = JSON.parse(text);
+                                textJson.type.should.equal("draft");
+                                textJson.query.adid.should.equal(testAdid);
+                                done();
+                            }
+                        })
+
+                    }
+
+                });
+        });
+
+        var testVersionId = "testVersion";
+
+        it("debug version", function(done){
+            var cookieHead = "scriptStore";
+            request(app)
+                .get(basePath + "/debug/version/" + testVersionId + "?query=" + JSON.stringify(query))
+                .set("Content-Type", "Application/json")
+                .expect(200)
+                .end(function(err, res){
+                    if(err){
+                        done(err);
+                    }else{
+                        var cookies = res.headers['set-cookie'];
+                        cookies.forEach(function(cookie){
+                            if(cookie.substr(0, cookieHead.length) == cookieHead){
+                                var end = cookie.indexOf(";");
+                                var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
+                                var textJson = JSON.parse(text);
+                                textJson.type.should.equal("version");
+                                textJson.query.adid.should.equal(testAdid);
+                                textJson.query._id.should.equal(testVersionId);
+                                done();
+                            }
+                        })
+                    }
                 });
         });
     });

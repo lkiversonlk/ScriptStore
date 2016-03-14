@@ -80,14 +80,21 @@ router.get("/publish/draft", function(req, res, next){
 
 router.get("/debug/draft", function(req, res, next){
     if(req.parameters.query.adid){
-
+        req.SsiData.addOperations(operBuilder.debugDraft(req.parameters));
+        return next();
     }else{
         return next(SsiError.ParameterInvalidError("adid is required"));
     }
 });
 
 router.get("/debug/version/:id", function(req, res, next){
-
+    if(req.parameters.query.adid){
+        req.parameters.query._id = req.params.id;
+        req.SsiData.addOperations(operBuilder.debugVersion(req.parameters));
+        return next();
+    }else{
+        return next(SsiError.ParameterInvalidError("adid is required"));
+    }
 });
 
 module.exports = router;
