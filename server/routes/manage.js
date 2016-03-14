@@ -78,4 +78,16 @@ router.get("/publish/draft", function(req, res, next){
     }
 });
 
+router.get("/debug/draft", function(req, res, next){
+    if(req.parameters.query.adid){
+
+    }else{
+        return next(SsiError.ParameterInvalidError("adid is required"));
+    }
+});
+
+router.get("/debug/version/:id", function(req, res, next){
+
+});
+
 module.exports = router;

@@ -165,6 +165,13 @@ ret.script_get_configurations = function(data, context, callback){
         logger.log("error", "no adid passed to script_get_configurations");
         callback(SsiError.ParameterInvalidError("adid is required to load configurations"));
     }
-}
+};
+
+var COOKIE_KEY = "scriptStore";
+ret.script_set_cookie = function(data, context, callback){
+    var res = context[1];
+    res.cookie(COOKIE_KEY, data.data);
+    callback(null);
+};
 
 module.exports = ret;

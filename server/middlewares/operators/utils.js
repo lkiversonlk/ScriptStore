@@ -213,9 +213,74 @@ var OperationBuilder = {
         ret = ret.concat(OperationBuilder.getReleasedContent());
         ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
         return ret;
+    },
+
+    /**
+     *
+     * @param data
+     */
+    debugDraft : function(data){
+        var cookie = {
+            debug : true,
+            type : "draft",
+            query : data.query
+        };
+
+        return [
+            {
+                type : "script",
+                operation : "set",
+                model : "cookie",
+                data : cookie
+            }
+        ];
+    },
+
+    /**
+     *
+     * @param data
+     */
+    debugVersion : function(data){
+        var cookie = {
+            debug : true,
+            type : "version",
+            query : data.query
+        };
+
+        return [
+            {
+                type : "script",
+                operation : "set",
+                model : "cookie",
+                data : cookie
+            }
+        ];
     }
 };
+
+/**
+ * validate that version tags' trigger indexes.
+ * @param data
+ */
+function validateVersion(data){
+    try{
+        var triggers = data.triggers ? data.triggers : [];
+        var tags = data.tags ? data.tags : [];
+        tags.forEach(function(tag, tagIndex){
+            tag.triggers.forEach(function(triggerIndex){
+                if(triggerIndex <0 || triggerIndex >= triggers.length){
+                    return [false, "tag." + tagIndex + " has invalid trigger " + triggerIndex];
+                }
+            });
+        });
+    }catch(error){
+        return [false, error.message];
+    }
+
+    return [true, null];
+}
 
 module.exports.mongooseWrapper = _mongooseErrorHandler;
 module.exports.wrapCallback = _wrapCallback;
 module.exports.operationBuilder = OperationBuilder;
+module.exports.validateVersion = validateVersion;

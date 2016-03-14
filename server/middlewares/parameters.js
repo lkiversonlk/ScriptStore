@@ -63,6 +63,8 @@ function _extractDataForReq(req){
         ret.from = req.query.from;
     }
 
+    //TODO: decrypt query.addi
+
     if(req.body){
         ret.data = req.body;
     }

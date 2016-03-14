@@ -6,7 +6,7 @@ var Dao = require("../../dao");
 var logger = require("../../log").getLogger("middlewares.operators.DBOperators");
 var _wrapCallback = require("./utils").wrapCallback;
 var SsiErrors = require("../../errors");
-
+var validateVersion = require("./utils").validateVersion;
 var operators = {
 
     db_getAll_draft : function(data, context, callback){
@@ -41,13 +41,16 @@ var operators = {
     */
 
     db_create_version : function(data, context, callback){
-        //TODO:check the trigger validate
         if(data.data){
             if(data.data.toJSON){
                 data.data = data.data.toJSON();
             }
-            data.data.creation = Date.now();
             delete data.data._id;
+            var result = validateVersion(data.data);
+            if(!result[0]){
+                return callback(SsiErrors.DataInvalidError(result[1]));
+            }
+            data.data.creation = Date.now();
             Dao.createDoc("version", data.data, _wrapCallback(callback));
         }else {
             logger.log("error", "create version without data, maybe deleted by someone else at the same time");
@@ -68,8 +71,12 @@ var operators = {
             if(data.data.toJSON){
                 data.data = data.data.toJSON();
             }
-            data.data.creation = Date.now();
             delete data.data._id;
+            var result = validateVersion(data.data);
+            if(!result[0]){
+                return callback(SsiErrors.DataInvalidError(result[1]));
+            }
+            data.data.creation = Date.now();
             Dao.updateDoc("draft", data, _wrapCallback(callback));
         }else {
             logger.log("warning", "update draft without data, maybe deleted by someone else at the same time");
@@ -78,15 +85,23 @@ var operators = {
     },
 
     db_create_draft : function(data, context, callback){
-        //TODO:check the trigger validate
-        data.data.creation = Date.now();
         delete data.data._id;
+        var result = validateVersion(data.data);
+        if(!result[0]){
+            return callback(SsiErrors.DataInvalidError(result[1]));
+        }
+        data.data.creation = Date.now();
         Dao.createDoc("draft", data.data, _wrapCallback(callback));
     },
 
     db_updateOrInsert_release : function(data, context, callback){
-        data.data.creation = Date.now();
         delete data.data._id;
+        var result = validateVersion(data.data);
+        if(!result[0]){
+            return callback(SsiErrors.DataInvalidError(result[1]));
+        }
+        data.data.creation = Date.now();
+
         Dao.updateOrInsertDoc("release", data,  _wrapCallback(callback));
     },
 

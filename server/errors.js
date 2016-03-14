@@ -37,6 +37,10 @@ var errorLib = {
 
     LogicError : function(msg){
         return new SsiError(6, msg);
+    },
+
+    DataInvalidError : function(msg){
+        return new SsiError(7, msg);
     }
 };
 
