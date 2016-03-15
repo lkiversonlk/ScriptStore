@@ -332,7 +332,7 @@ REST接口
 附表
 -------
 
-###<a id="TriggerType"></a> Trigger type字段对应表
+#### <a id="TriggerType"></a> Trigger type字段对应表
 
 | 值 | 含义 | 
 |---|-----|
@@ -343,7 +343,7 @@ REST接口
 | 4 | 指定第一方Cookie为触发判断条件 |
 | 5 | 点击事件 |
 
-###<a id="TriggerOp"></a> Trigger op字段对应表
+#### <a id="TriggerOp"></a> Trigger op字段对应表
 
 | 值 | 含义 |
 |---- |------|
@@ -353,7 +353,7 @@ REST接口
 | 4 | 结果为|
 | 5 | JQuery Select |
 
-###<a id="Errors"></a> 错误码表
+#### <a id="Errors"></a> 错误码表
 
 | 值 | 含义 |
 |-----|------|
@@ -365,3 +365,26 @@ REST接口
 | 5 | 接口路径不存在 |
 | 6 | 业务逻辑错误 |
 | 7 | 数据错误 |
+
+#### 发现的bug列表
+
+1. creation时间不变
+在schema里定义的default值为Date.now()，这个值会在schema定义时就取到，之后创建的所有creation时间都是一样的。
+	* 自动测试时应该检查连续创建记录，比较creation时间
+
+2. subarray有_id属性
+创建的document里会有自动创建的_id属性。
+	* 自动测试创建记录时要完整的检查记录值
+	
+3. Operation链上data.toJSON bug
+在Operation链上传递data的时候，从mongoose里传回的数据需要call toJSON才能变成扁平值类型。
+   * 设计问题，没法通过自动测试解决
+
+4. 参数解析问题
+在用parameter层解析参数的时候，有关overwrite和release参数的传值用true还是"true"造成的解析bug。
+   * 对parameter层加入自动化测试
+
+5. publish draft问题
+publish draft要从之前的数据中取出query字段创建新的release，由于带入了id字段，导致会重新创建一个release版本，这样同一个广告主会有两个release版本
+   * schema里加入限制
+   * 自动化测试时仔细检查结果
