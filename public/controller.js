@@ -1,50 +1,6 @@
 /**
  * Created by jerry on 3/11/16.
  */
-/*
-app.controller("statusController", function($scope, httpApi){
-
-    $scope.status = {};
-    $scope.status.advertiser = null;
-    $scope.status.currentId = null;
-    $scope.status.version = null;
-    $scope.status.versions = [];
-    $scope.status.draft = false;
-    $scope.status.needsSave = false;
-
-    $scope.setCurrentAdvertiser = function(id){
-        $scope.status.advertiser = id;
-    };
-
-    $scope.reloadVersions = function(){
-        if($scope.status.advertiser == null){
-            return ;
-        }
-
-        new httpApi("/manage")._handle("GET", "", {query : {adid : $scope.status.advertiser}}, null)
-            .then(function(data){
-                $scope.status.versions = data;
-                if($scope.status.versions.length > 0 && !$scope.status.currentId){
-                    $scope.status.version = $scope.status.versions[$scope.status.versions.length - 1];
-                    $scope.status.currentId = $scope.status.version._id;
-                    $scope.status.draft = true;
-                }
-            }, function(error){
-                alert(error);
-            });
-    };
-
-    $scope.updateDraft = function(){
-        new httpApi("/rest")._handle("PUT", "draft/" + $scope.status.currentId, null, $scope.status.version)
-            .then(function(result){
-                $scope.reloadVersions();
-            }, function(error){
-                alert(error);
-            });
-    }
-
-});
-*/
 
 app.controller("selectAdvertiserController", function($scope, appControl){
     $scope.input = null;
@@ -60,6 +16,7 @@ app.controller("selectAdvertiserController", function($scope, appControl){
 app.controller("selectVersionController", function($scope, appControl){
     $scope.shouldCreateDraft = false;
     $scope.draft = false;
+    $scope.version = false;
 
     $scope.$on(appControl.Events.VERSIONS_RELOADED, function(){
         $scope.versions = appControl.getVersions();
@@ -71,8 +28,10 @@ app.controller("selectVersionController", function($scope, appControl){
         appControl.getCurrentVersionData()
             .then(function(version){
                 $scope.draft = (version.draft == true);
+                $scope.version = !$scope.draft;
             }, function(error){
                 $scope.draft = false;
+                $scope.version = false;
             })
 
     });
@@ -92,11 +51,6 @@ app.controller("selectVersionController", function($scope, appControl){
         appControl.draftToVersion()
             .then(function(){
                 return appControl.reloadVersions();
-            })
-            .then(function(){
-
-            }, function(error){
-
             });
     };
 
@@ -113,12 +67,15 @@ app.controller("selectVersionController", function($scope, appControl){
                 function(){
                     return appControl.reloadVersions();
                 }
-            )
-            .then(function(){
+            );
+    };
 
-            }, function(error){
-                alert(error);
-            });
+    $scope.debug = function(){
+        return appControl.debug();
+    };
+
+    $scope.undebug = function(){
+        return appControl.undebug();
     }
 });
 
@@ -142,8 +99,8 @@ app.controller("createTriggerController", function($scope, appControl){
             .then(function(){
                 return appControl.reloadVersions();
             })
-            .then(function(){}, function(error){
-                alert(error);
+            .then(function(){
+                $scope.trigger = {}
             });
     };
 
@@ -188,8 +145,10 @@ app.controller("createTagController", function($scope, appControl){
             .then(function(){
                 return appControl.reloadVersions();
             })
-            .then(function(){}, function(error){
-                alert(error);
+            .then(function(){
+                $scope.tag = {
+                    triggers : []
+                };
             });
     };
 
@@ -237,4 +196,35 @@ app.controller("triggersController", function($scope, appControl){
                 }
             )
     });
+});
+
+app.controller("currentReleaseController", function($scope, appControl){
+    function update(){
+        var debugInfo = appControl.getDebugInfo();
+        if(debugInfo){
+            $scope.debugging = debugInfo.debug;
+            if($scope.debugging){
+                if(debugInfo.type == "draft"){
+                    $scope.status = "调试广告主 草稿中";
+                }else{
+                    $scope.status = "调试广告主" + debugInfo.id + " 版本中";
+                }
+            }else{
+                $scope.debugging = false;
+                $scope.status = "正常版本";
+            }
+        }else{
+            $scope.debugging = false;
+            $scope.status = "正常版本";
+        }
+
+        appControl.getCurrentReleaseOrDebug()
+            .then(function(content){
+                $scope.content = JSON.stringify(content);
+            });
+    }
+
+    $scope.$on(appControl.Events.ADVERTISER_CHANGE, update);
+    $scope.$on(appControl.Events.DEBUG, update);
+
 });

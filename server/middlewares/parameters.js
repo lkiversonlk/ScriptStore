@@ -9,11 +9,7 @@ var restDataSchema = {
     "type" : "object",
     "properties" : {
         "release" : {
-            "type" : "string",
-            "enum" : [
-                "true",
-                "false"
-            ]
+            "type" : "boolean"
         },
         "select" : {
             "type" : "array",

@@ -437,8 +437,9 @@ describe("test configuration interface", function(){
                                 var end = cookie.indexOf(";");
                                 var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                                 var textJson = JSON.parse(text);
-                                textJson.type.should.equal("draft");
-                                textJson.query.adid.should.equal(testAdid);
+                                textJson[testAdid].type.should.equal("draft");
+                                textJson[testAdid].debug.should.equal(true);
+
                                 done();
                             }
                         })
@@ -466,9 +467,9 @@ describe("test configuration interface", function(){
                                 var end = cookie.indexOf(";");
                                 var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                                 var textJson = JSON.parse(text);
-                                textJson.type.should.equal("version");
-                                textJson.query.adid.should.equal(testAdid);
-                                textJson.query._id.should.equal(testVersionId);
+                                textJson[testAdid].type.should.equal("version");
+                                textJson[testAdid].debug.should.equal(true);
+                                textJson[testAdid].id.should.equal(testVersionId);
                                 done();
                             }
                         })

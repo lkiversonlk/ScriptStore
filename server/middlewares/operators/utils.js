@@ -220,18 +220,18 @@ var OperationBuilder = {
      * @param data
      */
     debugDraft : function(data){
-        var cookie = {
-            debug : true,
-            type : "draft",
-            query : data.query
-        };
-
         return [
             {
                 type : "script",
                 operation : "set",
                 model : "cookie",
-                data : cookie
+                data : {
+                    query : data.query,
+                    data : {
+                        debug : true,
+                        type : "draft"
+                    }
+                }
             }
         ];
     },
@@ -241,20 +241,44 @@ var OperationBuilder = {
      * @param data
      */
     debugVersion : function(data){
-        var cookie = {
-            debug : true,
-            type : "version",
-            query : data.query
-        };
+        var adid = data.query.adid;
+        var versionId = data.query._id;
 
         return [
             {
                 type : "script",
                 operation : "set",
                 model : "cookie",
-                data : cookie
+                data : {
+                    query : data.query,
+                    data : {
+                        debug : true,
+                        type : "version",
+                        id : versionId
+                    }
+                }
             }
         ];
+    },
+
+    /**
+     *
+     * @param data
+     */
+    undebug : function(data){
+        return [
+            {
+                type : "script",
+                operation : "set",
+                model : "cookie",
+                data : {
+                    query : data.query,
+                    data : {
+                        debug : false
+                    }
+                }
+            }
+        ]
     }
 };
 
@@ -264,12 +288,24 @@ var OperationBuilder = {
  */
 function validateVersion(data){
     try{
+        var tagNames = {};
+        var triggerNames = {};
         var triggers = data.triggers ? data.triggers : [];
+        triggers.forEach(function(trigger){
+            if(triggerNames.hasOwnProperty(trigger.name)){
+                throw new Error("trigger name " + trigger.name + " conflict");
+            }
+            triggerNames[trigger.name] = true;
+        });
         var tags = data.tags ? data.tags : [];
         tags.forEach(function(tag, tagIndex){
+            if(tagNames.hasOwnProperty(tag.name)){
+                throw new Error("tag name " + tag.name + " conflict");
+            }
+            tagNames[tag.name] = true;
             tag.triggers.forEach(function(triggerIndex){
                 if(triggerIndex <0 || triggerIndex >= triggers.length){
-                    return [false, "tag." + tagIndex + " has invalid trigger " + triggerIndex];
+                    throw new Error("tag." + tagIndex + " has invalid trigger " + triggerIndex);
                 }
             });
         });

@@ -18,6 +18,6 @@
   "dependencies": {
     "angular": "~1.5.0",
     "bootstrap": "~3.3.6",
-    "amitava82/angular-multiselect": "amitava82-angular-multiselect#~1.1.0"
+    "angular-cookies": "~1.5.0"
   }
 }

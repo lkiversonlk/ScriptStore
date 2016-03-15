@@ -24,11 +24,6 @@ var triggerSchema = new Schema({
     value : {
         type : String,
         required :true
-    },
-
-    deleted : {
-        type : Boolean,
-        default : false
     }
 }, {_id : false});
 
@@ -50,9 +45,8 @@ var tagSchema = new Schema({
         default : []
     },
 
-    deleted : {
-        type : Boolean,
-        default : false
+    conversion : {
+        type : String
     }
 }, {_id : false});
 

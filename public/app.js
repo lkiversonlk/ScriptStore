@@ -2,7 +2,7 @@
  * Created by jerry on 3/11/16.
  */
 
-var app = angular.module("scriptStore", ['am.multiselect']);
+var app = angular.module("scriptStore", ['am.multiselect', 'ngCookies']);
 
 app.provider("httpApi", function(){
     var self = this;
@@ -29,9 +29,11 @@ app.provider("httpApi", function(){
                     if(response.data.code == 0){
                         deferred.resolve(response.data.data);
                     }else{
+                        alert(response.data.data);
                         deferred.reject(response.data.data);
                     }
                 }, function(response){
+                    alert(response.status);
                     deferred.reject(response.status);
                 });
 
@@ -53,13 +55,23 @@ app.provider("restApi", function(){
             this.api = apiCaller;
         }
 
-        RestCommand.prototype._getObjectById = function(model, id, select){
-            var param = select == null ? null : {select : select};
-            return this.api._handle("GET", model+"/" + id, param, null);
+        RestCommand.prototype._getObjectById = function(model, id, select, getParam){
+            if(select){
+                getParam.select = select;
+            }
+            return this.api._handle("GET", model+"/" + id, getParam, null);
         };
 
-        RestCommand.prototype._queryObjects = function(model, query, select){
-            return this.api._handle("GET", model, {query : query, select: select}, null);
+        RestCommand.prototype._queryObjects = function(model, query, select, getAttr){
+            var getPramas = getAttr ? getAttr : {};
+            if(query){
+                getPramas.query = query;
+            }
+            if(select){
+                getPramas.select = select;
+            }
+
+            return this.api._handle("GET", model, getPramas, null);
         };
 
         RestCommand.prototype._updateByQuery = function(model, query, updates){
@@ -68,7 +80,7 @@ app.provider("restApi", function(){
 
         RestCommand.prototype._updateById = function(model, data){
             return this.api._handle("PUT", model + "/" + data._id, null, data);
-        }
+        };
 
         RestCommand.prototype._create = function(model, data){
             return this.api._handle("POST", model, null, data);
@@ -89,16 +101,16 @@ app.provider("restApi", function(){
         }
 
         resources.forEach(function(resource){
-            RestCommand.prototype["get" + capitalize(resource) + "ById"] = function(id, select){
-                return this._getObjectById(resource, id, select);
+            RestCommand.prototype["get" + capitalize(resource) + "ById"] = function(id, select, getParam, putParam){
+                return this._getObjectById(resource, id, select, getParam, putParam);
             };
 
             RestCommand.prototype["create" + capitalize(resource)] = function(data){
                 return this._create(resource, data);
             };
 
-            RestCommand.prototype["search" + capitalize(resource)] = function(query, select){
-
+            RestCommand.prototype["search" + capitalize(resource)] = function(query, select, getAttr){
+                return this._queryObjects(resource, query, select, getAttr);
             };
 
             RestCommand.prototype["update" + capitalize(resource)] = function(data){
@@ -141,21 +153,36 @@ app.provider("manageApi", function(){
             return this.api._handle("GET", "export", {query : {adid : advertiser}, from : version, overwrite : overwrite}, null);
         };
 
+        ManageCommand.prototype.debugDraft = function(advertiser){
+            return this.api._handle("GET", "debug/draft", {query : {adid : advertiser}}, null);
+        };
+
+        ManageCommand.prototype.debugVersion = function(advertiser, version){
+            return this.api._handle("GET", "debug/version/" + version, {query : {adid : advertiser}}, null);
+        };
+
+        ManageCommand.prototype.undebug = function(advertiser){
+            return this.api._handle("GET", "undebug", {query : {adid : advertiser}}, null);
+        };
+
         return new ManageCommand(apiCaller);
     }];
 });
 
-app.factory("appControl", function($rootScope, $q, restApi, manageApi){
+app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi){
     var advertiser = null;
     var versionList = null;
-    var currentVersion = null;
 
+    var currentVersion = null;
     var currentVersionCache = null;
+
+    var cookieKey = "scriptStore";
 
     var Events = {
         ADVERTISER_CHANGE : "adidChange",
         VERSIONS_RELOADED : "verReloaded",
-        VERSION_CHANGE : "verChange"
+        VERSION_CHANGE : "verChange",
+        DEBUG : "debug"
     };
 
     var commands = {
@@ -276,6 +303,62 @@ app.factory("appControl", function($rootScope, $q, restApi, manageApi){
 
         updateDraft : function(draft){
             return restApi.updateDraft(draft);
+        },
+
+        debug : function(){
+            var ret;
+            commands.getCurrentVersionData()
+                .then(function(version){
+                    if(version.draft){
+                        ret = manageApi.debugDraft(advertiser);
+                    }else{
+                        ret = manageApi.debugVersion(advertiser, version._id);
+                    }
+                    ret = ret.then(function(){
+                        $rootScope.$broadcast(Events.DEBUG);
+                    });
+                    return ret;
+                });
+
+        },
+
+        undebug : function(){
+            var ret = manageApi.undebug(advertiser).then(function(){
+                debugging = false;
+                $rootScope.$broadcast(Events.DEBUG);
+            });
+            return ret;
+        },
+
+        getDebugInfo : function(){
+            var cookie = $cookies.get(cookieKey);
+            if(cookie){
+                return JSON.parse(cookie)[advertiser];
+            }else{
+                return null;
+            }
+        },
+
+        getCurrentReleaseOrDebug : function(){
+            var debugInfo = commands.getDebugInfo();
+            if(debugInfo && debugInfo.debug){
+                if(debugInfo.type == "draft"){
+                    var defer = $q.defer();
+                    restApi.searchDraft(debugInfo.query, null, {release : "true"})
+                        .then(function(drafts){
+                            if(drafts && drafts.length > 0){
+                                defer.resolve(drafts[0]);
+                            }else{
+                                defer.reject(null);
+                            }
+                        });
+                    return defer.promise;
+                }else{
+                    return restApi.getVersionById(debugInfo.query._id, null, {release : "true"});
+                }
+            }else{
+                return restApi.searchRelease({adid : advertiser}, null);
+            }
         },
 
         Events : Events

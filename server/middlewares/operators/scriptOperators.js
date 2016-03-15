@@ -107,8 +107,16 @@ function  _transform(version){
                 script : tag.script,
                 triggers : []
             };
+            if(tag.conversion){
+                newTag.conversion = tag.conversion;
+            }
             tag.triggers.forEach(function(trigger){
-                newTag.triggers.push(oldTriggers[trigger]);
+                var oldTrigger = oldTriggers[trigger];
+                newTag.triggers.push({
+                    ruleType : oldTrigger.ruleType,
+                    op : oldTrigger.op,
+                    value : oldTrigger.value
+                });
             });
             ret.tags.push(newTag);
         }
@@ -168,9 +176,34 @@ ret.script_get_configurations = function(data, context, callback){
 };
 
 var COOKIE_KEY = "scriptStore";
+/**
+ * Cookie data structure is like
+ * ScriptStore : {
+ *    advertiserId : {
+ *        debug : true | false,
+ *        type : "draft" | "version",
+ *        version : <version id>
+ *    }
+ * }
+ * @param data {
+ *    query : {adid : }
+ *    data : data
+ * }
+ * @param context
+ * @param callback
+ */
 ret.script_set_cookie = function(data, context, callback){
+    var advertiser = data.query.adid;
+    var req = context[0];
+    cookie = req.cookies[COOKIE_KEY];
+    if(cookie){
+        cookie = JSON.parse(cookie);
+    }else{
+        cookie = {};
+    }
+    cookie[advertiser] = data.data;
     var res = context[1];
-    res.cookie(COOKIE_KEY, JSON.stringify(data));
+    res.cookie(COOKIE_KEY, JSON.stringify(cookie));
     callback(null);
 };
 

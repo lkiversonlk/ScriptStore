@@ -28,7 +28,11 @@ dbModelResources.forEach(function(resource){
     });
 
     restfulRegistry.registerSearch(function(req, res, next){
+        var parameters = req.parameters;
         req.SsiData.addOperations(operBuilder.DbGetAll(restfulRegistry.name, req.parameters));
+        if(parameters.release){
+            req.SsiData.addOperations(operBuilder.getReleasedContent());
+        }
         return next();
     });
 

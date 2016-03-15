@@ -97,4 +97,13 @@ router.get("/debug/version/:id", function(req, res, next){
     }
 });
 
+router.get("/undebug", function(req, res, next){
+    if(req.parameters.query.adid){
+        req.SsiData.addOperations(operBuilder.undebug(req.parameters));
+        return next();
+    }else{
+        return next(SsiError.ParameterInvalidError("adid is required"));
+    }
+});
+
 module.exports = router;
