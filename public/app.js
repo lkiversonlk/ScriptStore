@@ -370,7 +370,7 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
         },
 
         publish : function(version){
-            commands.getCurrentVersionData()
+            return commands.getCurrentVersionData()
                 .then(function(version){
                     return manageApi.publish(version);
                 });

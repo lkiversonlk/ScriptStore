@@ -57,6 +57,11 @@ var versionSchema = new Schema({
         required : true
     },
 
+    publish : {
+        type : Number,
+        default : 0
+    },
+
     adid : {
         type : String,
         required : true

@@ -95,7 +95,10 @@ app.controller("selectVersionController", function($scope, appControl){
     };
 
     $scope.publish = function(){
-        return appControl.publish();
+        return appControl.publish()
+            .then(function(){
+                return appControl.reloadVersions();
+            });
     }
 });
 

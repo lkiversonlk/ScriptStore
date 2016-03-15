@@ -19,7 +19,8 @@ var logger = require("../../log").getLogger("middlewares.operators");
  */
 var operatorJSList = [
     "DBOperators",
-    "scriptOperators"
+    "scriptOperators",
+    "adapterOperators"
 ];
 
 var ret = {

@@ -20,6 +20,9 @@ function _mongooseErrorHandler(error){
 
 function _wrapCallback(callback){
     return function (error, result){
+        if(result && result.toJSON){
+            result = result.toJSON();
+        }
         callback(_mongooseErrorHandler(error), result);
     }
 }
@@ -192,11 +195,13 @@ var OperationBuilder = {
      */
     publishVersion : function(data){
         var ret = [];
-        var query = data.query;
+
         ret = ret.concat(OperationBuilder.DbGetOne("version", data));
         ret = ret.concat(OperationBuilder.getReleasedContent());
         //since data.data may be fullfilled by the operation, so we extract the query alone
-        ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
+        ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : {adid : data.query.adid }, data : null}));
+        ret = ret.concat(OperationBuilder.DbUpdate("version", {query : data.query, data : {publish : Date.now()}}));
+        //ret.push(OperationBuilder.DbUpdate("version", { query : data.query, data : { publish : Date.now()}}));
         return ret;
     },
 
@@ -209,6 +214,17 @@ var OperationBuilder = {
         var ret = [];
         var query = data.query;
         ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
+        ret.push({
+            type : "adapter",
+            operation : "update",
+            model : "property",
+            data : {
+                update : {
+                    publish : Date.now()
+                },
+                data : null
+            }
+        });
         ret = ret.concat(OperationBuilder.DbCreate("version", {data : null}));
         ret = ret.concat(OperationBuilder.getReleasedContent());
         //since data.data may be fullfilled by the operation, so we extract the query alone
