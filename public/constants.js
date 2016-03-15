@@ -16,7 +16,7 @@ var TRIGGER_TYPES = [
         value : 2
     },
     {
-        name : "?",
+        name : "元素存在性",
         value : 3
     },
     {
@@ -43,16 +43,12 @@ var OPS = [
         value : 3
     },
     {
-        name : "结果为",
+        name : "结尾为",
         value : 4
     },
     {
-        name : "通配符",
+        name : "JQuery Select",
         value : 5
-    },
-    {
-        name : "正则表达式",
-        value : 6
     }
 ]
 
