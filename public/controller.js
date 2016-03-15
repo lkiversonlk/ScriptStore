@@ -28,6 +28,12 @@ app.controller("selectVersionController", function($scope, appControl){
     $scope.$on(appControl.Events.VERSIONS_RELOADED, function(){
         $scope.versions = appControl.getVersions();
         $scope.shouldCreateDraft = $scope.versions.length == 0;
+        var debugInfo = appControl.getDebugInfo();
+        if(debugInfo){
+            $scope.debugging = debugInfo.debug;
+        }else{
+            $scope.debugging = false;
+        }
     });
 
     $scope.$on(appControl.Events.VERSION_CHANGE, function(){
@@ -98,6 +104,9 @@ app.controller("selectVersionController", function($scope, appControl){
         return appControl.publish()
             .then(function(){
                 return appControl.reloadVersions();
+            })
+            .then(function(){
+
             });
     }
 });
@@ -249,5 +258,6 @@ app.controller("currentReleaseController", function($scope, appControl){
 
     $scope.$on(appControl.Events.ADVERTISER_CHANGE, update);
     $scope.$on(appControl.Events.DEBUG, update);
+    $scope.$on(appControl.Events.PUBLISH, update);
 
 });

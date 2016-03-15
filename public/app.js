@@ -190,7 +190,8 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
         ADVERTISER_CHANGE : "adidChange",
         VERSIONS_RELOADED : "verReloaded",
         VERSION_CHANGE : "verChange",
-        DEBUG : "debug"
+        DEBUG : "debug",
+        PUBLISH : "publish"
     };
 
     var commands = {
@@ -352,7 +353,7 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
             if(debugInfo && debugInfo.debug){
                 if(debugInfo.type == "draft"){
                     var defer = $q.defer();
-                    restApi.searchDraft(debugInfo.query, null, {release : "true"})
+                    restApi.searchDraft({adid : advertiser}, null, {release : "true"})
                         .then(function(drafts){
                             if(drafts && drafts.length > 0){
                                 defer.resolve(drafts[0]);
@@ -372,7 +373,10 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
         publish : function(version){
             return commands.getCurrentVersionData()
                 .then(function(version){
-                    return manageApi.publish(version);
+                    return manageApi.publish(version)
+                        .then(function(){
+                            $rootScope.$broadcast(Events.PUBLISH);
+                        });
                 });
         },
 

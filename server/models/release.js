@@ -5,6 +5,21 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+var activeTriggerSchema = new Schema({
+    ruleType : {
+        type : Number,
+        required : true
+    },
+    op : {
+        type : Number,
+        required : true
+    },
+    value : {
+        type : String,
+        required : true
+    }
+}, {_id : false});
+
 var activeTagSchema = new Schema({
     script : {
         type : String,
@@ -16,20 +31,7 @@ var activeTagSchema = new Schema({
     },
 
     triggers : {
-        type : [{
-            ruleType : {
-                type : Number,
-                required : true
-            },
-            op : {
-                type : Number,
-                required : true
-            },
-            value : {
-                type : String,
-                required : true
-            }
-        }],
+        type : [activeTriggerSchema],
         default : []
     }
 }, {_id : false});
