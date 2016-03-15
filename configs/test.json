@@ -1,0 +1,14 @@
+{
+    "db" : {
+        "dbType" : "mongodb",
+        "connectString" : "localhost/testScriptStore",
+        "user" : "",
+        "password" : ""
+    },
+
+    "app" : {
+        "log" : {
+            "level" : "debug"
+        }
+    }
+}
