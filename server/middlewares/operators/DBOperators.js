@@ -42,9 +42,11 @@ var operators = {
 
     db_create_version : function(data, context, callback){
         if(data.data){
+            /*
             if(data.data.toJSON){
                 data.data = data.data.toJSON();
             }
+            */
             delete data.data._id;
             var result = validateVersion(data.data);
             if(!result[0]){
@@ -68,9 +70,11 @@ var operators = {
 
     db_update_draft : function(data, context, callback){
         if(data.data){
+            /*
             if(data.data.toJSON){
                 data.data = data.data.toJSON();
             }
+            */
             delete data.data._id;
             var result = validateVersion(data.data);
             if(!result[0]){

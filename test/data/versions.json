@@ -1,0 +1,102 @@
+[
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "0",
+        "name" : "testVersionName0",
+        "description" : "testDescription0",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "1",
+        "name" : "testVersionName1",
+        "description" : "testDescription1",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "2",
+        "name" : "testVersionName2",
+        "description" : "testDescription2",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "3",
+        "name" : "testVersionName3",
+        "description" : "testDescription3",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "4",
+        "name" : "testVersionName4",
+        "description" : "testDescription4",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "5",
+        "name" : "testVersionName5",
+        "description" : "testDescription5",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "6",
+        "name" : "testVersionName6",
+        "description" : "testDescription6",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "7",
+        "name" : "testVersionName7",
+        "description" : "testDescription7",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "8",
+        "name" : "testVersionName8",
+        "description" : "testDescription8",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    },
+    {
+        "creation" : 0,
+        "publish" : 0,
+        "adid" : "9",
+        "name" : "testVersionName9",
+        "description" : "testDescription9",
+        "triggers" : [],
+        "tags" : [],
+        "deleted" : false
+    }
+]

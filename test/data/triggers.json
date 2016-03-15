@@ -1,0 +1,44 @@
+[
+    {
+        "name" : "testTrigger0",
+        "ruleType" : 0,
+        "op" : 0,
+        "value" : "console.log(\"testTrigger0\")"
+    },
+    {
+        "name" : "testTrigger1",
+        "ruleType" : 1,
+        "op" : 1,
+        "value" : "console.log(\"testTrigger1\")"
+    },
+    {
+        "name" : "testTrigger2",
+        "ruleType" : 2,
+        "op" : 2,
+        "value" : "console.log(\"testTrigger2\")"
+    },
+    {
+        "name" : "testTrigger3",
+        "ruleType" : 3,
+        "op" : 3,
+        "value" : "console.log(\"testTrigger3\")"
+    },
+    {
+        "name" : "testTrigger4",
+        "ruleType" : 4,
+        "op" : 4,
+        "value" : "console.log(\"testTrigger4\")"
+    },
+    {
+        "name" : "testTrigger5",
+        "ruleType" : 5,
+        "op" : 5,
+        "value" : "console.log(\"testTrigger5\")"
+    },
+    {
+        "name" : "testTrigger6",
+        "ruleType" : 6,
+        "op" : 6,
+        "value" : "console.log(\"testTrigger6\")"
+    }
+]

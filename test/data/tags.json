@@ -1,0 +1,56 @@
+[
+    {
+        "name" : "TestTag0",
+        "script" : "console.log(\"TestTag0\")",
+        "triggers" : [],
+        "conversion" : "0"
+    },
+    {
+        "name" : "TestTag1",
+        "script" : "console.log(\"TestTag1\")",
+        "triggers" : [],
+        "conversion" : "1"
+    },
+    {
+        "name" : "TestTag2",
+        "script" : "console.log(\"TestTag2\")",
+        "triggers" : [],
+        "conversion" : "2"
+    },
+    {
+        "name" : "TestTag3",
+        "script" : "console.log(\"TestTag3\")",
+        "triggers" : [],
+        "conversion" : "3"
+    },
+    {
+        "name" : "TestTag4",
+        "script" : "console.log(\"TestTag4\")",
+        "triggers" : [],
+        "conversion" : "4"
+    },
+    {
+        "name" : "TestTag5",
+        "script" : "console.log(\"TestTag5\")",
+        "triggers" : [],
+        "conversion" : "5"
+    },
+    {
+        "name" : "TestTag6",
+        "script" : "console.log(\"TestTag6\")",
+        "triggers" : [],
+        "conversion" : "6"
+    },
+    {
+        "name" : "TestTag7",
+        "script" : "console.log(\"TestTag7\")",
+        "triggers" : [],
+        "conversion" : "7"
+    },
+    {
+        "name" : "TestTag8",
+        "script" : "console.log(\"TestTag8\")",
+        "triggers" : [],
+        "conversion" : "8"
+    }
+]

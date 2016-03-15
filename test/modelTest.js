@@ -5,10 +5,16 @@
 var chai = require("chai");
 should = chai.should();
 
+var data = require("./data");
+var _ = require("underscore");
+
 var models = require("../server/models");
 
-describe.skip("mongoose model schema test", function(){
+var testAdid = "testAdid";
+var testAdName = "testAdName";
+var testDescription = "testDescription";
 
+describe.skip("mongoose model schema test", function(){
     describe("active", function(){
 
         it("one simple active script conf", function(done){
@@ -87,7 +93,11 @@ describe.skip("mongoose model schema test", function(){
 
     });
 
-    describe("trigger", function(){
+    describe("draft", function(){
+        var model = models["draft"];
 
+        it("", function(done){
+
+        });
     });
 });
