@@ -211,6 +211,7 @@ var OperationBuilder = {
         ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
         ret = ret.concat(OperationBuilder.DbCreate("version", {data : null}));
         ret = ret.concat(OperationBuilder.getReleasedContent());
+        //since data.data may be fullfilled by the operation, so we extract the query alone
         ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
         return ret;
     },
@@ -286,20 +287,24 @@ var OperationBuilder = {
  * validate that version tags' trigger indexes.
  * @param data
  */
-function validateVersion(data){
+function validateVersion(data, isRelease){
     try{
         var tagNames = {};
         var triggerNames = {};
         var triggers = data.triggers ? data.triggers : [];
-        triggers.forEach(function(trigger){
-            if(triggerNames.hasOwnProperty(trigger.name)){
-                throw new Error("trigger name " + trigger.name + " conflict");
-            }
-            triggerNames[trigger.name] = true;
-        });
+
+        if(!isRelease){
+            triggers.forEach(function(trigger){
+                if(triggerNames.hasOwnProperty(trigger.name)){
+                    throw new Error("trigger name " + trigger.name + " conflict");
+                }
+                triggerNames[trigger.name] = true;
+            });
+        }
+
         var tags = data.tags ? data.tags : [];
         tags.forEach(function(tag, tagIndex){
-            if(tagNames.hasOwnProperty(tag.name)){
+            if(!isRelease && tagNames.hasOwnProperty(tag.name)){
                 throw new Error("tag name " + tag.name + " conflict");
             }
             tagNames[tag.name] = true;

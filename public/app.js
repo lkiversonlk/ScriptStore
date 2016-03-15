@@ -165,6 +165,14 @@ app.provider("manageApi", function(){
             return this.api._handle("GET", "undebug", {query : {adid : advertiser}}, null);
         };
 
+        ManageCommand.prototype.publish = function(version){
+            if(version.draft){
+                return this.api._handle("GET", "publish/draft", {query : {adid : version.adid}}, null);
+            }else{
+                return this.api._handle("GET", "publish/version", {query : {_id : version._id, adid : version.adid}}, null);
+            }
+        };
+
         return new ManageCommand(apiCaller);
     }];
 });
@@ -359,6 +367,13 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
             }else{
                 return restApi.searchRelease({adid : advertiser}, null);
             }
+        },
+
+        publish : function(version){
+            commands.getCurrentVersionData()
+                .then(function(version){
+                    return manageApi.publish(version);
+                });
         },
 
         Events : Events

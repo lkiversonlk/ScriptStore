@@ -28,18 +28,20 @@ block content
                         option(ng-repeat="version in versions", value="{{version._id}}")
                             | {{version.draft ? "当前草稿" : "版本 " + $index }}
                 div
-                    button.col-md-1.btn.btn-default(ng-click="createDraft();", ng-hide="!shouldCreateDraft")
+                    button.col-md-1.btn.btn-default(ng-click="createDraft();", ng-show="shouldCreateDraft")
                         | 创建草稿
-                    button.col-md-1.btn.btn-success(ng-click="toVersion();", ng-hide="!draft")
+                    button.col-md-1.btn.btn-success(ng-click="toVersion();", ng-show="draft")
                         | 保存为版本
-                    button.col-md-1.btn.btn-success(ng-click="toDraft();", ng-hide="!version")
+                    button.col-md-1.btn.btn-success(ng-click="toDraft();", ng-show="version")
                         | 导出为草稿
-                    button.col-md-1.btn.btn-danger(ng-click="delete();", ng-hide="!version")
+                    button.col-md-1.btn.btn-danger(ng-click="delete();", ng-show="version")
                         | 删除该版本
                     button.col-md-1.btn.btn-default(ng-click="debug();", ng-show="draft || version")
                         | 调试该版本
-                    button.col-md-1.btn.btn-danger(ng-click="undebug();")
+                    button.col-md-1.btn.btn-danger(ng-click="undebug();" ng-show="debugging")
                         | 取消调试
+                    button.col-md-1.btn.btn-success(ng-click="publish();", ng-show="draft || version")
+                        | 发布
         div(style="height:20px")
         div
             div.row

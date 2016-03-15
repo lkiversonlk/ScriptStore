@@ -96,7 +96,7 @@ var operators = {
 
     db_updateOrInsert_release : function(data, context, callback){
         delete data.data._id;
-        var result = validateVersion(data.data);
+        var result = validateVersion(data.data, true);
         if(!result[0]){
             return callback(SsiErrors.DataInvalidError(result[1]));
         }

@@ -18,6 +18,13 @@ app.controller("selectVersionController", function($scope, appControl){
     $scope.draft = false;
     $scope.version = false;
 
+    var debugInfo = appControl.getDebugInfo();
+    if(debugInfo){
+        $scope.debugging = debugInfo.debug;
+    }else{
+        $scope.debugging = false;
+    }
+
     $scope.$on(appControl.Events.VERSIONS_RELOADED, function(){
         $scope.versions = appControl.getVersions();
         $scope.shouldCreateDraft = $scope.versions.length == 0;
@@ -36,10 +43,19 @@ app.controller("selectVersionController", function($scope, appControl){
 
     });
 
+    $scope.$on(appControl.Events.DEBUG, function(){
+        var debugInfo = appControl.getDebugInfo();
+        if(debugInfo){
+            $scope.debugging = debugInfo.debug;
+        }else{
+            $scope.debugging = false;
+        }
+    });
+
     $scope.createDraft = function(){
         appControl.createDraft()
             .then(function(){
-                return appControl.reloadVersions()
+                return appControl.reloadVersions();
             });
     };
 
@@ -76,6 +92,10 @@ app.controller("selectVersionController", function($scope, appControl){
 
     $scope.undebug = function(){
         return appControl.undebug();
+    };
+
+    $scope.publish = function(){
+        return appControl.publish();
     }
 });
 

@@ -11,6 +11,10 @@ var activeTagSchema = new Schema({
         required : true
     },
 
+    conversion : {
+        type : String
+    },
+
     triggers : {
         type : [{
             ruleType : {
