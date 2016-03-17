@@ -19,12 +19,15 @@ app.set('view engine', 'jade');
 
 // db connection
 var configuration = require("./configs/config.json");
+
+/*
 try{
     configuration = require("./configs/test.json");
     console.log("under test environment");
 }catch (error){
     console.log("not under test environment");
 }
+*/
 
 var configurationSchema = require("./configs/configSchema.json");
 var jsen = require("jsen");
