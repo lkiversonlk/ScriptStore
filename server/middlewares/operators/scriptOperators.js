@@ -176,15 +176,17 @@ ret.script_get_configurations = function(data, context, callback){
 };
 
 var COOKIE_KEY = "scriptStore";
+var expirationTime = 40 * 60 * 1000;
 /**
  * Cookie data structure is like
+ *
  * ScriptStore : {
- *    advertiserId : {
- *        debug : true | false,
- *        type : "draft" | "version",
- *        version : <version id>
- *    }
+ *    advertiserId1 : "",
+ *    advertiserId2 : "sdferwedfdf"
  * }
+ *
+ * if value is empty array, indicating debug current draft
+ * else debug specified verison.
  * @param data {
  *    query : {adid : }
  *    data : data
@@ -203,8 +205,28 @@ ret.script_set_cookie = function(data, context, callback){
     }
     cookie[advertiser] = data.data;
     var res = context[1];
-    res.cookie(COOKIE_KEY, JSON.stringify(cookie));
+    res.cookie(COOKIE_KEY, JSON.stringify(cookie), {maxAge : expirationTime});
     callback(null);
+};
+
+ret.script_delete_cookie = function(data, context, callback){
+    var advertiser = data.query.adid;
+    var req = context[0];
+    cookie = req.cookies[COOKIE_KEY];
+    if(cookie){
+        cookie = JSON.parse(cookie);
+        delete cookie[advertiser];
+
+        var res = context[1];
+        if(Object.keys(cookie).length == 0){
+            res.clearCookie(COOKIE_KEY);
+        }else{
+            res.cookie(COOKIE_KEY, JSON.stringify(cookie), {maxAge : expirationTime});
+        }
+        return callback(null);
+    }else{
+        return callback(null);
+    }
 };
 
 module.exports = ret;

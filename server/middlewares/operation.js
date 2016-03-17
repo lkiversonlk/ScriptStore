@@ -50,7 +50,7 @@ function operation(req, res, next){
         function(results, operation, callback){
             if(operation.operation) {
                 var data = operation.data;
-                if(!data.data){
+                if(data.data == null){
                     data.data = results.length ? results[results.length - 1] : null;
                 }
 

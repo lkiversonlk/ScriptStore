@@ -244,10 +244,7 @@ var OperationBuilder = {
                 model : "cookie",
                 data : {
                     query : data.query,
-                    data : {
-                        debug : true,
-                        type : "draft"
-                    }
+                    data : ""
                 }
             }
         ];
@@ -268,11 +265,7 @@ var OperationBuilder = {
                 model : "cookie",
                 data : {
                     query : data.query,
-                    data : {
-                        debug : true,
-                        type : "version",
-                        id : versionId
-                    }
+                    data : versionId
                 }
             }
         ];
@@ -286,13 +279,11 @@ var OperationBuilder = {
         return [
             {
                 type : "script",
-                operation : "set",
+                operation : "delete",
                 model : "cookie",
                 data : {
                     query : data.query,
-                    data : {
-                        debug : false
-                    }
+                    data : {}
                 }
             }
         ]

@@ -108,4 +108,37 @@ router.get("/undebug", function(req, res, next){
     }
 });
 
+router.get("/release", function(req, res, next){
+    var adid = "";
+    if(adid = req.parameters.query.adid){
+        req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));
+        return next();
+    }else{
+        return next(SsiError.ParameterInvalidError("adid is required"));
+    }
+});
+
+router.post("/release", function(req, res, next){
+    var adid = "";
+    if(aid = req.parameters.query.adid){
+        var cookies = {};
+        var cookie = "";
+        if((cookies = req.body) && (cookie = cookies[adid])){
+            req.parameters.release = true;
+            if(cookie.length > 0){
+                req.parameters.query._id = cookie;
+                req.SsiData.addOperations(operBuilder.DbGetOne("version", req.parameters));
+            }else{
+                req.SsiData.addOperations(operBuilder.DbGetOne("draft", req.parameters));
+            }
+            return next();
+        }else{
+            req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));
+            return next();
+        }
+    }else{
+        return next(SsiError.ParameterInvalidError("adid is required"));
+    }
+});
+
 module.exports = router;
