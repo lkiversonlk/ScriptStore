@@ -12,16 +12,16 @@ var restDataSchema = {
             "type" : "boolean"
         },
         "select" : {
-            "type" : "array",
+            "type" : ["array", "null"],
             "items" : {
                 "type" : "string"
             }
         },
         "query" : {
-            "type" : "object"
+            "type" : ["object", "null"],
         },
         "populate" : {
-            "type" : "array",
+            "type" : ["array", "null"],
             "items" : {
                 "type" : "string"
             }
@@ -34,38 +34,16 @@ var restDataSchema = {
 var validate = jsen(restDataSchema);
 
 function _extractDataForReq(req){
-    var ret = {};
-    if(req.query.select){
-        ret.select = JSON.parse(req.query.select);
-    }
-
-    if(req.query.query){
-        ret.query = JSON.parse(req.query.query);
-    }
-
-    if(req.query.populate){
-        ret.pupulate = JSON.parse(req.query.populate);
-    }
-
-    if(req.query.overwrite){
-        ret.overwrite = (req.query.overwrite == "true");
-    }
-
-    if(req.query.release){
-        ret.release = (req.query.release == "true");
-    }
-
-    if(req.query.from){
-        ret.from = req.query.from;
-    }
-
-    //TODO: decrypt query.addi
-
-    if(req.body){
-        ret.data = req.body;
-    }
-
-    return ret;
+    var query = req.query;
+    return {
+        select : (query.select === undefined ? null : JSON.parse(query.select)),
+        query : (query.query === undefined ? null : JSON.parse(query.query)),
+        populate : (query.populate === undefined ? null : JSON.parse(query.populate)),
+        overwrite : (query.overwrite !== "false"),
+        release : (query.release == "true"),
+        from : query.from,
+        data : req.body
+    };
 }
 
 var parameters = function (req, res, next){
