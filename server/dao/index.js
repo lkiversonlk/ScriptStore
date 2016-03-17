@@ -47,14 +47,15 @@ var Dao = {
     },
 
     updateOrInsertDoc : function(resource, data, callback){
-        var options = {
-            safe : true,
-            upsert : true
-        };
-
         delete data.data._id;
-
-        models[resource].update(data.query, data.data, options, callback);
+        models[resource].update(
+            data.query,
+            data.data,
+            {
+                safe : true,
+                upsert : true
+            },
+            callback);
     }
 };
 

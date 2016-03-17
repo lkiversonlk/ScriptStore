@@ -3,9 +3,6 @@
  */
 var async = require("async");
 var Dao = require("../dao");
-var OPERATION_KEY = "operation";
-var MODEL_KEY = "model";
-var DATA_KEY = "data";
 var SsiError = require("../errors");
 var logger = require("../log").getLogger("middlewares.operation");
 
@@ -28,7 +25,7 @@ function _oper(type, operation, model, data, context, callback){
     //console.log(operation + ": " + model + ": " + JSON.stringify(data));
     //callback(null, "success");
     var method = type + "_" + operation+"_" + model;
-    if(operators.hasOwnProperty(method)){
+    if(operators[method] !== undefined){
         logger.log("debug", "calling operation " + method);
         operators[method](data, context, callback);
     }else{
@@ -72,7 +69,7 @@ function operation(req, res, next){
             if(error){
                 return next(error);
             }else{
-                req.SsiData.result = results.length > 0 ? results[results.length - 1] : null;
+                req.SsiData.result = results[results.length - 1];
                 return next();
             }
         }

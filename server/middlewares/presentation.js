@@ -7,6 +7,7 @@
  */
 var SsiError = require("../errors");
 var logger = require("../log").getLogger("middlewares.presentation");
+
 function present(req, res, next){
     res.json({
         code : 0,

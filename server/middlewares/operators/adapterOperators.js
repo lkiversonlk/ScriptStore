@@ -16,12 +16,10 @@ var  operators = {
      * @param callback
      */
     adapter_update_property : function(data, context, callback){
-        if(data.update && data.data){
-            var ret = data.data.toJSON ? data.data.toJSON() : data.data;
-            Object.keys(data.update).forEach(function(key){
-                if(data.update.hasOwnProperty(key)){
-                    ret[key] = data.update[key];
-                }
+        if(data.query && data.data){
+            var ret = data.data;
+            Object.keys(data.query).forEach(function(key){
+                ret[key] = data.query[key];
             });
             callback(null, ret);
         }else{

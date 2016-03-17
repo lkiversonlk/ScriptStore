@@ -18,6 +18,13 @@ function _mongooseErrorHandler(error){
     }
 }
 
+function OperationData(type, operation, model, data){
+    this.type = type;
+    this.operation = operation;
+    this.model = model;
+    this.data = data
+};
+
 function _wrapCallback(callback){
     return function (error, result){
         if(result && result.toJSON){
@@ -31,57 +38,27 @@ function _wrapCallback(callback){
 var OperationBuilder = {
     //directly db operation
     DbGetOne : function(model, data){
-        return [{
-            type : "db",
-            operation : "getOne",
-            model : model,
-            data : data
-        }];
+        return [new OperationData("db", "getOne", model, data)];
     },
 
     DbGetAll : function(model, data){
-        return [{
-            type : "db",
-            operation : "getAll",
-            model : model,
-            data : data
-        }];
+        return [new OperationData("db", "getAll", model, data)];
     },
 
     DbCreate : function(model, data){
-        return [{
-            type : "db",
-            operation : "create",
-            model : model,
-            data : data
-        }];
+        return [new OperationData("db", "create", model, data)];
     },
 
     DbUpdate : function(model, data){
-        return [{
-            type : "db",
-            operation : "update",
-            model : model,
-            data : data
-        }];
+        return [new OperationData("db", "update", model, data)];
     },
 
     DbDelete : function(model, data){
-        return [{
-            type : "db",
-            operation : "delete",
-            model : model,
-            data : data
-        }];
+        return [new OperationData("db", "delete", model, data)];
     },
 
     DbUpdateOrInsert : function(model, data){
-        return [{
-            type : "db",
-            operation : "updateOrInsert",
-            model : model,
-            data : data
-        }]
+        return [new OperationData("db", "updateOrInsert", model, data)];
     },
     /**
      * check out specified version and update it to current draft
@@ -89,8 +66,7 @@ var OperationBuilder = {
      * @returns {Array}
      */
     checkOutVersionToDraft : function(adid, versionId){
-        var ret = [];
-        ret = ret.concat(OperationBuilder.DbGetOne("version", {query : {_id : versionId}}));
+        var ret = OperationBuilder.DbGetOne("version", {query : {_id : versionId}});
         ret = ret.concat(OperationBuilder.DbUpdate("draft", {query : {adid : adid}, data : null}));
         return ret;
     },
@@ -101,12 +77,8 @@ var OperationBuilder = {
      * @returns {Array}
      */
     createEmptyDraft : function(adid){
-        ret = [];
-        ret = ret.concat(OperationBuilder.DbDelete("draft", { query : {adid : adid}}));
-        var emptyDraft = {
-            adid : adid
-        };
-        ret = ret.concat(OperationBuilder.DbCreate("draft", { data : emptyDraft}));
+        var ret = OperationBuilder.DbDelete("draft", { query : {adid : adid}});
+        ret = ret.concat(OperationBuilder.DbCreate("draft", { data : {adid : adid}}));
         return ret;
     },
 
@@ -138,8 +110,7 @@ var OperationBuilder = {
      * @returns {Array}
      */
     saveDraftToVersion : function(data){
-        var ret = [];
-        ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
+        var ret = OperationBuilder.DbGetOne("draft", data);
         ret = ret.concat(OperationBuilder.DbCreate("version", { data : null}));
         return ret;
     },
@@ -151,14 +122,7 @@ var OperationBuilder = {
      * @returns {*[]}
      */
     releaseVersion : function(adid, versionId){
-        return [{
-            type : "script",
-            operation : "release",
-            model : "version",
-            data : {
-                _id : versionId
-            }
-        }];
+        return [new OperationData("script", "release", "version", {_id : versionId})];
     },
 
     /**
@@ -167,25 +131,11 @@ var OperationBuilder = {
      * @returns {*[]}
      */
     getConfigurations : function(data){
-        return [{
-            type : "script",
-            operation : "get",
-            model : "configurations",
-            data : data
-        }];
+        return [new OperationData("script", "get", "all", data)];
     },
 
     getReleasedContent : function(data){
-        if(!data) {
-            data = {};
-        }
-        data.data = null;
-        return [{
-            type : "script",
-            operation : "transform",
-            model : "version",
-            data : data
-        }]
+        return [new OperationData("script", "transform", "version", data)];
     },
 
     /**
@@ -194,14 +144,11 @@ var OperationBuilder = {
      * @returns {Array}
      */
     publishVersion : function(data){
-        var ret = [];
-
-        ret = ret.concat(OperationBuilder.DbGetOne("version", data));
-        ret = ret.concat(OperationBuilder.getReleasedContent());
+        var ret = OperationBuilder.DbGetOne("version", data);
+        ret = ret.concat(OperationBuilder.getReleasedContent({data : null}));
         //since data.data may be fullfilled by the operation, so we extract the query alone
         ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : {adid : data.query.adid }, data : null}));
         ret = ret.concat(OperationBuilder.DbUpdate("version", {query : data.query, data : {publish : Date.now()}}));
-        //ret.push(OperationBuilder.DbUpdate("version", { query : data.query, data : { publish : Date.now()}}));
         return ret;
     },
 
@@ -211,22 +158,23 @@ var OperationBuilder = {
      * @returns {Array}
      */
     publishDraft : function(data){
-        var ret = [];
         var query = data.query;
-        ret = ret.concat(OperationBuilder.DbGetOne("draft", data));
-        ret.push({
-            type : "adapter",
-            operation : "update",
-            model : "property",
-            data : {
-                update : {
-                    publish : Date.now()
-                },
-                data : null
-            }
-        });
+        var ret = OperationBuilder.DbGetOne("draft", data);
+        ret.push(
+            new OperationData(
+                "adapter",
+                "update",
+                "property",
+                {
+                    query : {
+                        publish : Date.now()
+                    },
+                    data : null
+                }
+            )
+        );
         ret = ret.concat(OperationBuilder.DbCreate("version", {data : null}));
-        ret = ret.concat(OperationBuilder.getReleasedContent());
+        ret = ret.concat(OperationBuilder.getReleasedContent({data : null}));
         //since data.data may be fullfilled by the operation, so we extract the query alone
         ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : query, data : null}));
         return ret;
@@ -238,15 +186,15 @@ var OperationBuilder = {
      */
     debugDraft : function(data){
         return [
-            {
-                type : "script",
-                operation : "set",
-                model : "cookie",
-                data : {
+            new OperationData(
+                "script",
+                "set",
+                "cookie",
+                {
                     query : data.query,
                     data : ""
                 }
-            }
+            )
         ];
     },
 
@@ -257,18 +205,7 @@ var OperationBuilder = {
     debugVersion : function(data){
         var adid = data.query.adid;
         var versionId = data.query._id;
-
-        return [
-            {
-                type : "script",
-                operation : "set",
-                model : "cookie",
-                data : {
-                    query : data.query,
-                    data : versionId
-                }
-            }
-        ];
+        return [new OperationData("script", "set", "cookie", {query : data.query, data : versionId})];
     },
 
     /**
@@ -276,17 +213,10 @@ var OperationBuilder = {
      * @param data
      */
     undebug : function(data){
-        return [
-            {
-                type : "script",
-                operation : "delete",
-                model : "cookie",
-                data : {
-                    query : data.query,
-                    data : {}
-                }
-            }
-        ]
+        return [new OperationData("script", "delete", "cookie", {
+            query : data.query,
+            data : {}
+        })];
     }
 };
 

@@ -17,6 +17,7 @@ var ret = {};
  * @param callback
  * @returns {*}
  */
+/*
 ret.script_release_version = function(data, context, callback){
     if(data._id){
         Dao.readOneDoc("version", { query : { _id : data._id}}, _wrapCallback(function(error, version){
@@ -56,72 +57,31 @@ ret.script_release_version = function(data, context, callback){
         return callback(SsiError.ServerError());
     }
 };
-
-/**
- *
- * @param adid
- * @param context
- * @param callback
- */
-/*
-ret.script_publish_draft = function(adid, context, callback){
-    logger.log("debug", "publish draft of adid " + adid);
-    Dao.readOneDoc(
-        "draft",
-        {
-            query : {
-                adid : adid
-            }
-        },
-        _wrapCallback(function(error, draft){
-            if(error) {
-                callback(error);
-            }else{
-                //now save the draft
-                //delete the creation time
-                draft = draft.toJSON();
-                delete draft.creation;
-                Dao.createDoc(
-                    "version",
-                    draft,
-                    _wrapCallback(callback));
-            }
-        })
-    )
-};
 */
-
 function  _transform(version){
-
-    if(version.toJSON){
-        version = version.toJSON();
-    }
-
     var oldTriggers = version.triggers;
     var ret = {
         tags : []
     };
     version.tags.forEach(function(tag){
-        if(!tag.deleted){
-            var newTag = {
-                script : tag.script,
-                triggers : []
-            };
-            if(tag.conversion){
-                newTag.conversion = tag.conversion;
-            }
-            tag.triggers.forEach(function(trigger){
-                var oldTrigger = oldTriggers[trigger];
-                newTag.triggers.push({
-                    ruleType : oldTrigger.ruleType,
-                    op : oldTrigger.op,
-                    value : oldTrigger.value
-                });
-            });
-            ret.tags.push(newTag);
-            ret.vid = version._id;
+        var newTag = {
+            script : tag.script,
+            triggers : []
+        };
+        if(tag.conversion){
+            newTag.conversion = tag.conversion;
         }
+        tag.triggers.forEach(function(trigger){
+            var oldTrigger = oldTriggers[trigger];
+            newTag.triggers.push({
+                ruleType : oldTrigger.ruleType,
+                op : oldTrigger.op,
+                value : oldTrigger.value
+            });
+        });
+        ret.tags.push(newTag);
     });
+    ret.vid = version._id;
     return ret;
 }
 
@@ -140,39 +100,34 @@ ret.script_transform_version = function(data, context, callback){
     }
 };
 
-ret.script_get_configurations = function(data, context, callback){
-    if(data.query.adid){
-        async.parallel(
-            [
-                function(callback){
-                    Dao.readDoc("version", data, callback);
-                },
-                function(callback){
-                    Dao.readOneDoc("draft", data, callback);
+ret.script_get_all = function(data, context, callback){
+    async.parallel(
+        [
+            function(callback){
+                Dao.readDoc("version", data, callback);
+            },
+            function(callback){
+                Dao.readOneDoc("draft", data, callback);
+            }
+        ],
+        _wrapCallback(function(err, results){
+            if(err) {
+                callback(err);
+            }else{
+                var ret = [];
+                results[0].forEach(function(version, index){
+                    var json = version.toJSON();
+                    ret.push(json);
+                });
+                if(results[1]){
+                    var json = results[1].toJSON();
+                    json.draft = true;
+                    ret.push(json);
                 }
-            ],
-            _wrapCallback(function(err, results){
-                if(err) {
-                    callback(err);
-                }else{
-                    var ret = [];
-                    results[0].forEach(function(version, index){
-                        var json = version.toJSON();
-                        ret.push(json);
-                    });
-                    if(results[1]){
-                        var json = results[1].toJSON();
-                        json.draft = true;
-                        ret.push(json);
-                    }
-                    callback(null, ret);
-                }
-            })
-        )
-    }else{
-        logger.log("error", "no adid passed to script_get_configurations");
-        callback(SsiError.ParameterInvalidError("adid is required to load configurations"));
-    }
+                callback(null, ret);
+            }
+        })
+    );
 };
 
 var COOKIE_KEY = "scriptStore";

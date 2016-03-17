@@ -41,23 +41,13 @@ var operators = {
 
 
     db_create_version : function(data, context, callback){
-        if(data.data){
-            /*
-            if(data.data.toJSON){
-                data.data = data.data.toJSON();
-            }
-            */
-            delete data.data._id;
-            var result = validateVersion(data.data);
-            if(!result[0]){
-                return callback(SsiErrors.DataInvalidError(result[1]));
-            }
-            data.data.creation = Date.now();
-            Dao.createDoc("version", data.data, _wrapCallback(callback));
-        }else {
-            logger.log("error", "create version without data, maybe deleted by someone else at the same time");
-            callback(SsiErrors.ServerError());
+        delete data.data._id;
+        var result = validateVersion(data.data);
+        if(!result[0]){
+            return callback(SsiErrors.DataInvalidError(result[1]));
         }
+        data.data.creation = Date.now();
+        Dao.createDoc("version", data.data, _wrapCallback(callback));
     },
 
     db_getOne_draft : function(data, context, callback){
@@ -69,23 +59,13 @@ var operators = {
     },
 
     db_update_draft : function(data, context, callback){
-        if(data.data){
-            /*
-            if(data.data.toJSON){
-                data.data = data.data.toJSON();
-            }
-            */
-            delete data.data._id;
-            var result = validateVersion(data.data);
-            if(!result[0]){
-                return callback(SsiErrors.DataInvalidError(result[1]));
-            }
-            data.data.creation = Date.now();
-            Dao.updateDoc("draft", data, _wrapCallback(callback));
-        }else {
-            logger.log("warning", "update draft without data, maybe deleted by someone else at the same time");
-            callback(SsiErrors.ServerError());
+        delete data.data._id;
+        var result = validateVersion(data.data);
+        if(!result[0]){
+            return callback(SsiErrors.DataInvalidError(result[1]));
         }
+        data.data.creation = Date.now();
+        Dao.updateDoc("draft", data, _wrapCallback(callback));
     },
 
     db_create_draft : function(data, context, callback){
