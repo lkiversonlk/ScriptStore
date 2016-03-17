@@ -1,7 +1,6 @@
 /**
  * Created by jerry on 3/4/16.
  */
-
 var Dao = require("../../dao");
 var _wrapCallback = require("./utils").wrapCallback;
 var _transformOriginToRelease = require("./utils").transformOriginToRelease;
@@ -93,6 +92,7 @@ ret.script_publish_draft = function(adid, context, callback){
 */
 
 function  _transform(version){
+
     if(version.toJSON){
         version = version.toJSON();
     }
@@ -119,11 +119,11 @@ function  _transform(version){
                 });
             });
             ret.tags.push(newTag);
+            ret.vid = version._id;
         }
     });
     return ret;
 }
-
 
 ret.script_transform_version = function(data, context, callback){
     var versions = data.data;

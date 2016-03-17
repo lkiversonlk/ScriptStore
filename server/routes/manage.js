@@ -41,27 +41,29 @@ router.get("/export", function(req, res, next){
 /**
  * publish specified draft to a new version
  */
-router.get("/toVersion/:id", function(req, res, next){
+router.get("/toversion/:id", function(req, res, next){
     var parameters = req.parameters;
-    if(!parameters.query) {
-        parameters.query = {}
+    if(parameters.query && parameters.query.adid) {
+        parameters.query._id = req.params.id;
+        req.SsiData.addOperations(operBuilder.saveDraftToVersion(parameters));
+        return next();
+    }else{
+        return next(SsiError.ParameterInvalidError("adid are required"));
     }
-    parameters.query._id = req.params.id;
-    req.SsiData.addOperations(operBuilder.saveDraftToVersion(parameters));
-    return next();
 });
 
 /**
  * publish specified version
  *
  */
-router.get("/publish/version", function(req, res, next){
+router.get("/publish/version/:id", function(req, res, next){
     var parameters = req.parameters;
-    if(parameters.query.adid && parameters.query._id){
+    if(parameters.query && parameters.query.adid){
+        parameters.query._id = req.params.id;
         req.SsiData.addOperations(operBuilder.publishVersion(parameters));
         return next();
     }else{
-        return next(SsiError.ParameterInvalidError("adid and _id are required"));
+        return next(SsiError.ParameterInvalidError("adid are required"));
     }
 });
 

@@ -190,7 +190,7 @@ describe("test configuration interface", function(){
                     res.body.code.should.equal(0, res.body.data);
                     var currentVersions = res.body.data.length;
                     request(app)
-                        .get(basePath + "/toVersion/" + testDraft._id)
+                        .get(basePath + "/toversion/" + testDraft._id + "?query="+JSON.stringify(query))
                         .set("Content-Type", "Application/json")
                         .expect(200)
                         .end(function (err, res) {
@@ -232,12 +232,11 @@ describe("test configuration interface", function(){
 
         it("publish the first version", function(done){
             var query = {
-                adid : testVersion.adid,
-                _id : testVersion._id
+                adid : testVersion.adid
             };
 
             request(app)
-                .get(basePath+"/publish/version?query=" + JSON.stringify(query))
+                .get(basePath+"/publish/version/" + testVersion._id + "?query=" + JSON.stringify(query))
                 .set("Content-Type", "Application/json")
                 .expect(200)
                 .end(function(err, res){
