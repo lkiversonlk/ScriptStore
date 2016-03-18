@@ -42,7 +42,8 @@ function _extractDataForReq(req){
         overwrite : (query.overwrite !== "false"),
         release : (query.release == "true"),
         from : query.from,
-        data : req.body
+        data : req.body,
+        cookie : (query.cookie == undefined ? null : JSON.parse(query.cookie))
     };
 }
 

@@ -117,8 +117,8 @@ describe("test configuration interface", function(){
                     res.body.code.should.equal(0, res.body.data);
                     testDraft = res.body.data;
                     testDraft.adid.should.equal(testAdid);
-                    testDraft.name.should.equal("");
-                    testDraft.description.should.equal("");
+                    //testDraft.name.should.equal("");
+                    //testDraft.description.should.equal("");
                     testDraft.triggers.length.should.equal(0);
                     testDraft.tags.length.should.equal(0);
 
@@ -168,7 +168,7 @@ describe("test configuration interface", function(){
                                 done(err);
                             }
                             res.body.code.should.equal(0, res.body.data);
-                            res.body.data.description.should.equal(testDraft.description, "description should be updated");
+                            //res.body.data.description.should.equal(testDraft.description, "description should be updated");
                             res.body.data.triggers[0].value.should.equal(testTrigger.value);
                             done();
                         });
@@ -190,7 +190,7 @@ describe("test configuration interface", function(){
                     res.body.code.should.equal(0, res.body.data);
                     var currentVersions = res.body.data.length;
                     request(app)
-                        .get(basePath + "/toversion/" + testDraft._id + "?query="+JSON.stringify(query))
+                        .get(basePath + "/toversion?query="+JSON.stringify(query))
                         .set("Content-Type", "Application/json")
                         .expect(200)
                         .end(function (err, res) {

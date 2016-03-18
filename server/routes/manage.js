@@ -42,10 +42,8 @@ router.get("/export", function(req, res, next){
 /**
  * publish specified draft to a new version
  */
-router.get("/toversion/:id", function(req, res, next){
-    var parameters = req.parameters;
-    parameters.query._id = req.params.id;
-    req.SsiData.addOperations(operBuilder.saveDraftToVersion(parameters));
+router.get("/toversion", function(req, res, next){
+    req.SsiData.addOperations(operBuilder.saveDraftToVersion(req.parameters));
     return next();
 });
 
@@ -85,12 +83,29 @@ router.get("/undebug", function(req, res, next){
     return next();
 });
 
+
 router.get("/release", function(req, res, next){
-    req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));
-    return next();
+    var parameters = req.parameters;
+    var cookie;
+    if(parameters.cookie && (cookie = parameters.cookie[parameters.query.adid])){
+        if(cookie.length > 0){
+            req.parameters.query= { _id : cookie};
+            req.SsiData.addOperations(operBuilder.DbGetOne("version", req.parameters));
+        }else{
+            req.SsiData.addOperations(operBuilder.DbGetOne("draft", req.parameters));
+        }
+        req.SsiData.addOperations(operBuilder.getReleasedContent({data : null}));
+        return next();
+    }else{
+        req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));
+        return next();
+    }
+
 });
 
+
 router.post("/release", function(req, res, next){
+    var adid = req.parameters.query.adid;
     var cookies = req.body;
     var cookie = "";
     if(cookies && (cookie = cookies[adid])){
@@ -101,6 +116,7 @@ router.post("/release", function(req, res, next){
         }else{
             req.SsiData.addOperations(operBuilder.DbGetOne("draft", req.parameters));
         }
+        req.SsiData.addOperations(operBuilder.getReleasedContent({data : null}));
         return next();
     }else{
         req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));

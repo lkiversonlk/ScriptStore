@@ -71,6 +71,22 @@ dbModelResources.forEach(function(resource){
         next();
     });
 
+    restfulRegistry.registerUpdate(function(req, res, next){
+        var schema = schemas["create_" + restfulRegistry.name];
+        if(!schema || !schema(req.parameters.data)){
+            if(schema){
+                logger.log("debug", "update " + restfulRegistry.name + " failed, error is " + JSON.stringify(schema.errors));
+            }else{
+                logger.log("debug", "update json schema for " + restfulRegistry.name + " not existed");
+            }
+            next(SsiErrors.ParameterInvalidError("failed to create with invalid data"));
+        }
+
+        var data = req.parameters;
+        req.SsiData.addOperations(operBuilder.DbUpdate(restfulRegistry.name, data));
+        next();
+    });
+
     restfulRegistry.registerDelete(function(req, res, next){
         var data = req.parameters;
         if(!data.query){

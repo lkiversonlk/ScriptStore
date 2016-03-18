@@ -62,16 +62,6 @@ var draftSchema = new Schema({
         required : true
     },
 
-    name : {
-        type :String,
-        default : ""
-    },
-
-    description : {
-        type : String,
-        default : ""
-    },
-
     triggers : {
         type : [triggerSchema],
         default : []
