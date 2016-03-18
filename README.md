@@ -80,10 +80,6 @@ draft表保存广告主当前草稿。
 记录创建时间，自标准时间以来经过的毫秒数
 * adid
 广告主id
-* name
-记录名称，默认为空
-* description
-版本描述，默认为空
 * triggers
 触发器数组，里面存了该版本定义的触发器列表，每一项格式为：
 	* name
@@ -199,7 +195,6 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 			[
 				{
 					...,                      //version 内容
-					draft : false
 				},
 				...,
 				{
@@ -208,7 +203,7 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 				}
 			]
 	
-	读取指定广告主下所有配置列表，列表中单项格式与version表和draft表相同，但是每个记录会添加一个draft字段表明这是版本还是草稿，草稿只会在列表的最后一个位置里。
+	读取指定广告主下所有配置列表，列表中单项格式与version表和draft表相同，草稿只会在列表的最后一个位置里,并且有一个字段draft标明其为草稿。
 	
 * 导出指定版本到草稿区
 		
@@ -225,11 +220,9 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 	
 * 将指定草稿保存成版本
 
-		GET /manage/toversion/ID?query={adid : ADID}
+		GET /manage/toversion?query={adid : ADID}
 
-		1.ID
-			草稿ID
-		2.ADID
+		1. ADID
 			广告主ID
 		返回data：返回创建成功的version记录内容
 
