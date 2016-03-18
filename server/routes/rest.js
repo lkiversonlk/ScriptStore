@@ -22,7 +22,7 @@ dbModelResources.forEach(function(resource){
         parameters.query._id = req.params.id;
         req.SsiData.addOperations(operBuilder.DbGetOne(restfulRegistry.name, parameters));
         if(parameters.release){
-            req.SsiData.addOperations(operBuilder.getReleasedContent());
+            req.SsiData.addOperations(operBuilder.getReleasedContent({data : null}));
         }
         next();
     });
@@ -31,7 +31,7 @@ dbModelResources.forEach(function(resource){
         var parameters = req.parameters;
         req.SsiData.addOperations(operBuilder.DbGetAll(restfulRegistry.name, req.parameters));
         if(parameters.release){
-            req.SsiData.addOperations(operBuilder.getReleasedContent());
+            req.SsiData.addOperations(operBuilder.getReleasedContent({data : null}));
         }
         return next();
     });

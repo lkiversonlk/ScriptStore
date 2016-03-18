@@ -2,7 +2,7 @@
  * Created by jerry on 3/11/16.
  */
 
-var app = angular.module("scriptStore", ['am.multiselect', 'ngCookies']);
+var app = angular.module("scriptStore", ['am.multiselect', 'ngCookies', 'blockUI']);
 
 app.provider("httpApi", function(){
     var self = this;
@@ -141,8 +141,8 @@ app.provider("manageApi", function(){
             return this.api._handle("GET", "", {query : {adid : adid}, select : []}, null);
         };
 
-        ManageCommand.prototype.saveDraftToVersion = function(draftId){
-            return this.api._handle("GET", "toVersion/" + draftId, null, null);
+        ManageCommand.prototype.saveDraftToVersion = function(adid){
+            return this.api._handle("GET", "toVersion", {query : {adid : adid}}, null);
         };
 
         ManageCommand.prototype.createEmptyDraft = function(advertiser){
@@ -169,10 +169,17 @@ app.provider("manageApi", function(){
             if(version.draft){
                 return this.api._handle("GET", "publish/draft", {query : {adid : version.adid}}, null);
             }else{
-                return this.api._handle("GET", "publish/version", {query : {_id : version._id, adid : version.adid}}, null);
+                return this.api._handle("GET", "publish/version/" + version._id, {query : {adid : version.adid}}, null);
             }
         };
 
+        ManageCommand.prototype.getCurrentRelease = function(adid, cookie){
+            if(cookie){
+                return this.api._handle("GET", "release", {query : {adid : adid}, cookie : cookie}, null);
+            }else{
+                return this.api._handle("GET", "release", {query : {adid : adid}}, null);
+            }
+        }
         return new ManageCommand(apiCaller);
     }];
 });
@@ -244,7 +251,7 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
         },
 
         draftToVersion : function(){
-            return manageApi.saveDraftToVersion(currentVersion);
+            return manageApi.saveDraftToVersion(advertiser);
         },
 
         getCurrentVersionData : function(){
@@ -349,34 +356,16 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
         },
 
         getCurrentReleaseOrDebug : function(){
-            var debugInfo = commands.getDebugInfo();
-            if(debugInfo && debugInfo.debug){
-                if(debugInfo.type == "draft"){
-                    var defer = $q.defer();
-                    restApi.searchDraft({adid : advertiser}, null, {release : "true"})
-                        .then(function(drafts){
-                            if(drafts && drafts.length > 0){
-                                defer.resolve(drafts[0]);
-                            }else{
-                                defer.reject(null);
-                            }
-                        });
-                    return defer.promise;
-                }else{
-                    return restApi.getVersionById(debugInfo.query._id, null, {release : "true"});
-                }
-            }else{
-                return restApi.searchRelease({adid : advertiser}, null);
-            }
+            var cookie = $cookies.get(cookieKey);
+            return manageApi.getCurrentRelease(advertiser, cookie);
         },
 
         publish : function(version){
             return commands.getCurrentVersionData()
                 .then(function(version){
-                    return manageApi.publish(version)
-                        .then(function(){
-                            $rootScope.$broadcast(Events.PUBLISH);
-                        });
+                    return manageApi.publish(version);
+                }).then(function(){
+                    $rootScope.$broadcast(Events.PUBLISH);
                 });
         },
 

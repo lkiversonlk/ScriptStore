@@ -29,8 +29,8 @@ app.controller("selectVersionController", function($scope, appControl){
         $scope.versions = appControl.getVersions();
         $scope.shouldCreateDraft = $scope.versions.length == 0;
         var debugInfo = appControl.getDebugInfo();
-        if(debugInfo){
-            $scope.debugging = debugInfo.debug;
+        if(debugInfo !== undefined){
+            $scope.debugging = true
         }else{
             $scope.debugging = false;
         }
@@ -51,8 +51,8 @@ app.controller("selectVersionController", function($scope, appControl){
 
     $scope.$on(appControl.Events.DEBUG, function(){
         var debugInfo = appControl.getDebugInfo();
-        if(debugInfo){
-            $scope.debugging = debugInfo.debug;
+        if(debugInfo !== undefined){
+            $scope.debugging = true;
         }else{
             $scope.debugging = false;
         }
@@ -233,21 +233,16 @@ app.controller("triggersController", function($scope, appControl){
 app.controller("currentReleaseController", function($scope, appControl){
     function update(){
         var debugInfo = appControl.getDebugInfo();
-        if(debugInfo){
-            $scope.debugging = debugInfo.debug;
-            if($scope.debugging){
-                if(debugInfo.type == "draft"){
-                    $scope.status = "调试广告主 草稿中";
-                }else{
-                    $scope.status = "调试广告主" + debugInfo.id + " 版本中";
-                }
+        if(debugInfo !== undefined){
+            $scope.debugging = true;
+            if(debugInfo.length > 0){
+                $scope.status = "调试广告主" + debugInfo + " 版本中";
             }else{
-                $scope.debugging = false;
-                $scope.status = "正常版本";
+                $scope.status = "调试广告主 草稿中";
             }
         }else{
             $scope.debugging = false;
-            $scope.status = "正常版本";
+            $scope.status = "正常调试中"
         }
 
         appControl.getCurrentReleaseOrDebug()
