@@ -177,12 +177,12 @@ function releaseValid(data, version, keys){
  * * GET /manage/export?from overwrite=true done
  * * GET /manage/export?from overwrite=false done
  * * GET /manage done
- * * GET /manage/debug/draft
+ * * GET /manage/debug/draft done
  * * GET /manage/release done
  * * GET /manage/debug/version done
- * * GET /manage/rlease
- * * GET /manage/undebug/
- * * GET /manage/rlease
+ * * GET /manage/release done
+ * * GET /manage/undebug/ done
+ * * GET /manage/release done
  */
 describe("manage test suite", function(){
     after("clear database", function(done){
@@ -570,7 +570,7 @@ describe("manage test suite", function(){
      * Version : version1, version2, version3
      * Release : release2
      */
-    it.skip("debug draft", function(done){
+    it("debug draft", function(done){
         get("/manage/debug/draft?query=" + query, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             var cookies = res.headers['set-cookie'];
@@ -580,12 +580,54 @@ describe("manage test suite", function(){
                     var end = cookie.indexOf(";");
                     var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                     var textJson = JSON.parse(text);
-                    textJson[testAdid].should.equal(version1._id);
+                    textJson[testAdid].should.equal("");
                     done();
                 }
             });
         });
     });
 
+    /**
+     * Draft : draft2
+     * Version : version1, version2, version3
+     * Release : release2
+     */
+    it("check the debug draft works", function(done){
+        var fackeCookie = {};
+        fackeCookie[testAdid] = "";
+        var cookie = JSON.stringify(fackeCookie);
+        get("/manage/release?query=" + query + "&cookie=" + cookie, done, function(res){
+            res.body.code.should.equal(0, res.body.data);
+            releaseValid(res.body.data, version2, 2);
+            res.body.data.vid.should.equal(draft2._id);
+            done();
+        });
+    });
+
+    /**
+     * Draft : draft2
+     * Version : version1, version2, version3
+     * Release : release2
+     */
+    it("undebug advertiser", function(done){
+        var cookie = {};
+        cookie[testAdid] = "";
+
+        var sendCookie = "scriptStore=" + JSON.stringify(cookie);
+
+        getWithCookie("/manage/undebug?query=" + query, sendCookie, done, function(res){
+            res.body.code.should.equal(0, res.body.data);
+            var cookies = res.headers['set-cookie'];
+
+            cookies.forEach(function(cookie){
+                if(cookie.substr(0, cookieHead.length) == cookieHead){
+                    var end = cookie.indexOf(";");
+                    var array = cookie.split(";");
+                    array[0].should.equal(cookieHead+"=");
+                    done();
+                }
+            });
+        });
+    });
     var testAdid2 = "testAdid2";
 });

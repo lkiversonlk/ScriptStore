@@ -87,7 +87,7 @@ router.get("/undebug", function(req, res, next){
 router.get("/release", function(req, res, next){
     var parameters = req.parameters;
     var cookie;
-    if(parameters.cookie && (cookie = parameters.cookie[parameters.query.adid])){
+    if(parameters.cookie && ((cookie = parameters.cookie[parameters.query.adid]) !== undefined)){
         if(cookie.length > 0){
             req.parameters.query= { _id : cookie};
             req.SsiData.addOperations(operBuilder.DbGetOne("version", req.parameters));
