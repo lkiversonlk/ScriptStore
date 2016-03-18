@@ -151,7 +151,7 @@ release表保存广告主当前publish的版本。
 	```
 	**在下面接口部分的返回值示例中，只给出data字段的值**
 	
-#### Rest接口
+#### rest接口
 对于draft，version和release三种resource，系统提供了一套通用的rest接口实现增删改查。
 
 接口的标准形式为
@@ -280,6 +280,17 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 		1. ADID
 			广告主
 
+* 获取广告主当前激活脚本
+	
+		GET /manage/release?query={adid:ADID}[&cookie=COOKIE]
+	
+		1. ADID
+			广告主ID
+		2.COOKIE
+			在scriptStore key下的cookie
+		返回data：
+			供页面端加载的release脚本
+			
 系统使用教程
 ----------------
 
