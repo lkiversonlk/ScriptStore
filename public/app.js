@@ -175,7 +175,7 @@ app.provider("manageApi", function(){
 
         ManageCommand.prototype.getCurrentRelease = function(advid, cookie){
             if(cookie){
-                return this.api._handle("GET", "release", {query : {advid : advid}, cookie : cookie}, null);
+                return this.api._handle("GET", "release", {query : {advid : advid}, pycodeconf : cookie}, null);
             }else{
                 return this.api._handle("GET", "release", {query : {advid : advid}}, null);
             }
@@ -191,7 +191,7 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
     var currentVersion = null;
     var currentVersionCache = null;
 
-    var cookieKey = "scriptStore";
+    var cookieKey = "pycodeconf";
 
     var Events = {
         ADVERTISER_CHANGE : "advidChange",
