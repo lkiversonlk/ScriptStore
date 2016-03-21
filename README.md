@@ -42,7 +42,7 @@ version表存放广告主保存的版本。
 记录创建时间，自标准时间以来经过的毫秒数
 * publish
 默认为0，如果该版本被发布过，则记录最近一次发布时间
-* adid
+* advid
 广告主id
 * name
 记录名称，默认为空
@@ -78,7 +78,7 @@ draft表保存广告主当前草稿。
 记录唯一id
 * creation
 记录创建时间，自标准时间以来经过的毫秒数
-* adid
+* advid
 广告主id
 * triggers
 触发器数组，里面存了该版本定义的触发器列表，每一项格式为：
@@ -108,7 +108,7 @@ release表保存广告主当前publish的版本。
 记录唯一id
 * vid
 该记录在version表中唯一id
-* adid
+* advid
 广告主id
 * tags
 配置单元，数组，具体每项为：
@@ -133,7 +133,7 @@ release表保存广告主当前publish的版本。
 1. 参数
 	ScriptStore系统对参数做了统一的解析处理，对特定参数名，其参数格式都是固定的，如下：
 	* query
-	json字典格式，如 /rest/draft?query={adid : "234, _id : "23434"}
+	json字典格式，如 /rest/draft?query={advid : "234", _id : "23434"}
 	* select
 	json数组，如 /rest/draft?select=["name", "description"]
 
@@ -186,9 +186,9 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 
 * 读取广告主所有配置（包括草稿)
 	
-		GET /manage?query={adid : ADID}
+		GET /manage?query={advid : ADVID}
 		
-		1. ADID
+		1. ADVID
 			广告主ID
 
 		返回data：
@@ -207,9 +207,9 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 	
 * 导出指定版本到草稿区
 		
-		GET /manage/export?query={adid : ADID}&from=FROM&overwrite=OVERWRITE
+		GET /manage/export?query={advid : ADVID}&from=FROM&overwrite=OVERWRITE
 	
-		1. ADID
+		1. ADVID
 			广告主ID
 		2. FROM
 			导出版本ID
@@ -220,7 +220,7 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 	
 * 将指定草稿保存成版本
 
-		GET /manage/toversion?query={adid : ADID}
+		GET /manage/toversion?query={advid : ADVID}
 
 		1. ADID
 			广告主ID
@@ -230,16 +230,16 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 	
 * 发布指定版本
 
-		GET /manage/publish/version/ID?query={adid : ADID}
+		GET /manage/publish/version/ID?query={advid : ADVID}
 
 		1.ID
 			版本ID
-		2.ADID
+		2.ADVID
 			广告主ID
 			
 * 发布草稿
 
-		GET /manage/publish/draft?query={adid:ADID}
+		GET /manage/publish/draft?query={advid:ADVID}
 
 		1. ADID
 			广告主ID
@@ -247,47 +247,47 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 
 	<em>
 		调试功能说明：
-		调试版本/草稿时会在http返回中设置cookie，目前的key为"scriptStore",value为json对象的字符串表示。其json格式为：
+		调试版本/草稿时会在http返回中设置cookie，目前的key为"pycodeconf",value为json对象的字符串表示。其json格式为：
 
 	```javascript
 			{
-				"ADID1" : "" | versionid，
-				"ADID2" : "" | version      为空时表示调试debug版本,传值时表示version id
+				"ADVID1" : "" | versionid，
+				"ADVID2" : "" | version      为空时表示调试debug版本,传值时表示version id
 			}
 	```
 	</em>
 	
 * 调试指定版本
 
-		GET /manage/debug/version/ID?query={adid : ADID}
+		GET /manage/debug/version/ID?query={advid : ADVID}
 
 		1. ID
 			版本ID
-		1. ADID
+		1. ADVID
 			广告主ID
 			
 * 调试草稿
 
-		GET /manage/debug/draft?query={adid : ADID}
+		GET /manage/debug/draft?query={advid : ADVID}
 	
-		1. ADID
+		1. ADVID
 			广告主ID
 			
 * 取消某指定广告主调试状态
 
-		GET /manage/undebug?query={adid : ADID}
+		GET /manage/undebug?query={advid : ADVID}
 
 		1. ADID
 			广告主
 
 * 获取广告主当前激活脚本
 	
-		GET /manage/release?query={adid:ADID}[&cookie=COOKIE]
+		GET /manage/release?query={advid:ADVID}[&pycodeconf=COOKIE]
 	
-		1. ADID
+		1. ADVID
 			广告主ID
 		2.COOKIE
-			在scriptStore key下的cookie
+			在pycodeconf下的cookie
 		返回data：
 			供页面端加载的release脚本
 			
@@ -299,32 +299,27 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 1. 获取广告主id 234所有配置
 	获取广告主已有的所有配置，包括草稿。
 	
-		GET /manage?query={adid : "234"}
+		GET /manage?query={advid : "234"}
 2. 创建草稿DraftA
 	发现广告主配置为空，创建第一个空白草稿。
 			
-		GET /manage/export?query={adid : "234"}
+		GET /manage/export?query={advid : "234"}
 		假设返回值里草稿id为“draftA”
 3. 编辑草稿DraftA
 	对草稿A进行一系列编辑，生成完整的草稿json数据，然后更新该草稿
 	
-		PUT /rest/draft?query={adid : "234"}
+		PUT /rest/draft?query={advid : "234"}
 		post内容填入更新后的完整草稿
 		
 4. 调试草稿DraftA
 	在浏览器中发出调试请求
 
-		GET /manage/debug/draft?query={adid : "234"}
+		GET /manage/debug/draft?query={advid : "234"}
 
-5. 打开广告主页面，调试草稿
-	在浏览器中打开广告主页面，投放中心分析cookie得知当前处于调试模式，且类型为"draft"，于是向scriptStore系统发出请求，取经过release的草稿版本
-
-		 GET /rest/draft?query={adid : "234"}&release="true"
-		 注意：上述接口返回的是一个list，请检查长度并取出第一项返回
 5. 保存成版本VersionA
 	调试完后，将草稿保存成版本,
 		
-		 GET /manage/toversion/draftA?query={adid : "234"}
+		 GET /manage/toversion/draftA?query={advid : "234"}
 		 从返回的data._id里可以取到生成的版本id，假设为"versionA"
 6. 发布该版本ReleaseA
 
@@ -333,7 +328,7 @@ query参数用来筛选操作数据集，指明id属性时，表示对指定的�
 7. 导出该版本到草稿区DraftB
 		当又需要对版本A进行修改时，先导出版本A到草稿区
 	
-		GET /manage/export?query={adid:"234"}&from=versionA
+		GET /manage/export?query={advid:"234"}&from=versionA
 	
 
 附表
