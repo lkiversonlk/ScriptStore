@@ -18,22 +18,23 @@ app.controller("selectVersionController", function($scope, appControl){
     $scope.draft = false;
     $scope.version = false;
 
-    var debugInfo = appControl.getDebugInfo();
-    if(debugInfo){
-        $scope.debugging = debugInfo.debug;
-    }else{
-        $scope.debugging = false;
+
+
+    function updateDebug(){
+        var debugInfo = appControl.getDebugInfo();
+        if(debugInfo !== null){
+            $scope.debugging = true;
+        }else{
+            $scope.debugging = false;
+        }
     }
+
+    updateDebug();
 
     $scope.$on(appControl.Events.VERSIONS_RELOADED, function(){
         $scope.versions = appControl.getVersions();
         $scope.shouldCreateDraft = $scope.versions.length == 0;
-        var debugInfo = appControl.getDebugInfo();
-        if(debugInfo !== undefined){
-            $scope.debugging = true
-        }else{
-            $scope.debugging = false;
-        }
+        updateDebug();
     });
 
     $scope.$on(appControl.Events.VERSION_CHANGE, function(){
@@ -49,14 +50,7 @@ app.controller("selectVersionController", function($scope, appControl){
 
     });
 
-    $scope.$on(appControl.Events.DEBUG, function(){
-        var debugInfo = appControl.getDebugInfo();
-        if(debugInfo !== undefined){
-            $scope.debugging = true;
-        }else{
-            $scope.debugging = false;
-        }
-    });
+    $scope.$on(appControl.Events.DEBUG, updateDebug);
 
     $scope.createDraft = function(){
         appControl.createDraft()
@@ -233,7 +227,7 @@ app.controller("triggersController", function($scope, appControl){
 app.controller("currentReleaseController", function($scope, appControl){
     function update(){
         var debugInfo = appControl.getDebugInfo();
-        if(debugInfo !== undefined){
+        if(debugInfo !== null){
             $scope.debugging = true;
             if(debugInfo.length > 0){
                 $scope.status = "调试广告主" + debugInfo + " 版本中";
@@ -242,7 +236,7 @@ app.controller("currentReleaseController", function($scope, appControl){
             }
         }else{
             $scope.debugging = false;
-            $scope.status = "正常调试中"
+            $scope.status = "正常"
         }
 
         appControl.getCurrentReleaseOrDebug()
