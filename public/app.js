@@ -137,47 +137,47 @@ app.provider("manageApi", function(){
             this.api = apiCaller;
         }
 
-        ManageCommand.prototype.loadAllVersions = function(adid){
-            return this.api._handle("GET", "", {query : {adid : adid}, select : []}, null);
+        ManageCommand.prototype.loadAllVersions = function(advid){
+            return this.api._handle("GET", "", {query : {advid : advid}, select : []}, null);
         };
 
-        ManageCommand.prototype.saveDraftToVersion = function(adid){
-            return this.api._handle("GET", "toVersion", {query : {adid : adid}}, null);
+        ManageCommand.prototype.saveDraftToVersion = function(advid){
+            return this.api._handle("GET", "toVersion", {query : {advid : advid}}, null);
         };
 
         ManageCommand.prototype.createEmptyDraft = function(advertiser){
-            return this.api._handle("GET", "export", {query : {adid : advertiser}}, null);
+            return this.api._handle("GET", "export", {query : {advid : advertiser}}, null);
         };
 
         ManageCommand.prototype.exportVersionToDraft = function(advertiser, version, overwrite){
-            return this.api._handle("GET", "export", {query : {adid : advertiser}, from : version, overwrite : overwrite}, null);
+            return this.api._handle("GET", "export", {query : {advid : advertiser}, from : version, overwrite : overwrite}, null);
         };
 
         ManageCommand.prototype.debugDraft = function(advertiser){
-            return this.api._handle("GET", "debug/draft", {query : {adid : advertiser}}, null);
+            return this.api._handle("GET", "debug/draft", {query : {advid : advertiser}}, null);
         };
 
         ManageCommand.prototype.debugVersion = function(advertiser, version){
-            return this.api._handle("GET", "debug/version/" + version, {query : {adid : advertiser}}, null);
+            return this.api._handle("GET", "debug/version/" + version, {query : {advid : advertiser}}, null);
         };
 
         ManageCommand.prototype.undebug = function(advertiser){
-            return this.api._handle("GET", "undebug", {query : {adid : advertiser}}, null);
+            return this.api._handle("GET", "undebug", {query : {advid : advertiser}}, null);
         };
 
         ManageCommand.prototype.publish = function(version){
             if(version.draft){
-                return this.api._handle("GET", "publish/draft", {query : {adid : version.adid}}, null);
+                return this.api._handle("GET", "publish/draft", {query : {advid : version.advid}}, null);
             }else{
-                return this.api._handle("GET", "publish/version/" + version._id, {query : {adid : version.adid}}, null);
+                return this.api._handle("GET", "publish/version/" + version._id, {query : {advid : version.advid}}, null);
             }
         };
 
-        ManageCommand.prototype.getCurrentRelease = function(adid, cookie){
+        ManageCommand.prototype.getCurrentRelease = function(advid, cookie){
             if(cookie){
-                return this.api._handle("GET", "release", {query : {adid : adid}, cookie : cookie}, null);
+                return this.api._handle("GET", "release", {query : {advid : advid}, cookie : cookie}, null);
             }else{
-                return this.api._handle("GET", "release", {query : {adid : adid}}, null);
+                return this.api._handle("GET", "release", {query : {advid : advid}}, null);
             }
         }
         return new ManageCommand(apiCaller);
@@ -194,7 +194,7 @@ app.factory("appControl", function($rootScope, $q, $cookies, restApi, manageApi)
     var cookieKey = "scriptStore";
 
     var Events = {
-        ADVERTISER_CHANGE : "adidChange",
+        ADVERTISER_CHANGE : "advidChange",
         VERSIONS_RELOADED : "verReloaded",
         VERSION_CHANGE : "verChange",
         DEBUG : "debug",
