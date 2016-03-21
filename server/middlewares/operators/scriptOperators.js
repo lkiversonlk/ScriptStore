@@ -130,7 +130,8 @@ ret.script_get_all = function(data, context, callback){
     );
 };
 
-var COOKIE_KEY = "scriptStore";
+var COOKIE_KEY = "advcodeconf";
+
 var expirationTime = 40 * 60 * 1000;
 /**
  * Cookie data structure is like

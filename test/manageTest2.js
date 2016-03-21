@@ -12,7 +12,7 @@ var should = chai.should();
 var async = require("async");
 var queryString = require("querystring");
 
-var cookieHead = "scriptStore";
+var cookieHead = "advcodeconf";
 var testAdid = "testAdid";
 var releaseKeys = 4;
 var releaseTagKeys = 3;
@@ -613,7 +613,7 @@ describe("manage test suite", function(){
         var cookie = {};
         cookie[testAdid] = "";
 
-        var sendCookie = "scriptStore=" + JSON.stringify(cookie);
+        var sendCookie = cookieHead+ "=" + JSON.stringify(cookie);
 
         getWithCookie("/manage/undebug?query=" + query, sendCookie, done, function(res){
             res.body.code.should.equal(0, res.body.data);

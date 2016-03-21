@@ -16,6 +16,7 @@ var testDraft = null;
 var testVersion = null;
 var testRelease = null;
 var currentVersions = null;
+var cookieHead = "advcodeconf";
 
 var basePath = "/manage";
 var restBasePath = "/rest";
@@ -34,6 +35,7 @@ var testTag = {
         0
     ]
 };
+
 
 function getAll(adid, callback){
     var query = {
@@ -421,7 +423,6 @@ describe("test configuration interface", function(){
         };
 
         it("debug draft", function(done){
-            var cookieHead = "scriptStore";
             request(app)
                 .get(basePath + "/debug/draft?query=" + JSON.stringify(query))
                 .set("Content-Type", "Application/json")
@@ -449,7 +450,7 @@ describe("test configuration interface", function(){
         var testVersionId = "testVersion";
 
         it("debug version", function(done){
-            var cookieHead = "scriptStore";
+
             request(app)
                 .get(basePath + "/debug/version/" + testVersionId + "?query=" + JSON.stringify(query))
                 .set("Content-Type", "Application/json")
