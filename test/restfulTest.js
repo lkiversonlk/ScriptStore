@@ -45,7 +45,7 @@ var validTags = [
 
 var validVersions = [
     {
-        adid : "testadid1",
+        advid : "testadid1",
         name : "version1",
         description : "",
         triggers : validTriggers,
@@ -53,7 +53,7 @@ var validVersions = [
         createBy : ""
     },
     {
-        adid : "testadid2",
+        advid : "testadid2",
         name : "version2",
         triggers : validTriggers,
         tags : validTags,

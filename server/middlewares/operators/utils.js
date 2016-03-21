@@ -65,41 +65,41 @@ var OperationBuilder = {
      * @param from
      * @returns {Array}
      */
-    checkOutVersionToDraft : function(adid, versionId){
+    checkOutVersionToDraft : function(advid, versionId){
         var ret = OperationBuilder.DbGetOne("version", {query : {_id : versionId}});
-        ret = ret.concat(OperationBuilder.DbUpdate("draft", {query : {adid : adid}, data : null}));
+        ret = ret.concat(OperationBuilder.DbUpdate("draft", {query : {advid : advid}, data : null}));
         return ret;
     },
 
     /**
-     * create empty draft for adid
-     * @param adid
+     * create empty draft for advid
+     * @param advid
      * @returns {Array}
      */
-    createEmptyDraft : function(adid){
-        var ret = OperationBuilder.DbDelete("draft", { query : {adid : adid}});
-        ret = ret.concat(OperationBuilder.DbCreate("draft", { data : {adid : adid}}));
+    createEmptyDraft : function(advid){
+        var ret = OperationBuilder.DbDelete("draft", { query : {advid : advid}});
+        ret = ret.concat(OperationBuilder.DbCreate("draft", { data : {advid : advid}}));
         return ret;
     },
 
     /**
      * if not overwrite, publish current draft to a new version
      * create a new empty draft if version is not provided, or copy the specified version to be a new draft
-     * @param adid
+     * @param advid
      * @param version
      * @param overwrite
      * @returns {Array}
      */
 
-    exportVersionToDraft : function(adid, version, overwrite){
+    exportVersionToDraft : function(advid, version, overwrite){
         var ret = [];
         if(!overwrite){
-            ret = ret.concat(OperationBuilder.saveDraftToVersion({query : {adid : adid}}));
+            ret = ret.concat(OperationBuilder.saveDraftToVersion({query : {advid : advid}}));
         }
         if(version){
-            ret = ret.concat(OperationBuilder.checkOutVersionToDraft(adid, version))
+            ret = ret.concat(OperationBuilder.checkOutVersionToDraft(advid, version))
         }else{
-            ret = ret.concat(OperationBuilder.createEmptyDraft(adid));
+            ret = ret.concat(OperationBuilder.createEmptyDraft(advid));
         }
         return ret;
     },
@@ -117,11 +117,11 @@ var OperationBuilder = {
 
     /**
      * release specified version
-     * @param adid
+     * @param advid
      * @param versionId
      * @returns {*[]}
      */
-    releaseVersion : function(adid, versionId){
+    releaseVersion : function(advid, versionId){
         return [new OperationData("script", "release", "version", {_id : versionId})];
     },
 
@@ -147,7 +147,7 @@ var OperationBuilder = {
         var ret = OperationBuilder.DbGetOne("version", data);
         ret = ret.concat(OperationBuilder.getReleasedContent({data : null}));
         //since data.data may be fullfilled by the operation, so we extract the query alone
-        ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : {adid : data.query.adid }, data : null}));
+        ret = ret.concat(OperationBuilder.DbUpdateOrInsert("release", {query : {advid : data.query.advid }, data : null}));
         ret = ret.concat(OperationBuilder.DbUpdate("version", {query : data.query, data : {publish : Date.now()}}));
         return ret;
     },
@@ -203,7 +203,7 @@ var OperationBuilder = {
      * @param data
      */
     debugVersion : function(data){
-        var adid = data.query.adid;
+        var advid = data.query.advid;
         var versionId = data.query._id;
         return [new OperationData("script", "set", "cookie", {query : data.query, data : versionId})];
     },

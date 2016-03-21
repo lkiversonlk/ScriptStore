@@ -1,12 +1,12 @@
 {
     "type" : "object",
     "required" : [
-        "adid",
+        "advid",
         "triggers",
         "tags"
     ],
     "properties" : {
-        "adid" : {
+        "advid" : {
             "type" : "string"
         },
         "name" : {

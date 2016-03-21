@@ -57,7 +57,7 @@ var draftSchema = new Schema({
         required : true
     },
 
-    adid : {
+    advid : {
         type : String,
         required : true
     },

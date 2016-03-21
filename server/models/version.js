@@ -62,7 +62,7 @@ var versionSchema = new Schema({
         default : 0
     },
 
-    adid : {
+    advid : {
         type : String,
         required : true
     },

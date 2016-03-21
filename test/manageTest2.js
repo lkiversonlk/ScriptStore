@@ -12,8 +12,8 @@ var should = chai.should();
 var async = require("async");
 var queryString = require("querystring");
 
-var cookieHead = "advcodeconf";
-var testAdid = "testAdid";
+var cookieHead = "pycodeconf";
+var testadvid = "testadvid";
 var releaseKeys = 4;
 var releaseTagKeys = 3;
 var versionKeys = 10;
@@ -21,9 +21,9 @@ var versionTagKeys = 4;
 var draftKeys = 6;
 var draftTagKeys = 4;
 
-function getRelease(adid, callback){
+function getRelease(advid, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
 
     request(app)
@@ -33,9 +33,9 @@ function getRelease(adid, callback){
         .end(callback);
 }
 
-function getDraft(adid, callback){
+function getDraft(advid, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
 
     request(app)
@@ -45,9 +45,9 @@ function getDraft(adid, callback){
         .end(callback);
 }
 
-function getVersions(adid, id, callback){
+function getVersions(advid, id, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
 
     request(app)
@@ -86,7 +86,7 @@ function getWithCookie(url, cookie, done, callback){
         });
 }
 
-var query = JSON.stringify({adid : testAdid});
+var query = JSON.stringify({advid : testadvid});
 
 function method(method, url, data, done, callback){
     request(app)
@@ -105,7 +105,7 @@ function method(method, url, data, done, callback){
 
 function versionValid(data, version){
     //data.description.should.equal(version.description);
-    data.adid.should.equal(version.adid);
+    data.advid.should.equal(version.advid);
     Object.keys(data).length.should.equal(versionKeys);
     data.tags.length.should.equal(version.tags.length);
 
@@ -129,7 +129,7 @@ function versionValid(data, version){
 function draftValid(data, version){
     //data.name.should.equal(version.name);
     //data.description.should.equal(version.description);
-    data.adid.should.equal(version.adid);
+    data.advid.should.equal(version.advid);
     Object.keys(data).length.should.equal(draftKeys);
     data.tags.length.should.equal(version.tags.length);
 
@@ -211,7 +211,7 @@ describe("manage test suite", function(){
      * Empty
      */
     it("create first draft", function(done){
-        get("/manage/export?query=" + JSON.stringify({adid : testAdid}), done, function(res){
+        get("/manage/export?query=" + query, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             res.body.data.creation.should.be.above(startTime);
             creation1 = res.body.data.creation;
@@ -225,8 +225,8 @@ describe("manage test suite", function(){
      * Draft : emptydraft
      */
     it("update the draft", function(done){
-        versiondata1.adid = testAdid;
-        method("put", "/rest/draft?query=" + JSON.stringify({adid : testAdid}), versiondata1, done, function(res){
+        versiondata1.advid = testadvid;
+        method("put", "/rest/draft?query=" + query, versiondata1, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             done();
         });
@@ -238,7 +238,7 @@ describe("manage test suite", function(){
      *  Draft : versiondata1
      */
     it("check the draft", function(done){
-        get("/rest/draft?query=" + JSON.stringify({adid : testAdid}), done, function(res){
+        get("/rest/draft?query=" + query, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             res.body.data.length.should.equal(1);
             draft1 = res.body.data[0];
@@ -253,7 +253,7 @@ describe("manage test suite", function(){
      * Draft : draft1
      */
     it("now publish this draft", function(done){
-        get("/manage/publish/draft?query=" + JSON.stringify({adid : testAdid}), done, function(res){
+        get("/manage/publish/draft?query=" + query, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             done();
         });
@@ -296,7 +296,7 @@ describe("manage test suite", function(){
     })
 
     var versiondata2 = versions[1];
-    versiondata2.adid = testAdid;
+    versiondata2.advid = testadvid;
 
     /**
      * Draft : draft1
@@ -544,7 +544,7 @@ describe("manage test suite", function(){
                         var end = cookie.indexOf(";");
                         var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                         var textJson = JSON.parse(text);
-                        textJson[testAdid].should.equal(version1._id);
+                        textJson[testadvid].should.equal(version1._id);
                         done();
                     }
                 });
@@ -555,9 +555,9 @@ describe("manage test suite", function(){
 
     it("check the debug version1 works", function(done){
         var fackeCookie = {};
-        fackeCookie[testAdid] = version1._id;
+        fackeCookie[testadvid] = version1._id;
         var cookie = JSON.stringify(fackeCookie);
-        get("/manage/release?query=" + query + "&cookie=" + cookie, done, function(res){
+        get("/manage/release?query=" + query + "&pycodeconf=" + cookie, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             releaseValid(res.body.data, version1, 2);
             res.body.data.vid.should.equal(version1._id);
@@ -580,7 +580,7 @@ describe("manage test suite", function(){
                     var end = cookie.indexOf(";");
                     var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                     var textJson = JSON.parse(text);
-                    textJson[testAdid].should.equal("");
+                    textJson[testadvid].should.equal("");
                     done();
                 }
             });
@@ -594,9 +594,9 @@ describe("manage test suite", function(){
      */
     it("check the debug draft works", function(done){
         var fackeCookie = {};
-        fackeCookie[testAdid] = "";
+        fackeCookie[testadvid] = "";
         var cookie = JSON.stringify(fackeCookie);
-        get("/manage/release?query=" + query + "&cookie=" + cookie, done, function(res){
+        get("/manage/release?query=" + query + "&pycodeconf=" + cookie, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             releaseValid(res.body.data, version2, 2);
             res.body.data.vid.should.equal(draft2._id);
@@ -611,7 +611,7 @@ describe("manage test suite", function(){
      */
     it("undebug advertiser", function(done){
         var cookie = {};
-        cookie[testAdid] = "";
+        cookie[testadvid] = "";
 
         var sendCookie = cookieHead+ "=" + JSON.stringify(cookie);
 
@@ -629,5 +629,5 @@ describe("manage test suite", function(){
             });
         });
     });
-    var testAdid2 = "testAdid2";
+    var testadvid2 = "testadvid2";
 });

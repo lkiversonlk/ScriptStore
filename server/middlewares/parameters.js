@@ -43,7 +43,7 @@ function _extractDataForReq(req){
         release : (query.release == "true"),
         from : query.from,
         data : req.body,
-        cookie : (query.cookie == undefined ? null : JSON.parse(query.cookie))
+        pycodeconf : (query.pycodeconf == undefined ? null : JSON.parse(query.pycodeconf))
     };
 }
 

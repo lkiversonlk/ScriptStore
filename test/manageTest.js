@@ -11,12 +11,12 @@ var should = chai.should();
 var async = require("async");
 var queryString = require("querystring");
 
-var testAdid = "testAd";
+var testadvid = "testAd";
 var testDraft = null;
 var testVersion = null;
 var testRelease = null;
 var currentVersions = null;
-var cookieHead = "advcodeconf";
+var cookieHead = "pycodeconf";
 
 var basePath = "/manage";
 var restBasePath = "/rest";
@@ -37,9 +37,9 @@ var testTag = {
 };
 
 
-function getAll(adid, callback){
+function getAll(advid, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
     request(app)
         .get(basePath + "?query=" + JSON.stringify(query))
@@ -48,9 +48,9 @@ function getAll(adid, callback){
         .end(callback);
 }
 
-function getRelease(adid, callback){
+function getRelease(advid, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
 
     request(app)
@@ -60,9 +60,9 @@ function getRelease(adid, callback){
         .end(callback);
 }
 
-function getDraft(adid, callback){
+function getDraft(advid, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
 
     request(app)
@@ -72,9 +72,9 @@ function getDraft(adid, callback){
         .end(callback);
 }
 
-function getVersions(adid, callback){
+function getVersions(advid, callback){
     var query = {
-        adid : adid
+        advid : advid
     };
 
     request(app)
@@ -108,7 +108,7 @@ describe("test configuration interface", function(){
     describe("draft CURD", function(){
         it("create an empty draft", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
             request(app)
                 .get(basePath + "/export?query=" + JSON.stringify(query))
@@ -118,14 +118,14 @@ describe("test configuration interface", function(){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
                     testDraft = res.body.data;
-                    testDraft.adid.should.equal(testAdid);
+                    testDraft.advid.should.equal(testadvid);
                     //testDraft.name.should.equal("");
                     //testDraft.description.should.equal("");
                     testDraft.triggers.length.should.equal(0);
                     testDraft.tags.length.should.equal(0);
 
                     var query = {
-                        adid : testAdid
+                        advid : testadvid
                     };
                     request(app)
                         .get(restBasePath + "/draft?query=" + JSON.stringify(query))
@@ -139,7 +139,7 @@ describe("test configuration interface", function(){
                             //res.body.data.should.be.a("")
                             res.body.data.length.should.equal(1);
                             res.body.data[0]._id.should.equal(testDraft._id);
-                            getVersions(testAdid, function(err, res){
+                            getVersions(testadvid, function(err, res){
                                 if(err) done(err);
                                 res.body.code.should.equal(0, res.body.data);
                                 res.body.data.length.should.equal(0);
@@ -179,7 +179,7 @@ describe("test configuration interface", function(){
 
         it("save the draft to version", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
 
             request(app)
@@ -218,7 +218,7 @@ describe("test configuration interface", function(){
 
         it("get configurations of test advertiser", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
             request(app)
                 .get(basePath + "?query=" + JSON.stringify(query))
@@ -234,7 +234,7 @@ describe("test configuration interface", function(){
 
         it("publish the first version", function(done){
             var query = {
-                adid : testVersion.adid
+                advid : testVersion.advid
             };
 
             request(app)
@@ -245,7 +245,7 @@ describe("test configuration interface", function(){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
                     var query = {
-                        adid : testAdid
+                        advid : testadvid
                     };
                     request(app)
                         .get(restBasePath+"/release?query=" + JSON.stringify(query))
@@ -274,7 +274,7 @@ describe("test configuration interface", function(){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
                     var query = {
-                        adid : testAdid
+                        advid : testadvid
                     };
 
                     request(app)
@@ -287,7 +287,7 @@ describe("test configuration interface", function(){
                             //before there is one draft with one trigger, one version with one trigger, one release empty
                             //after publish draft, there should be one draft with one trigger and one tag
                             //two version the latter has one trigger and one tag, one release with one tag
-                            getAll(testAdid, function(err, res){
+                            getAll(testadvid, function(err, res){
                                 if(err) done(err);
                                 res.body.code.should.equal(0, res.body.data);
                                 currentVersions = res.body.data;
@@ -297,7 +297,7 @@ describe("test configuration interface", function(){
                                 currentVersions[2].triggers.length.should.equal(1);
                                 currentVersions[1].tags.length.should.equal(1);
                                 currentVersions[0].tags.length.should.equal(0);
-                                getRelease(testAdid, function(err, res){
+                                getRelease(testadvid, function(err, res){
                                     if(err) done(err);
                                     res.body.code.should.equal(0);
                                     res.body.data[0].tags.length.should.equal(1);
@@ -314,7 +314,7 @@ describe("test configuration interface", function(){
         //we have one release, two version, and one draft
         it("export version 0 with overwirte", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
             request(app)
                 .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[0]._id + "&overwrite=true")
@@ -323,12 +323,12 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
-                    getDraft(testAdid, function(err, res){
+                    getDraft(testadvid, function(err, res){
                         if(err) done(err);
                         res.body.code.should.equal(0, res.body.data);
                         res.body.data[0].triggers.length.should.equal(1);
                         res.body.data[0].tags.length.should.equal(0);
-                        getVersions(testAdid, function(err, res){
+                        getVersions(testadvid, function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
                             res.body.data.length.should.equal(2);
@@ -340,7 +340,7 @@ describe("test configuration interface", function(){
 
         it("export version 1 with overwrite", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
             request(app)
                 .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[1]._id + "&overwrite=true")
@@ -349,12 +349,12 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
-                    getDraft(testAdid, function(err, res){
+                    getDraft(testadvid, function(err, res){
                         if(err) done(err);
                         res.body.code.should.equal(0, res.body.data);
                         res.body.data[0].triggers.length.should.equal(1);
                         res.body.data[0].tags.length.should.equal(1);
-                        getVersions(testAdid, function(err, res){
+                        getVersions(testadvid, function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
                             res.body.data.length.should.equal(2);
@@ -366,7 +366,7 @@ describe("test configuration interface", function(){
 
         it("export version 0 without overwrite", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
             request(app)
                 .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[0]._id + "&overwrite=false")
@@ -375,12 +375,12 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
-                    getDraft(testAdid, function(err, res){
+                    getDraft(testadvid, function(err, res){
                         if(err) done(err);
                         res.body.code.should.equal(0, res.body.data);
                         res.body.data[0].triggers.length.should.equal(1);
                         res.body.data[0].tags.length.should.equal(0);
-                        getVersions(testAdid, function(err, res){
+                        getVersions(testadvid, function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
                             res.body.data.length.should.equal(3);
@@ -392,7 +392,7 @@ describe("test configuration interface", function(){
 
         it("export version 1 without overwrite", function(done){
             var query = {
-                adid : testAdid
+                advid : testadvid
             };
             request(app)
                 .get(basePath+"/export?query=" + JSON.stringify(query) + "&from=" + currentVersions[1]._id + "&overwrite=false")
@@ -401,12 +401,12 @@ describe("test configuration interface", function(){
                 .end(function(err, res){
                     if(err) done(err);
                     res.body.code.should.equal(0, res.body.data);
-                    getDraft(testAdid, function(err, res){
+                    getDraft(testadvid, function(err, res){
                         if(err) done(err);
                         res.body.code.should.equal(0, res.body.data);
                         res.body.data[0].triggers.length.should.equal(1);
                         res.body.data[0].tags.length.should.equal(1);
-                        getVersions(testAdid, function(err, res){
+                        getVersions(testadvid, function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
                             res.body.data.length.should.equal(4);
@@ -419,7 +419,7 @@ describe("test configuration interface", function(){
 
     describe("cookie test", function(){
         var query = {
-            adid : testAdid
+            advid : testadvid
         };
 
         it("debug draft", function(done){
@@ -437,7 +437,7 @@ describe("test configuration interface", function(){
                                 var end = cookie.indexOf(";");
                                 var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                                 var textJson = JSON.parse(text);
-                                textJson[testAdid].should.equal("");
+                                textJson[testadvid].should.equal("");
                                 done();
                             }
                         })
@@ -465,7 +465,7 @@ describe("test configuration interface", function(){
                                 var end = cookie.indexOf(";");
                                 var text = queryString.unescape(cookie.substr(cookieHead.length + 1 , end - cookieHead.length - 1));
                                 var textJson = JSON.parse(text);
-                                textJson[testAdid].should.equal(testVersionId);
+                                textJson[testadvid].should.equal(testVersionId);
                                 done();
                             }
                         })

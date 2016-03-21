@@ -12,10 +12,10 @@ var schemas = require("./schemas");
 var logger = require("../log").getLogger("routers.configuration");
 
 router.use(function(req, res, next){
-    if(req.parameters.query && req.parameters.query.adid){
+    if(req.parameters.query && req.parameters.query.advid){
         return next();
     }else{
-        return next(SsiError.ParameterInvalidError("adid is required"));
+        return next(SsiError.ParameterInvalidError("advid is required"));
     }
 });
 
@@ -29,13 +29,13 @@ router.get("/", function(req, res, next){
 });
 
 /**
- * checkout specified version to be the current draft of specified adid
+ * checkout specified version to be the current draft of specified advid
  *
  * * if no version id is provided, create an empty draft
  * * if not overwrite, previous draft will be saved as a new version
  */
 router.get("/export", function(req, res, next){
-    req.SsiData.addOperations(operBuilder.exportVersionToDraft(req.parameters.query.adid, req.parameters.from, req.parameters.overwrite));
+    req.SsiData.addOperations(operBuilder.exportVersionToDraft(req.parameters.query.advid, req.parameters.from, req.parameters.overwrite));
     return next();
 });
 
@@ -59,7 +59,7 @@ router.get("/publish/version/:id", function(req, res, next){
 });
 
 /**
- * publish draft of adid
+ * publish draft of advid
  */
 router.get("/publish/draft", function(req, res, next){
     var parameters = req.parameters;
@@ -87,7 +87,7 @@ router.get("/undebug", function(req, res, next){
 router.get("/release", function(req, res, next){
     var parameters = req.parameters;
     var cookie;
-    if(parameters.cookie && ((cookie = parameters.cookie[parameters.query.adid]) !== undefined)){
+    if(parameters.pycodeconf && ((cookie = parameters.pycodeconf[parameters.query.advid]) !== undefined)){
         if(cookie.length > 0){
             req.parameters.query= { _id : cookie};
             req.SsiData.addOperations(operBuilder.DbGetOne("version", req.parameters));
@@ -105,10 +105,10 @@ router.get("/release", function(req, res, next){
 
 
 router.post("/release", function(req, res, next){
-    var adid = req.parameters.query.adid;
+    var advid = req.parameters.query.advid;
     var cookies = req.body;
     var cookie = "";
-    if(cookies && (cookie = cookies[adid])){
+    if(cookies && (cookie = cookies[advid])){
         req.parameters.release = true;
         if(cookie.length > 0){
             req.parameters.query= { _id : cookie};

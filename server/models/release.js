@@ -43,7 +43,7 @@ var activeSchema = new Schema({
         required : true
     },
 
-    adid : {
+    advid : {
         type : String,
         required : true
     },

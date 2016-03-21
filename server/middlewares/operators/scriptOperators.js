@@ -130,7 +130,7 @@ ret.script_get_all = function(data, context, callback){
     );
 };
 
-var COOKIE_KEY = "advcodeconf";
+var COOKIE_KEY = "pycodeconf";
 
 var expirationTime = 40 * 60 * 1000;
 /**
@@ -151,7 +151,7 @@ var expirationTime = 40 * 60 * 1000;
  * @param callback
  */
 ret.script_set_cookie = function(data, context, callback){
-    var advertiser = data.query.adid;
+    var advertiser = data.query.advid;
     var req = context[0];
     cookie = req.cookies[COOKIE_KEY];
     if(cookie){
@@ -166,7 +166,7 @@ ret.script_set_cookie = function(data, context, callback){
 };
 
 ret.script_delete_cookie = function(data, context, callback){
-    var advertiser = data.query.adid;
+    var advertiser = data.query.advid;
     var req = context[0];
     cookie = req.cookies[COOKIE_KEY];
     if(cookie){
