@@ -33,12 +33,10 @@ var operators = {
         Dao.deleteDoc("version", data, _wrapCallback(callback));
     },
 
-
     db_update_version : function(data, context, callback){
         data.data.creation = Date.now();
         Dao.updateDoc("version", data, _wrapCallback(callback));
     },
-
 
     db_create_version : function(data, context, callback){
         delete data.data._id;

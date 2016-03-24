@@ -7,10 +7,11 @@ var logger = require("../../log").getLogger("middlewares.operators.adapterOperat
 var  operators = {
     /**
      * data should be like {
-     *    update : {}
-     *    data :
+     *    query : { key : value}
+     *    data : obj
      * }
-     * update the data.data according to update value
+     * update obj[key]=value
+     *
      * @param data
      * @param context
      * @param callback
@@ -23,13 +24,8 @@ var  operators = {
             });
             callback(null, ret);
         }else{
-            logger.log("error", "update adapter needs data and update field");
-            callback()
+            callback(SsiErrors.DataInvalidError("update adapter needs data and query field"));
         }
-    },
-
-    adapter_extact_property : function(data, context, callback){
-
     }
 };
 

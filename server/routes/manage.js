@@ -40,7 +40,7 @@ router.get("/export", function(req, res, next){
 });
 
 /**
- * publish specified draft to a new version
+ * publish draft of specific advertiser to a new version
  */
 router.get("/toversion", function(req, res, next){
     req.SsiData.addOperations(operBuilder.saveDraftToVersion(req.parameters));
@@ -103,7 +103,9 @@ router.get("/release", function(req, res, next){
 
 });
 
-
+/**
+ * maybe deprecated
+ */
 router.post("/release", function(req, res, next){
     var advid = req.parameters.query.advid;
     var cookies = req.body;
