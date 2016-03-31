@@ -24,6 +24,10 @@ var triggerSchema = new Schema({
     value : {
         type : String,
         required :true
+    },
+
+    extension : {
+        type : String
     }
 }, {_id : false});
 

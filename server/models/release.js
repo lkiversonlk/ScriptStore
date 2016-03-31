@@ -6,31 +6,31 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var activeTriggerSchema = new Schema({
-    ruleType : {
+    r : {    //ruleType
         type : Number,
         required : true
     },
-    op : {
+    o : {    //op
         type : Number,
         required : true
     },
-    value : {
+    v : {    //value
         type : String,
         required : true
     }
 }, {_id : false});
 
 var activeTagSchema = new Schema({
-    script : {
+    s : {             //script
         type : String,
         required : true
     },
 
-    conversion : {
+    c : {    //conversions
         type : String
     },
 
-    triggers : {
+    t : {         //triggers
         type : [activeTriggerSchema],
         default : []
     }
@@ -38,7 +38,7 @@ var activeTagSchema = new Schema({
 
 var activeSchema = new Schema({
 
-    vid : {
+    v : {     //vid
         type : String,
         required : true
     },
@@ -48,7 +48,7 @@ var activeSchema = new Schema({
         required : true
     },
 
-    tags : {
+    t : {   //tags
         type : [activeTagSchema],
         default : []
     }

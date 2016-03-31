@@ -153,14 +153,14 @@ function draftValid(data, version){
 function releaseValid(data, version, keys){
     if(!keys) keys = releaseKeys;
     Object.keys(data).length.should.equal(keys);
-    data.tags.forEach(function(tag, i){
+    data.t.forEach(function(tag, i){  //tags
         Object.keys(tag).length.should.equal(releaseTagKeys);
-        tag.script.should.equal(version.tags[i].script);
-        tag.conversion.should.equal(version.tags[i].conversion);
-        tag.triggers.forEach(function(trigger, j){
-            trigger.ruleType.should.equal(version.triggers[version.tags[i].triggers[j]].ruleType);
-            trigger.value.should.equal(version.triggers[version.tags[i].triggers[j]].value);
-            trigger.op.should.equal(version.triggers[version.tags[i].triggers[j]].op);
+        tag.s.should.equal(version.tags[i].script);   //script
+        tag.c.should.equal(version.tags[i].conversion);  //conversion
+        tag.t.forEach(function(trigger, j){   //triggers
+            trigger.r.should.equal(version.triggers[version.tags[i].triggers[j]].ruleType);  //ruleType
+            trigger.v.should.equal(version.triggers[version.tags[i].triggers[j]].value);    //value
+            trigger.o.should.equal(version.triggers[version.tags[i].triggers[j]].op);       //op
         });
     });
 }
@@ -286,7 +286,7 @@ describe("manage test suite", function(){
             res.body.code.should.equal(0, res.body.data);
             res.body.data.length.should.equal(1);
             version1 = res.body.data[0];
-            release1.vid.should.equal(version1._id);
+            release1.v.should.equal(version1._id);
             version1.publish.should.not.equal(0);
             versionValid(version1, draft1);
             version1.creation.should.be.above(draft1.creation);
@@ -358,7 +358,6 @@ describe("manage test suite", function(){
             version2._id.should.not.equal(draft2._id);
             versionValid(version2, draft2);
             version2.creation.should.be.above(draft2.creation);
-
             done();
         });
     });
@@ -399,7 +398,7 @@ describe("manage test suite", function(){
         get("/rest/version/" + version2._id + "?query=" + query, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             version2 = res.body.data;
-            release2.vid.should.equal(version2._id);
+            release2.v.should.equal(version2._id);
             version2.publish.should.be.above(version1.publish);
             versionValid(version2, draft2);
             version2.creation.should.be.above(draft2.creation);
@@ -532,7 +531,7 @@ describe("manage test suite", function(){
         get("/manage/release?query=" + query, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             releaseValid(res.body.data, version2);
-            res.body.data.vid.should.equal(version2._id);
+            res.body.data.v.should.equal(version2._id);
             done();
             get("/manage/debug/version/" + version1._id + "?query=" + query, done, function(res){
                 res.body.code.should.equal(0, res.body.data);
@@ -560,7 +559,7 @@ describe("manage test suite", function(){
         get("/manage/release?query=" + query + "&pycodeconf=" + cookie, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             releaseValid(res.body.data, version1, 2);
-            res.body.data.vid.should.equal(version1._id);
+            res.body.data.v.should.equal(version1._id);
             done();
         });
     });
@@ -599,7 +598,7 @@ describe("manage test suite", function(){
         get("/manage/release?query=" + query + "&pycodeconf=" + cookie, done, function(res){
             res.body.code.should.equal(0, res.body.data);
             releaseValid(res.body.data, version2, 2);
-            res.body.data.vid.should.equal(draft2._id);
+            res.body.data.v.should.equal(draft2._id);
             done();
         });
     });

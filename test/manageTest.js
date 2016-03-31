@@ -119,8 +119,6 @@ describe("test configuration interface", function(){
                     res.body.code.should.equal(0, res.body.data);
                     testDraft = res.body.data;
                     testDraft.advid.should.equal(testadvid);
-                    //testDraft.name.should.equal("");
-                    //testDraft.description.should.equal("");
                     testDraft.triggers.length.should.equal(0);
                     testDraft.tags.length.should.equal(0);
 
@@ -254,7 +252,6 @@ describe("test configuration interface", function(){
                         .end(function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
-
                             done();
                         });
 
@@ -300,7 +297,7 @@ describe("test configuration interface", function(){
                                 getRelease(testadvid, function(err, res){
                                     if(err) done(err);
                                     res.body.code.should.equal(0);
-                                    res.body.data[0].tags.length.should.equal(1);
+                                    res.body.data[0].t.length.should.equal(1);  //tags
                                     done();
                                 });
 

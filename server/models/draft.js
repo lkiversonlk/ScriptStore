@@ -24,7 +24,12 @@ var triggerSchema = new Schema({
     value : {
         type : String,
         required :true
+    },
+
+    extension : {
+        type : String
     }
+
 }, {_id : false});
 
 var tagSchema = new Schema({
@@ -48,6 +53,7 @@ var tagSchema = new Schema({
     conversion : {
         type : String
     }
+
 }, {_id : false});
 
 var draftSchema = new Schema({

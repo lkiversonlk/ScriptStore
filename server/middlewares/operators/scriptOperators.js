@@ -10,33 +10,39 @@ var SsiError = require('../../errors');
 var async = require("async");
 var ret = {};
 
-
+/**
+ * the transform will compress the properties
+ * @param version
+ * @returns {{tags: Array}}
+ * @private
+ */
 function  _transform(version){
     var oldTriggers = version.triggers;
     var ret = {
-        tags : []
+        t : []  //tags
     };
     version.tags.forEach(function(tag){
         var newTag = {
-            script : tag.script,
-            triggers : []
+            s : tag.script,  //script
+            t : [] //triggers
         };
         if(tag.conversion){
-            newTag.conversion = tag.conversion;
+            newTag.c = tag.conversion; //conversion
         }
         tag.triggers.forEach(function(trigger){
             var oldTrigger = oldTriggers[trigger];
-            newTag.triggers.push({
-                ruleType : oldTrigger.ruleType,
-                op : oldTrigger.op,
-                value : oldTrigger.value
+            newTag.t.push({    //triggers
+                r : oldTrigger.ruleType, //ruleType
+                o : oldTrigger.op,       //op
+                v : oldTrigger.value     //value
             });
         });
-        ret.tags.push(newTag);
+        ret.t.push(newTag);  //tags
     });
-    ret.vid = version._id;
+    ret.v = version._id;    //vid
     return ret;
 }
+
 
 ret.script_transform_version = function(data, context, callback){
     var versions = data.data;
