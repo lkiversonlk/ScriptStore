@@ -110,23 +110,23 @@ release表保存广告主当前publish的版本。
 
 * _id
 记录唯一id
-* vid
+* v (vid)
 该记录在version表中唯一id
 * advid
 广告主id
-* tags
+* t (tags)
 配置单元，数组，具体每项为：
-	* script
+	* s (scripts)
 	tag脚本内容
-	* conversion
+	* c (conversion)
 	转化点
-	* triggers
+	* t (triggers)
 	触发器数组，每项数据内容为:
-		* ruleType
+		* r (ruleType)
 		触发器类型
-		* op
+		* o (op)
 		匹配方法类型
-		* value
+		* v (value)
 		匹配值
 
 接口及规范
