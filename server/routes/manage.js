@@ -97,6 +97,8 @@ router.get("/release", function(req, res, next){
         req.SsiData.addOperations(operBuilder.getReleasedContent({data : null}));
         return next();
     }else{
+        //for direct get release content, we only select the "t" segments
+        req.parameters.select = ["t", "-_id"];
         req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));
         return next();
     }
@@ -113,6 +115,7 @@ router.post("/release", function(req, res, next){
     if(cookies && (cookie = cookies[advid])){
         req.parameters.release = true;
         if(cookie.length > 0){
+
             req.parameters.query= { _id : cookie};
             req.SsiData.addOperations(operBuilder.DbGetOne("version", req.parameters));
         }else{
@@ -121,6 +124,8 @@ router.post("/release", function(req, res, next){
         req.SsiData.addOperations(operBuilder.getReleasedContent({data : null}));
         return next();
     }else{
+        //for direct get release content, we only select the "t" segments
+        req.parameters.select = ["t", "-_id"];
         req.SsiData.addOperations(operBuilder.DbGetOne("release", req.parameters));
         return next();
     }
