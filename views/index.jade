@@ -48,14 +48,14 @@ block content
         div
             div.row
                 ul.nav.nav-pills.nav-stacked.col-md-2
-                    li(role="presentation")
+                    li.active(role="presentation")
                         a(href="#triggers", data-toggle="tab")
                             | triggers
-                    li.active(role="presentation")
+                    li(role="presentation")
                         a(href="#tags", data-toggle="tab")
                             | tags
                 div.tab-content.col-md-4.col-md-offset-1
-                    div#tags.tab-pane.active
+                    div#tags.tab-pane
                         div.label
                             | Tags 列表
                         div(ng-controller="tagsController")
@@ -101,7 +101,7 @@ block content
                                         div.form-group
                                             am-multiselect(class="input-lg", multiple="true", ms-selected = "选择了{{triggerNames.length}}个triggers", ng-model="triggerNames", ms-header="选择触发器", options="c.name for c in triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
 
-                    div#triggers.tab-pane
+                    div#triggers.tab-pane.active
                         div.label
                             | Triggers 列表
                         div(ng-controller="triggersController")
