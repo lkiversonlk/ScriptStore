@@ -16,7 +16,6 @@
     "jade": "~1.11.0",
     "js-yaml": "^3.5.5",
     "jsen": "^0.6.0",
-    "mariasql": "^0.2.5",
     "mongoose": "^4.4.5",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
