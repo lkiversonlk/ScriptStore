@@ -5,28 +5,16 @@
     ],
     "properties" : {
         "db" : {
-            "type" : "object",
-            "required" : [
-                "dbType",
-                "connectString",
-                "user",
-                "password"
-            ],
-            "properties" : {
-                "dbType" : {
-                    "type" : "string",
-                    "enum" : [
-                        "mongodb"
-                    ]
-                },
-                "connectString" : {
-                    "type" : "string"
-                },
-                "user" : {
-                    "type" : "string"
-                },
-                "password" : {
-                    "type" : "string"
+            "type" : "array",
+            "item" : {
+                "type" : "object",
+                "required" : [
+                    "connectString"
+                ],
+                "properties" : {
+                    "connectString" : {
+                        "type" : "string"
+                    }
                 }
             }
         },

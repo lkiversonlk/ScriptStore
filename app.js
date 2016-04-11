@@ -18,8 +18,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // db connection
-var configuration = require("./configs/config.json");
+var configuration = null;
+var configurationSchema = require("./configs/configSchema.json");
+var yaml = require("js-yaml");
+var fs = require("fs");
 
+try{
+    configuration = yaml.safeLoad(fs.readFileSync("./configs/config.yaml", "utf-8"));
+}catch (error){
+    console.log("fail to load configuration " + error.message);
+    process.exit(-1);
+}
 /*
 try{
     configuration = require("./configs/test.json");
@@ -29,7 +38,7 @@ try{
 }
 */
 
-var configurationSchema = require("./configs/configSchema.json");
+
 var jsen = require("jsen");
 
 var validate= jsen(configurationSchema);
@@ -53,7 +62,18 @@ if(validate(configuration)){
 }
 
 var mongoose = require("mongoose");
-mongoose.connect(configuration.db.connectString);
+var connectString = configuration.db.map(function(db){
+    return db.connectString
+}).join(",");
+
+var options = {};
+options.server = {};
+options.replset = {};
+options.server.socketOptions =
+    options.replset.socketOptions =
+    {keepAlive : 120};
+
+mongoose.connect(connectString, options);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
