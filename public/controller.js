@@ -261,7 +261,7 @@ app.controller("triggersController", function($scope, appControl){
 app.controller("currentReleaseController", function($scope, appControl){
     function update(){
         var debugInfo = appControl.getDebugInfo();
-        if(debugInfo !== null){
+        if(debugInfo == null || debugInfo == undefined){
             $scope.debugging = true;
             if(debugInfo.length > 0){
                 $scope.status = "调试广告主" + debugInfo + " 版本中";
