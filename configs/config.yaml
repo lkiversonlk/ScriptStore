@@ -1,0 +1,6 @@
+db:
+  -
+    connectString: "localhost/testScriptStore"
+app:
+  log:
+    level: debug

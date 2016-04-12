@@ -28,7 +28,7 @@ block content
                 div.col-md-3
                     select.form-control(ng-model="select", ng-change="changeVersion();")
                         option(ng-repeat="version in versions", value="{{version._id}}")
-                            | {{version.draft ? "当前草稿" : "版本 " + $index}}
+                            | {{version.draft ? "当前草稿" : ("版本 " + $index + "<=====>" + (version.publish))}}
                 div
                     button.col-md-1.btn.btn-default(ng-click="createDraft();", ng-show="shouldCreateDraft")
                         | 创建草稿
