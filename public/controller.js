@@ -103,6 +103,10 @@ app.controller("selectVersionController", function($scope, appControl){
 
             });
     }
+
+    $scope.getDate = function(date){
+        return new Date(date).toLocaleTimeString();
+    }
 });
 
 app.controller("createTriggerController", function($scope, appControl){
