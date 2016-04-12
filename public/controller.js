@@ -130,14 +130,7 @@ app.controller("createTriggerController", function($scope, appControl){
             });
     };
 
-    $scope.allowEditing = false;
 
-    $scope.$on(appControl.Events.VERSION_CHANGE, function(){
-        appControl.getCurrentVersionData()
-            .then(function(version){
-                $scope.allowEditing = version.draft;
-            });
-    });
 });
 
 app.controller("createTagController", function($scope, appControl){
@@ -178,8 +171,6 @@ app.controller("createTagController", function($scope, appControl){
             });
     };
 
-    $scope.allowEditing = false;
-
     $scope.$on(appControl.Events.VERSION_CHANGE, function(){
         appControl.getCurrentVersionData()
             .then(function(version){
@@ -191,18 +182,40 @@ app.controller("createTagController", function($scope, appControl){
 
 app.controller("tagsController", function($scope, appControl){
     $scope.tags = [];
+    $scope.allowEditing = false;
+
+    $scope.updateTag = function(i){
+        //alert("trying to update tag " + i);
+        var tag = this.tag; //this points to the child scope
+        appControl.getCurrentVersionData()
+            .then(function(version){
+                if(version.draft){
+                    version.tags[i] = tag;
+                    return appControl.updateDraft(version);
+                }else{
+                    //TODO: reject it!
+                }
+            })
+            .then(function(){
+                return appControl.reloadVersions();
+            });
+    }
+
     $scope.$on(appControl.Events.VERSION_CHANGE, function(){
         appControl.getCurrentVersionData()
             .then(
                 function(version){
                     $scope.tags = version.tags;
                     $scope.triggers = version.triggers;
+                    $scope.allowEditing = version.draft;
                 },
                 function(error){
                     $scope.tags = [];
                 }
             )
     });
+
+
 });
 
 app.controller("triggersController", function($scope, appControl){
@@ -215,13 +228,30 @@ app.controller("triggersController", function($scope, appControl){
             .then(
                 function(version){
                     $scope.triggers = version.triggers;
-
+                    $scope.allowEditing = version.draft;
                 },
                 function(error){
                     $scope.triggers = [];
                 }
             )
     });
+
+    $scope.updateTrigger = function(i){
+        //alert("trying to update tag " + i);
+        var trigger = this.trigger; //this points to the child scope
+        appControl.getCurrentVersionData()
+            .then(function(version){
+                if(version.draft){
+                    version.triggers[i] = trigger;
+                    return appControl.updateDraft(version);
+                }else{
+                    //TODO: reject it!
+                }
+            })
+            .then(function(){
+                return appControl.reloadVersions();
+            });
+    }
 });
 
 app.controller("currentReleaseController", function($scope, appControl){
@@ -246,6 +276,7 @@ app.controller("currentReleaseController", function($scope, appControl){
     }
 
     $scope.$on(appControl.Events.ADVERTISER_CHANGE, update);
+    $scope.$on(appControl.Events.VERSIONS_RELOADED, update);
     $scope.$on(appControl.Events.DEBUG, update);
     $scope.$on(appControl.Events.PUBLISH, update);
 
