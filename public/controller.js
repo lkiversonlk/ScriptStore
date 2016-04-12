@@ -22,7 +22,7 @@ app.controller("selectVersionController", function($scope, appControl){
 
     function updateDebug(){
         var debugInfo = appControl.getDebugInfo();
-        if(debugInfo !== null){
+        if(debugInfo !== null && debugInfo !== undefined){
             $scope.debugging = true;
         }else{
             $scope.debugging = false;
