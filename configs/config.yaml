@@ -1,6 +1,0 @@
-db:
-  -
-    connectString: "192.168.99.100/pyscript"
-app:
-  log:
-    level: debug
