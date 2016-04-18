@@ -54,5 +54,5 @@ build/Release
 .node_repl_history
 
 config.json
-config/config.yaml
+configs/config.yaml
 bower_components
