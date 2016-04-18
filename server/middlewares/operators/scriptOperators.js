@@ -120,7 +120,7 @@ ret.script_set_cookie = function(data, context, callback){
     }
     cookie[advertiser] = data.data;
     var res = context[1];
-    res.cookie(COOKIE_KEY, JSON.stringify(cookie), {domain : ".ipinyou.com", maxAge : expirationTime});
+    res.cookie(COOKIE_KEY, JSON.stringify(cookie), {domain : ".ipinyou.com"});
     callback(null);
 };
 
@@ -136,7 +136,7 @@ ret.script_delete_cookie = function(data, context, callback){
         if(Object.keys(cookie).length == 0){
             res.clearCookie(COOKIE_KEY, {domain : ".ipinyou.com"});
         }else{
-            res.cookie(COOKIE_KEY, JSON.stringify(cookie), {domain : ".ipinyou.com", maxAge : expirationTime});
+            res.cookie(COOKIE_KEY, JSON.stringify(cookie), {domain : ".ipinyou.com"});
         }
         return callback(null);
     }else{

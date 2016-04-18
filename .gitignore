@@ -56,5 +56,3 @@ build/Release
 config.json
 config.yaml
 bower_components
-
-public/lib/*

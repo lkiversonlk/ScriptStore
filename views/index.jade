@@ -1,9 +1,9 @@
 extends layout
 
 block content
-    link(rel="stylesheet", href="/lib/amitava82/angular-multiselect/dist/multiselect.css")
+    link(rel="stylesheet", href="/lib/amitava82-angular-multiselect/dist/multiselect.css")
     link(rel="stylesheet", href="/lib/angular-block-ui/dist/angular-block-ui.min.css")
-    script(src="/lib/amitava82/angular-multiselect/dist/multiselect.js")
+    script(src="/lib/amitava82-angular-multiselect/dist/multiselect.js")
     script(src="/lib/angular-cookies/angular-cookies.min.js")
     script(src="/lib/angular-block-ui/dist/angular-block-ui.min.js")
     script(src="/constants.js")
@@ -97,7 +97,7 @@ block content
                                         div.form-group
                                             input.form-control(placeholder="转化点ID", ng-model="tag.conversion")
                                         div.form-group
-                                            am-multiselect(class="input-lg", multiple="true", ms-selected = "选择了{{triggerNames.length}}个triggers", ng-model="triggerNames", ms-header="选择触发器", options="c.name for c in triggers", template-url="/lib/amitava82/angular-multiselect/dist/multiselect.tmpl.html")
+                                            am-multiselect(class="input-lg", multiple="true", ms-selected = "选择了{{triggerNames.length}}个triggers", ng-model="triggerNames", ms-header="选择触发器", options="c.name for c in triggers", template-url="/lib/amitava82-angular-multiselect/dist/multiselect.tmpl.html")
 
                     div#triggers.tab-pane.active
                         div(ng-controller="triggersController")
