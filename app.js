@@ -93,11 +93,13 @@ app.use(function(req, res, next){
     next();
 });
 
+var template = require("./server/routes/template");
+app.use("/template", template, middlewares.presentation.present, middlewares.presentation.presentError);
+
+
 app.use(middlewares.parameters);
 app.use('/rest', restRouter);
 app.use('/manage', manage);
-//app.use('/users', users);
-
 app.use(middlewares.operation);
 app.use(middlewares.presentation.present);
 app.use(middlewares.presentation.presentError);
