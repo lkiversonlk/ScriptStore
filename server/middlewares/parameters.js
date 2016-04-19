@@ -50,10 +50,6 @@ function _extractDataForReq(req){
 var parameters = function (req, res, next){
     var data;
 
-    if(!req.headers['content-type'] || req.headers['content-type'].toLowerCase() != "application/json"){
-        logger.log("debug", "content-type not exist or not valid");
-        return next(SsiErrors.ContentTypeInvalidError());
-    }
     try{
         data = _extractDataForReq(req);
     }catch (error){
