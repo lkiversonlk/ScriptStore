@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var winston = require("winston");
+
 
 var restRouter = require('./server/routes/rest');
 var manage = require("./server/routes/manage");
@@ -49,7 +51,7 @@ if(validate(configuration)){
     if(configuration.app){
         if(configuration.app.log){
             if(configuration.app.log.level){
-                require("./server/log").setLogLevel(configuration.app.log.level);
+                winston.level = configuration.app.log.level;
             }
         }
     }
