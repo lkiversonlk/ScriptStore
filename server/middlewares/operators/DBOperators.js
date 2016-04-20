@@ -7,14 +7,42 @@ var logger = require("../../log").getLogger("middlewares.operators.DBOperators")
 var _wrapCallback = require("./utils").wrapCallback;
 var SsiErrors = require("../../errors");
 var validateVersion = require("./utils").validateVersion;
-var operators = {
+var TimeCache = require("../../timeCache");
 
+var releaseCache = new TimeCache(10 * 60 * 1000);
+
+var operators = {
     db_getAll_draft : function(data, context, callback){
         Dao.readDoc("draft", data, _wrapCallback(callback));
     },
 
+
     db_getOne_release : function(data, context, callback){
-        Dao.readOneDoc("release", data, _wrapCallback(callback));
+        //add cache here
+        //assume that the only parameter should be advid
+        if(data && (data.query) && (data.query.advid)){
+            return releaseCache.get(data.query.advid)
+                .then(
+                    function (item) {
+                        logger.log("debug", "cache hitted for advid " + data.query.advid);
+                        callback(null, item);
+                    },
+                    function () {
+                        Dao.readOneDoc("release", data, _wrapCallback(function (error, doc) {
+                            if(error){
+                                callback(error);
+                            }else{
+                                logger.log("debug", "cache missed for advid " + data.query.advid);
+                                releaseCache.set(data.query.advid, doc);
+                                callback(null, doc);
+                            }
+                        }));
+                    }
+                )
+        }else{
+            Dao.readOneDoc("release", data, _wrapCallback(callback));
+        }
+
     },
 
     db_getAll_release : function(data, context, callback){

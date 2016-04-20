@@ -20,6 +20,10 @@
     "bootstrap": "~3.3.6",
     "angular-cookies": "~1.5.0",
     "angular-block-ui": "~0.2.2",
-    "amitava82-angular-multiselect": "^1.2.0"
+    "amitava82-angular-multiselect": "^1.2.0",
+    "angularjs-dropdown-multiselect": "^1.5.2"
+  },
+  "resolutions": {
+    "angular": ">=1.0.4"
   }
 }
