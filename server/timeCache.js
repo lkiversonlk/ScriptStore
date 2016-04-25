@@ -4,7 +4,7 @@
 
 var logger = require("./log").getLogger("timeCache");
 
-var Q = require("Q");
+var Q = require("q");
 
 function _cacheItem(item) {
     this.item = item;
