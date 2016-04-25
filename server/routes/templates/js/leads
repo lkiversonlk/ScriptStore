@@ -1,0 +1,4 @@
+py("event","leads" ,{
+    "id":"{{ leadsId }}",
+    "data":{{ data|raw|json_encode }}
+});

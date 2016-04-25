@@ -5,8 +5,9 @@
     var h = d.getElementsByTagName("script")[0];h.parentNode.insertBefore(c, h);
 })(window,document,'script','{% if command_name %}{{ command_name }}{% else %}py{% endif %}','{{ ad_id }}');
 
-// set domain 段
-py("set","domain","{domain}");
+{% if domain %}
+py("set", "domain", "{domain}");
+{% endif %}
 
 {% if site %}
 py("set", "site", {

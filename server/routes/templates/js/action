@@ -1,1 +1,0 @@
-{% if command_name %}{{ command_name }}{% else %}py{% endif %}("event",
