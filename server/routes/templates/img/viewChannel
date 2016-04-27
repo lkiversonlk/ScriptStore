@@ -1,0 +1,2 @@
+py("event","viewActivity","{{ channelName }}");
+py('send','visit','viewActivity');

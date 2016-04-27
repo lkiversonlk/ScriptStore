@@ -1,0 +1,10 @@
+py("event","viewCart",{
+    "money":"{{ money }}",
+    "items":[
+        {% for item in items %}
+        {"id":"{{ item['id'] }}","count":"{{ item['count'] }}","price":"{{ item['price'] }}"} {% if !loop.last %},{% endif %}
+        {% endfor %}
+    ]
+});
+
+py('send','visit','viewCart');

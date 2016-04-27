@@ -1,5 +1,5 @@
 py("event", "custom", "{{ eventName }}"
    {% if data %}
-   ,
+   , {{ data|raw|json_encode }}
    {% endif %}
 );

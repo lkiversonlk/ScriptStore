@@ -17,7 +17,7 @@ py("set", "site", {
 });
 {% endif %}
 
-{% if user %}
+{% if userid||username||usercookie||useremail||usertype||usercategory  %}
 py("set","user",{
     "id":"{userid}",
     "name":"{username}",

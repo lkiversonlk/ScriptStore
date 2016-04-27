@@ -1,0 +1,4 @@
+py("event","register" ,{
+    "id":"{{ userId }}",
+    "data":{{ data|raw|json_encode }}
+});

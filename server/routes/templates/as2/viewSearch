@@ -1,0 +1,12 @@
+var keywords = "{{ keywords }}";
+var submitURL:String = "http://stats.ipinyou.com/cvt.gif?a={a}&e=ev%3Dvs%26ep%3D"+keywords;
+var result_lv:LoadVars = new LoadVars();
+result_lv.onLoad = function(success:Boolean) {
+    if (success) {
+        trace("We are in business");
+    } else {
+        trace("false");
+    }
+};
+var send_lv:LoadVars = new LoadVars();
+send_lv.sendAndLoad(submitURL, result_lv, "POST");
