@@ -1,0 +1,34 @@
+品友用户访问行为数据收集基础代码
+
+{% if domain %}
+py("set", "domain", "{domain}");
+{% endif %}
+
+{% if site %}
+site段参数说明
+type：站点类型，取值为（pc,mobile,tablet）对应广告主pc站点，移动站点，平板站点，不传默认为pc站点。
+{% endif %}
+
+{% if userid|username|usercookie|useremail|usertype|usercategory %}
+user段参数说明
+py("set","user",{
+{% if userid %}
+id：用户ID，替换“{userid}”
+{% endif %}
+{% if username %}
+name：用户名，替换“{username}”
+{% endif %}
+{% if usercookie %}
+cookieId：用户cookieid，替换“{usercookie}”
+{% endif %}
+{% if useremail %}
+email：用户邮箱，替换“{useremail}”
+{% endif %}
+{% if usertype %}
+type：用户类型，1为新客，0为老客，2为不确定
+{% endif %}
+{% if usercategory %}
+category：用户分类，品友分配，根据规则替换
+{% endif %}
+});
+{% endif %}

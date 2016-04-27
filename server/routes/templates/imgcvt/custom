@@ -1,0 +1,7 @@
+py("event", "custom", "{{ eventName }}"{
+    "id":"{uniqueId}",
+    "data":{
+		"{key1}":"{value1}",
+		"{key2}":"{value2}"
+	}
+});

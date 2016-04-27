@@ -1,0 +1,2 @@
+py('event','collect','{itemId}');
+py('send','visit','collect');

@@ -1,0 +1,7 @@
+py("event","register" ,{
+    "id":"{userId}",
+    "data":{
+		"{key1}":"{value1}",
+		"{key2}":"{value2}"
+	}
+});

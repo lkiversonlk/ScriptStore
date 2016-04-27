@@ -1,0 +1,9 @@
+py("event","viewCart",{
+    "money":"{money}",
+    "items":[
+        {"id":"{item.id}","count":"{item.count}","price":"{item.price}"},
+        {"id":"{item.id}","count":"{item.count}","price":"{item.price}"}
+    ]
+});
+
+py('send','visit','viewCart');

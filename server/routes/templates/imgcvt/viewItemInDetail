@@ -1,0 +1,29 @@
+py("event","viewItem",{
+	"product_no":"{product_no}", //商品编号
+	"spu_id":"{spu_id}", //标准化产品单元ID
+	"name":"{name}", //商品名称（必填）
+	"category":"{category}", //所属分类完整路径（必填）
+	"price":"{price}", //商品售价（必填）
+	"orig_price":"{orig_price}", //商品显示价格
+	"currency_code":"{currency_code}", //货币类型(选填)
+	"product_url":"{product_url}", //商品URL地址（必填）
+	"pic_size":"{pic_size}", //商品图片尺寸“宽x高”
+	"pc_pic_url":"{pc_pic_url}", //商品预览图（必填）
+	"promotion":"{promotion}", //促销信息(选填),如：热卖,促销
+	"on_time":"{on_time}", //商品上架时间
+	"off_time":"{off_time}", //商品下架时间
+	"sold_out":"{sold_out}", //售空标识 1为不可售，0为可售
+	"stock":"{stock}", //商品剩余库存数
+	"brand":"{brand}", //商品品牌名称
+	{% if mobile|app %}
+	"mobile_name":"{mobile_name}", //商品名用于移动端模板
+	"mobile_product_url":"{mobile_product_url}", //移动端商品链接地址
+	"mobile_pic_url":"{mobile_pic_url}", //商品图片地址
+	"mobile_pic_size":"{mobile_pic_size}", //移动端图片尺寸“宽x高”
+	{% endif %}
+	{% if app %}
+	"ios_schema_url":"{ios_schema_url}", //IOS启动URL
+	"android_schema_url":"{android_schema_url}" //Android启动URL
+	{% endif %}
+});
+py('send','visit','viewItem');
