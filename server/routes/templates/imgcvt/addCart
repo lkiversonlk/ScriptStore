@@ -1,2 +1,1 @@
-py('event','addCart','{itemId}');
-py('send','visit','addCart');
+<img src='//{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dad%26ep%3D{item.id}' style='display:none;'/>

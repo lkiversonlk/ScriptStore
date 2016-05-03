@@ -1,1 +1,0 @@
-py('send','track','{{ eventName }}','{{ a }}');

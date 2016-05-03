@@ -1,0 +1,5 @@
+var categoryPath = "{categoryPath}";
+var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dvl%26ep%3D"+categoryPath;
+var request:URLRequest=new URLRequest(targetURL);
+var loader:URLLoader=new URLLoader();
+loader.load(request);

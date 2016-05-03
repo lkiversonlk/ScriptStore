@@ -1,5 +1,4 @@
 自定义用户行为，新定义事件为“{{ eventName }}”，可收集该行为产生的数据。
 参数说明：
-id：该自定义行为的唯一标识ID，替换“{uniqueId}”
-data：该自定义行为其他信息，JSON格式，例如：{"movie":"视频1","user":"test001","action":"play"}
-如果该自定义事件不产生数据，则不传id及data即可。
+{uniqueId}：该自定义行为的唯一标识ID，替换“{uniqueId}”
+{key}/{value}：该自定义行为其他信息，key为信息名称（变量名），替换{key1}{key2}；value为值，替换{value1}{value2}；请删掉多余key/value键值对，不足请按规则自行补充。

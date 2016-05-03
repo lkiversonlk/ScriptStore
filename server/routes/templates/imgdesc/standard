@@ -1,9 +1,0 @@
-品友用户访问行为数据收集基础代码
-{% if sitetype %}
-sitetype：站点类型，取值为（pc,mobile,tablet）对应广告主pc站点，移动站点，平板站点，不传默认为pc站点。
-{% endif %}
-
-
-{% if usercategory %}
-usercategory：用户分类，品友分配，根据规则替换
-{% endif %}

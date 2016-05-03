@@ -1,7 +1,1 @@
-py("event","leads" ,{
-    "id":"{leadsId}",
-    "data":{
-		"{key1}":"{value1}",
-		"{key2}":"{value2}"
-	}
-});
+<img src='//{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&OrderNo={leadId}&ProductList={key1}%3D{value1}%26{key2}%3D{value2}&e=ev%3Dls' style='display:none;'/>

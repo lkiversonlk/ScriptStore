@@ -1,0 +1,6 @@
+var leadsId = "{leadsId}";
+var leadsInfo = "{key1}%3D{value1}%26{key2}%3D{value2}";
+var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&OrderNo="+leadsId+"&ProductList="+leadsInfo+"&e=ev%3Dls";
+var request:URLRequest=new URLRequest(targetURL);
+var loader:URLLoader=new URLLoader();
+loader.load(request);

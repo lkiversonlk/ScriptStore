@@ -1,2 +1,1 @@
-py("event","viewUserIndex","{userId}");
-py('send','visit','viewUserIndex');
+<img src='//{% if domain %}{{domain}}{% endif %}/adv.gif?a={{ ad_id }}&e=ev%3Dvu%26ep%3D{userId}' style='display:none;'/>

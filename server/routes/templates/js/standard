@@ -22,19 +22,19 @@ py("set","user",{
 {% if userid %}
     "id":"{userid}",
 {% endif %}
-{% if userid %}
+{% if username %}
     "name":"{username}",
 {% endif %}
-{% if userid %}
+{% if usercookie %}
     "cookieId":"{usercookie}",
 {% endif %}
-{% if userid %}
+{% if useremail %}
     "email":"{useremail}",
 {% endif %}
-	{% if userid %}
+	{% if usertype %}
     "type":"{usertype}",
 {% endif %}
-{% if userid %}
+{% if usercategory %}
     "category":"{usercategory}"
 {% endif %}
 });

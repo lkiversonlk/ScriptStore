@@ -1,4 +1,4 @@
 收集用户注册行为以及相关信息，包括；注册用户ID，注册用户信息
 参数说明：
-id：注册用户ID，替换“{userId}”
-data：注册信息，JSON格式，例如：{"name":"风清扬","age":"91","sex":"男"}
+{userId}：注册用户ID，替换“{userId}”
+{key}/{value}：注册信息，key为信息名称（变量名），替换{key1}{key2}；value为值，替换{value1}{value2}；请删掉多余key/value键值对，不足请按规则自行补充。
