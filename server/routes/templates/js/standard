@@ -6,7 +6,7 @@
 })(window,document,'script','{% if command_name %}{{ command_name }}{% else %}py{% endif %}','{{ ad_id }}');
 
 {% if domain %}
-py("set", "domain", "{domain}");
+py("set", "domain", "{{domain}}");
 {% endif %}
 
 {% if site %}
@@ -17,13 +17,25 @@ py("set", "site", {
 });
 {% endif %}
 
-{% if userid||username||usercookie||useremail||usertype||usercategory  %}
+{% if userid|username|usercookie|useremail|usertype|usercategory %}
 py("set","user",{
+{% if userid %}
     "id":"{userid}",
+{% endif %}
+{% if userid %}
     "name":"{username}",
+{% endif %}
+{% if userid %}
     "cookieId":"{usercookie}",
+{% endif %}
+{% if userid %}
     "email":"{useremail}",
+{% endif %}
+	{% if userid %}
     "type":"{usertype}",
+{% endif %}
+{% if userid %}
     "category":"{usercategory}"
+{% endif %}
 });
 {% endif %}

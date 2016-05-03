@@ -1,11 +1,9 @@
 py("event","order" ,{
-    "id":" {{ orderNo }}",
-    "money":"{{ money }}",
+    "id":" {orderNo}",
+    "money":"{money}",
     "items":[
-        {% for item in items %}
-        {"id":"{{ item['id'] }}","count":"{{ item['count'] }}","price":"{{ item['price'] }}"} {% if !loop.last %},{% endif %}
-        {% endfor %}
+    	{"id":"{item.id}","count":"{item.count}","price":"{item.price}"},
+        {"id":"{item.id}","count":"{item.count}","price":"{item.price}"}
     ]
 });
-
 py('send','visit','order');
