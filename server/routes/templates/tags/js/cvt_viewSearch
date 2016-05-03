@@ -1,0 +1,3 @@
+py("event","viewSearch","{keywords}");
+py('send','visit','viewSearch');
+py('send','track','viewSearch','{{ad_id}}');

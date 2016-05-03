@@ -1,0 +1,9 @@
+py("event", "custom", "{{ eventName }}"{
+    "id":"{uniqueId}",
+    "data":{
+		"{key1}":"{value1}",
+		"{key2}":"{value2}"
+	}
+});
+py('send','visit','custom');
+py('send','track','custom','{{ad_id}}');

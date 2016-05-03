@@ -1,0 +1,9 @@
+py("event","leads" ,{
+    "id":"{leadsId}",
+    "data":{
+		"{key1}":"{value1}",
+		"{key2}":"{value2}"
+	}
+});
+py('send','visit','leads');
+py('send','track','leads','{{ad_id}}');

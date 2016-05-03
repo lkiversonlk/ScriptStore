@@ -1,0 +1,3 @@
+py("event", "viewHome");
+py('send','visit','viewHome');
+py('send','track','viewHome','{{ad_id}}');

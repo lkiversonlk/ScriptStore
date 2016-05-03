@@ -1,0 +1,3 @@
+py("event","viewList","{categoryPath}");
+py('send','visit','viewList');
+py('send','track','viewList','{{ad_id}}');

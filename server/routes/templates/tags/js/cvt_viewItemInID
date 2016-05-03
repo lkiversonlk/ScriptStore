@@ -1,0 +1,3 @@
+py("event","viewItem","{itemId}");
+py('send','visit','viewItem');
+py('send','track','viewItem','{{ad_id}}');
