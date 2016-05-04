@@ -1,4 +1,6 @@
-py("event","register" ,{
-    "id":"{{ userId }}",
-    "data":{{ data|raw|json_encode }}
-});
+var userId = "{userId}";
+var userInfo = "{key1}%3D{value1}%26{key2}%3D{value2}";
+var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&OrderNo="+userId+"&ProductList="+userInfo+"&e=ev%3Drg";
+var request:URLRequest=new URLRequest(targetURL);
+var loader:URLLoader=new URLLoader();
+loader.load(request);

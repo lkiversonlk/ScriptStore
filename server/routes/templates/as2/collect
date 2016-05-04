@@ -1,2 +1,12 @@
-py('event','collect','{{ itemId }}');
-py('send','visit','collect');
+var itemid = "{item.id}";
+var submitURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dcl%26ep%3D"+itemid;
+var result_lv:LoadVars = new LoadVars();
+result_lv.onLoad = function(success:Boolean) {
+    if (success) {
+        trace("We are in business");
+    } else {
+        trace("false");
+    }
+};
+var send_lv:LoadVars = new LoadVars();
+send_lv.sendAndLoad(submitURL, result_lv, "POST");

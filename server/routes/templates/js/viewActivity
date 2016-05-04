@@ -1,0 +1,2 @@
+py("event","viewActivity","{activityName}");
+py('send','visit','viewActivity');

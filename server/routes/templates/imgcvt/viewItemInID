@@ -1,2 +1,1 @@
-py("event","viewItem","{itemId}");
-py('send','visit','viewItem');
+<img src='//{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dvi%26ep%3D{item.id}' style='display:none;'/>

@@ -1,7 +1,1 @@
-py("event", "custom", "{{ eventName }}"{
-    "id":"{uniqueId}",
-    "data":{
-		"{key1}":"{value1}",
-		"{key2}":"{value2}"
-	}
-});
+<img src='//{% if domain %}{{domain}}{% endif %}/adv.gif?a={{ ad_id }}&e=ev%3Dcm%26ce%3D{{eventName}}%26ep%3D{"id":"{uniqueId}","dt":{"{key1}":"{value1}","{key2}":"{value2}"}}' style='display:none;'/>

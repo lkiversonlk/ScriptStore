@@ -1,11 +1,14 @@
-py("event","order" ,{
-    "id":" {{ orderNo }}",
-    "money":"{{ money }}",
-    "items":[
-        {% for item in items %}
-        {"id":"{{ item['id'] }}","count":"{{ item['count'] }}","price":"{{ item['price'] }}"} {% if !loop.last %},{% endif %}
-        {% endfor %}
-    ]
-});
-
-py('send','visit','order');
+var orderNO = "{orderNo}";
+var money = "{money}";
+var plist = "{item.id},{item.count},{item.price};{item.id},{item.count},{item.price};";
+var submitURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&OrderNo="+orderNO+"&Money="+money+"&ProductList="+plist+"&e=ev%3Dod";
+var result_lv:LoadVars = new LoadVars();
+result_lv.onLoad = function(success:Boolean) {
+    if (success) {
+        trace("We are in business");
+    } else {
+        trace("false");
+    }
+};
+var send_lv:LoadVars = new LoadVars();
+send_lv.sendAndLoad(submitURL, result_lv, "POST");

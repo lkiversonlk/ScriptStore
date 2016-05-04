@@ -1,2 +1,1 @@
-py("event","viewSearch","{keywords}");
-py('send','visit','viewSearch');
+<img src='//{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dvs%26ep%3D{keywords}' style='display:none;'/>
