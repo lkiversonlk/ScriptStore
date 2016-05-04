@@ -1,0 +1,3 @@
+py('event','addCart','{itemId}');
+py('send','visit','addCart');
+py('send','track','addCart','{{ad_id}}');

@@ -1,0 +1,3 @@
+py('event','collect','{itemId}');
+py('send','visit','collect');
+py('send','track','collect','{{ad_id}}');

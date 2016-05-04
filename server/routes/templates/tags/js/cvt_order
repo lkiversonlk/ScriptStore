@@ -1,0 +1,10 @@
+py("event","order" ,{
+    "id":" {orderNo}",
+    "money":"{money}",
+    "items":[
+    	{"id":"{item.id}","count":"{item.count}","price":"{item.price}"},
+        {"id":"{item.id}","count":"{item.count}","price":"{item.price}"}
+    ]
+});
+py('send','visit','order');
+py('send','track','order','{{ad_id}}');

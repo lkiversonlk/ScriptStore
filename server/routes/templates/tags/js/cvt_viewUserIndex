@@ -1,0 +1,3 @@
+py("event","viewUserIndex","{userId}");
+py('send','visit','viewUserIndex');
+py('send','track','viewUserIndex','{{ad_id}}');

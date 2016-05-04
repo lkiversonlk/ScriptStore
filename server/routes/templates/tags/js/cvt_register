@@ -1,0 +1,9 @@
+py("event","register" ,{
+    "id":"{userId}",
+    "data":{
+		"{key1}":"{value1}",
+		"{key2}":"{value2}"
+	}
+});
+py('send','visit','register');
+py('send','track','register','{{ad_id}}');

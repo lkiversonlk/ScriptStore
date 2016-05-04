@@ -1,0 +1,3 @@
+py("event","viewActivity","{channelName}");
+py('send','visit','viewActivity');
+py('send','track','viewActivity','{{ad_id}}');
