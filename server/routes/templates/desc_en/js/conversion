@@ -1,0 +1,2 @@
+py('send','track','{{ eventName }}','{{ a }}');
+追踪用户{{ eventName }}行为为转化事件，用以优化投放效果
