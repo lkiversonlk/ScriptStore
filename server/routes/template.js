@@ -25,10 +25,15 @@ var fs = require("fs");
 var swig = require("swig");
 var logger = require("../log").getLogger("routes.template");
 var SErrors = require("../errors");
-
+var async = require("async");
 var templatePath = path.join(__dirname, "templates");
 
-function render(filePath, req, res, next) {
+var categories = [
+    "desc",
+    "tags"
+];
+
+function render(filePath, req, res, callback) {
     var fac = null;
     try {
         fac = swig.compileFile(filePath);
@@ -40,14 +45,97 @@ function render(filePath, req, res, next) {
     return next();
 }
 
-router.post('/standard/:type', function (req, res, next) {
-    var filePath = path.join(templatePath, req.params.type, "standard");
-    render(filePath, req, res, next);
-});
+/**
+ * fetch default data in /templates/[category]/default/[model]
+ * @param category
+ * @param type
+ * @param model
+ * @param callback
+ */
+function loadDefault(category, type, model, callback) {
+    var defaultPath = path.join(templatePath, category, "default", model);
+    fs.stat(defaultPath, function (err, stats) {
+        if(err){
+            logger.log("debug", "read data " + defaultPath + " failed: " + err.message);
+            return callback(err);
+        }else{
+            if(stats.isFile()){
+                return fs.readFile(defaultPath, 'utf8', callback);
+            } else {
+                logger.log("debug", "read data " + defaultPath + " failed, this is not file");
+                return callback(SErrors.LogicError("template default is not file"));
+            }
+        }
+    })
+}
 
-router.post('/event/:event/:type', function (req, res, next) {
-    var filePath = path.join(templatePath, req.params.type, req.params.event);
-    render(filePath, req, res, next);
+/**
+ * fetch data belong to /templates/[category]/[type]/[model]
+ * @param category
+ * @param type
+ * @param model
+ * @param callback
+ */
+function fetchData(category, type, model, callback) {
+    var dataPath = path.join(templatePath, category, type, model);
+
+    fs.stat(dataPath, function (err, stats) {
+        if(err){
+            //file not existed, find the default
+            logger.log("debug", "read data " + dataPath + " failed, load default");
+            return loadDefault(category, type, model, callback);
+        }else{
+            if(stats.isFile()){
+                return fs.readFile(dataPath, 'utf8', callback);
+            } else {
+                logger.log("debug", dataPath + " is not file, load default");
+                return loadDefault(category, type, model, callback);
+            }
+        }
+    })
+}
+
+/**
+ * the templates folder path:
+ * templates:
+ *    /tags
+ *       [as2, as3, img, js, ]
+ *    /desc
+ *       [as2, as3, img, js, default]
+ *    /desc-eng
+ *       [as2, as3, img, js, default]
+ */
+router.post('/:type/:model', function (req, res, next) {
+    var type = req.params.type;     //js, as, as2, img
+    var model = req.params.model;   //viewHome, view...
+
+    var codePath = path.join(templatePath, "tags", type, model);
+
+    var ret = {};
+
+    async.map(
+        categories,
+        function (category, callback) {
+            fetchData(category, type, model, function (err, data) {
+                if(err){
+                    logger.log("fail to load data of category " + category + ": " + err.message);
+                    return callback();
+                } else {
+                    if(category == "tags"){
+                        var fac = swig.compile(data);
+                        ret[category] = fac(req.body);
+                    }else{
+                        ret[category] = data;
+                    }
+                    return callback();
+                }
+            })
+        },
+        function (err, results) {
+            req.SsiData.result = ret;
+            return next();
+        }
+    );
 });
 
 module.exports = router;
