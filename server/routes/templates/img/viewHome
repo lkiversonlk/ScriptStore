@@ -1,2 +1,0 @@
-py("event", "viewHome");
-py("send", "visit", "viewHome");

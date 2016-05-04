@@ -1,2 +1,0 @@
-py("event","viewList","{{ categoryPath }}");
-py('send','visit','viewList');

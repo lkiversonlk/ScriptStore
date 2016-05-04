@@ -1,2 +1,0 @@
-py("event","viewSearch","{{ keywords }}");
-py('send','visit','viewSearch');

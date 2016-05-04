@@ -1,2 +1,0 @@
-py("event","viewUserIndex","{{ userId }}");
-py('send','visit','viewUserIndex');

@@ -1,2 +1,0 @@
-py("event","viewItem","{{ itemId }}");
-py('send','visit','viewItem');
