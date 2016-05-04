@@ -25,10 +25,13 @@ var fs = require("fs");
 var swig = require("swig");
 var logger = require("../log").getLogger("routes.template");
 var SErrors = require("../errors");
-
+var async = require("async");
 var templatePath = path.join(__dirname, "templates");
 
-var categories = fs.readdirSync(templatePath);
+var categories = [
+    "desc",
+    "tags"
+];
 
 function render(filePath, req, res, callback) {
     var fac = null;
@@ -54,10 +57,10 @@ function loadDefault(category, type, model, callback) {
     fs.stat(defaultPath, function (err, stats) {
         if(err){
             logger.log("debug", "read data " + defaultPath + " failed: " + err.message);
-            return return callback(err);
+            return callback(err);
         }else{
             if(stats.isFile()){
-                return fs.readFile(defaultPath, callback);
+                return fs.readFile(defaultPath, 'utf8', callback);
             } else {
                 logger.log("debug", "read data " + defaultPath + " failed, this is not file");
                 return callback(SErrors.LogicError("template default is not file"));
@@ -74,18 +77,18 @@ function loadDefault(category, type, model, callback) {
  * @param callback
  */
 function fetchData(category, type, model, callback) {
-    var path = path.join(templatePath, category, type, model);
+    var dataPath = path.join(templatePath, category, type, model);
 
-    fs.stat(path, function (err, stats) {
+    fs.stat(dataPath, function (err, stats) {
         if(err){
             //file not existed, find the default
-            logger.log("debug", "read data " + path + " failed, load default");
+            logger.log("debug", "read data " + dataPath + " failed, load default");
             return loadDefault(category, type, model, callback);
         }else{
             if(stats.isFile()){
-                return fs.readFile(path, callback);
+                return fs.readFile(dataPath, 'utf8', callback);
             } else {
-                logger.log("debug", path + " is not file, load default");
+                logger.log("debug", dataPath + " is not file, load default");
                 return loadDefault(category, type, model, callback);
             }
         }
@@ -129,7 +132,7 @@ router.post('/:type/:model', function (req, res, next) {
             })
         },
         function (err, results) {
-            req.SsiData.Result = ret;
+            req.SsiData.result = ret;
             return next();
         }
     );
