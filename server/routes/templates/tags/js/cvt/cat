@@ -1,0 +1,3 @@
+py("set","user",{
+    "category":"{{usercategory}}"
+});
