@@ -30,7 +30,7 @@ var templatePath = path.join(__dirname, "templates");
 
 var categories = [
     "desc",
-    "tags"
+    "desc_en"
 ];
 
 function render(filePath, req, res, callback) {
@@ -104,11 +104,12 @@ function fetchData(category, type, model, callback) {
  *       [as2, as3, img, js, default]
  *    /desc-eng
  *       [as2, as3, img, js, default]
+ *       
  */
-router.post('/:type/:model', function (req, res, next) {
+router.post('/:type/:class/:model', function (req, res, next) {
     var type = req.params.type;     //js, as, as2, img
     var model = req.params.model;   //viewHome, view...
-
+    var cls = req.params.class;
     var codePath = path.join(templatePath, "tags", type, model);
 
     var ret = {};
@@ -121,17 +122,18 @@ router.post('/:type/:model', function (req, res, next) {
                     logger.log("fail to load data of category " + category + ": " + err.message);
                     return callback();
                 } else {
-                    if(category == "tags"){
-                        var fac = swig.compile(data);
-                        ret[category] = fac(req.body);
-                    }else{
-                        ret[category] = data;
-                    }
+                    ret[category] = data;
                     return callback();
                 }
             })
         },
         function (err, results) {
+            var tagsPath = path.join(templatePath, "tags", type, cls, model);
+            try{
+                ret["tags"] = swig.compileFile(tagsPath)(req.body);
+            }catch (error){
+                logger.log("error", "fail to render " + tagsPath + ": " + error.message);
+            }
             req.SsiData.result = ret;
             return next();
         }
