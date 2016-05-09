@@ -8,34 +8,4 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
-
-{% if site %}
-py("set", "site", {
-    "type" : "{site_type}",
-    "industry" : "{site_industry}",
-    "id" : "{site_id}"
-});
-{% endif %}
-
-{% if userid|username|usercookie|useremail|usertype|usercategory %}
-py("set","user",{
-{% if userid %}
-    "id":"{userid}",
-{% endif %}
-{% if username %}
-    "name":"{username}",
-{% endif %}
-{% if usercookie %}
-    "cookieId":"{usercookie}",
-{% endif %}
-{% if useremail %}
-    "email":"{useremail}",
-{% endif %}
-	{% if usertype %}
-    "type":"{usertype}",
-{% endif %}
-{% if usercategory %}
-    "category":"{usercategory}"
-{% endif %}
-});
-{% endif %}
+py('send','visit');

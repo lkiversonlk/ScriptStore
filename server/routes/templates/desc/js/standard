@@ -1,9 +1,5 @@
 品友用户访问行为数据收集基础代码
 
-{% if domain %}
-py("set", "domain", "{domain}");
-{% endif %}
-
 {% if site %}
 site段参数说明
 type：站点类型，取值为（pc,mobile,tablet）对应广告主pc站点，移动站点，平板站点，不传默认为pc站点。
