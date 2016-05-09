@@ -392,3 +392,87 @@ publish draft要从之前的数据中取出query字段创建新的release，由�
 
 5. operation layerl里对data.data的识别
 当data.data为空时,operation会复用上一次操作结果,但是在判断是否空时,if(data.data)在data.data为空字符串或者空对象时都会返回否,只能用data.data == null才行.
+
+# Smart Pixel 代码配置接口
+
+标签（空格分隔）： 接口文档
+
+---
+
+#请求方式
+
+POST /template/[type]/[class]/[event]
+
+其中：
+
+   * type表示代码类型，取值包括：
+     * js
+     * as2
+     * as3
+     * img
+   * class表示类别，取值包括：
+     * cvt
+     * adv
+   * event表示事件类型，取值包括：
+     * standard
+     * addCart
+     * collect
+     * conversion
+     * custom
+     * leads
+     * order
+     * register
+     * viewActivity
+     * viewCart
+     * viewChannel
+     * viewHome
+     * viewItemInDetail
+     * viewItemInID
+     * viewList
+     * viewSearch
+     * viewUserIndex
+
+  每一种事件类型都对应一个渲染模板，POST Data中给出需要渲染的参数及渲染值。有关渲染的参数，请查阅[GITLAB](http://gitlab.ipinyou.com/kan.liu/pyscript/tree/master/server/routes/templates/tags) 每个具体事件的渲染文档中被{{ }}包含的字段。
+
+  返回值 JSON对象：
+  * code
+    当code为0时，表示正确。
+    * data
+    具体返回内容，包括：
+        * tags
+        脚本内容
+        * desc
+        中文描述
+        * desc_en
+        英文描述
+
+  其中，脚本内容即为模板根据发送数据渲染后的结果，例如，event standard的渲染模板为:
+
+  ```
+     (function(w,d,s,l,a){
+    w[l]=w[l]||function(){w._CommandName_=l;(w[l].q=w[l].q||[]).push(arguments)},w[l].a=a,w[l].l=1*new Date();
+    var f = 'https:' == d.location.protocol;var c = d.createElement(s);c.type='text/javascript';c.async=1;
+    c.src='adv-v4.2.0.js';//(f ? 'https' : 'http') + '://'+(f?'{% if https_domain %}{{ https_domain }}{% else %}fm.ipinyou.com{% endif %}':'{% if http_domain %}{{ http_domain }}{% else %}fm.p0y.cn{% endif %}')+'/j/t/adv.js';
+    var h = d.getElementsByTagName("script")[0];h.parentNode.insertBefore(c, h);
+})(window,document,'script','{% if command_name %}{{ command_name }}{% else %}py{% endif %}','{{ ad_id }}');
+  ```
+
+  其中有<em>{{ ad_id }} {{ command_name }}</em>, 因此，如果我们发出POST请求：
+
+  POST /template/js/adv/standard
+  DATA: {
+           "ad_id" : "testAD"
+        }
+
+  则会收到结果：
+  ```
+  {
+"code": 0
+"data": {
+"desc": "品友用户访问行为数据收集基础代码 {% if domain %} py("set", "domain", "{domain}"); {% endif %} {% if site %} site段参数说明 type：站点类型，取值为（pc,mobile,tablet）对应广告主pc站点，移动站点，平板站点，不传默认为pc站点。 {% endif %} {% if userid|username|usercookie|useremail|usertype|usercategory %} user段参数说明 py("set","user",{ {% if userid %} id：用户ID，替换“{userid}” {% endif %} {% if username %} name：用户名，替换“{username}” {% endif %} {% if usercookie %} cookieId：用户cookieid，替换“{usercookie}” {% endif %} {% if useremail %} email：用户邮箱，替换“{useremail}” {% endif %} {% if usertype %} type：用户类型，1为新客，0为老客，2为不确定 {% endif %} {% if usercategory %} category：用户分类，品友分配，根据规则替换 {% endif %} }); {% endif %}"
+"desc_en": "品友用户访问行为数据收集基础代码 {% if domain %} py("set", "domain", "{domain}"); {% endif %} {% if site %} site段参数说明 type：站点类型，取值为（pc,mobile,tablet）对应广告主pc站点，移动站点，平板站点，不传默认为pc站点。 {% endif %} {% if userid|username|usercookie|useremail|usertype|usercategory %} user段参数说明 py("set","user",{ {% if userid %} id：用户ID，替换“{userid}” {% endif %} {% if username %} name：用户名，替换“{username}” {% endif %} {% if usercookie %} cookieId：用户cookieid，替换“{usercookie}” {% endif %} {% if useremail %} email：用户邮箱，替换“{useremail}” {% endif %} {% if usertype %} type：用户类型，1为新客，0为老客，2为不确定 {% endif %} {% if usercategory %} category：用户分类，品友分配，根据规则替换 {% endif %} }); {% endif %}"
+"tags": "(function(w,d,s,l,a){ w[l]=w[l]||function(){w._CommandName_=l;(w[l].q=w[l].q||[]).push(arguments)},w[l].a=a,w[l].l=1*new Date(); var f = 'https:' == d.location.protocol;var c = d.createElement(s);c.type='text/javascript';c.async=1; c.src='adv-v4.2.0.js';//(f ? 'https' : 'http') + '://'+(f?'fm.ipinyou.com':'fm.p0y.cn')+'/j/t/adv.js'; var h = d.getElementsByTagName("script")[0];h.parentNode.insertBefore(c, h); })(window,document,'script','py','testAD'); "
+}-
+}
+```
+请注意“tags”中的adid已经被替换成testAD了。
