@@ -1,4 +1,4 @@
-var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dvh";
+var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ target_id }}&e=ev%3Dvh";
 var request:URLRequest=new URLRequest(targetURL);
 var loader:URLLoader=new URLLoader();
 loader.load(request);

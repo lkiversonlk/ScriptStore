@@ -15,4 +15,4 @@ py("event","viewCart",{
     ]
 });
 py('send','visit','viewCart');
-py('send','track','viewCart','{{ad_id}}');
+py('send','track','viewCart','{{target_id}}');

@@ -1,5 +1,5 @@
 var channelName:String = "{channelName}";
-var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ ad_id }}&e=ev%3Dvn%26ep%3D"+channelName;
+var targetURL:String = "http://{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ target_id }}&e=ev%3Dvn%26ep%3D"+channelName;
 var request:URLRequest=new URLRequest(targetURL);
 var loader:URLLoader=new URLLoader();
 loader.load(request);

@@ -9,4 +9,4 @@ py("set", "domain", "{{domain}}");
 {% endif %}
 py("event", "viewHome");
 py('send','visit','viewHome');
-py('send','track','viewHome','{{ad_id}}');
+py('send','track','viewHome','{{target_id}}');

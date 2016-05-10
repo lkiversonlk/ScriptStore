@@ -36,4 +36,4 @@ py("event","viewItem",{
 	{% endif %}
 });
 py('send','visit','viewItem');
-py('send','track','viewItem','{{ad_id}}');
+py('send','track','viewItem','{{target_id}}');

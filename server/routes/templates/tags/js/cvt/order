@@ -16,4 +16,4 @@ py("event","order" ,{
     ]
 });
 py('send','visit','order');
-py('send','track','order','{{ad_id}}');
+py('send','track','order','{{target_id}}');

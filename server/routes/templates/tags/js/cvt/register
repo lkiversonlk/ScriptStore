@@ -15,4 +15,4 @@ py("event","register" ,{
 	}
 });
 py('send','visit','register');
-py('send','track','register','{{ad_id}}');
+py('send','track','register','{{target_id}}');

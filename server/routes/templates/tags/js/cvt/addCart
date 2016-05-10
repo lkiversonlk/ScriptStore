@@ -9,4 +9,4 @@ py("set", "domain", "{{domain}}");
 {% endif %}
 py('event','addCart','{itemId}');
 py('send','visit','addCart');
-py('send','track','addCart','{{ad_id}}');
+py('send','track','addCart','{{target_id}}');

@@ -15,4 +15,4 @@ py("event", "custom", "{{ eventName }}"{
 	}
 });
 py('send','visit','custom');
-py('send','track','custom','{{ad_id}}');
+py('send','track','custom','{{target_id}}');
