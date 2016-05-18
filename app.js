@@ -86,6 +86,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 var SsiData = require("./server/SsiData");
 
+/**
+ * disable Nagle algorithm to speed up traffic
+ */
+app.use(function(req, res, next){
+    req.connection.setNoDelay(true);
+    next();
+});
+
 app.get("/", function(req, res, next){
     res.render("index", {title : "Smart Pixel"});
 });
@@ -97,7 +105,6 @@ app.use(function(req, res, next){
 
 var template = require("./server/routes/template");
 app.use("/template", template, middlewares.presentation.present, middlewares.presentation.presentError);
-
 
 app.use(middlewares.parameters);
 app.use('/rest', restRouter);
