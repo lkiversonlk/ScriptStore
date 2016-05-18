@@ -1,1 +1,23 @@
-{}
+{
+	"events":[
+		{"event":"viewHome","name":"访问首页","index":1,"desc":""},
+		{"event":"viewList","name":"访问列表页","index":2,"desc":""},
+		{"event":"viewSearch","name":"访问搜索页","index":3,"desc":""},
+		{"event":"viewActivity","name":"访问活动页","index":4,"desc":""},
+		{"event":"viewChannel","name":"访问频道页","index":5,"desc":""},
+		{"event":"viewUserIndex","name":"访问用户中心","index":6,"desc":""},
+		{"event":"viewItem","name":"访问单品","index":7,"desc":""},
+		{"event":"viewCart","name":"访问购物车","index":8,"desc":""},
+		{"event":"register","name":"注册提交","index":9,"desc":""},
+		{"event":"leads","name":"Leads提交","index":10,"desc":""},
+		{"event":"collect","name":"单品收藏","index":11,"desc":""},
+		{"event":"addCart","name":"添加购物车","index":12,"desc":""},
+		{"event":"order","name":"提交订单","index":13,"desc":""},
+		{"event":"custom","name":"自定义","index":14,"desc":""}
+	],
+	"industries":[
+		{"industry":"product","name":"电商","index":1,"desc":""}
+		,{"industry":"hotel","name":"酒店","index":2,"desc":""}
+		,{"industry":"building","name":"房产","index":3,"desc":""}
+	]
+}
