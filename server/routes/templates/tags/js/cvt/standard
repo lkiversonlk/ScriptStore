@@ -8,4 +8,9 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
+{% if site_industry %}
+py("set", "site", {
+    "industry" : "{{site_industry}}"
+});
+{% endif %}
 py('send','visit');

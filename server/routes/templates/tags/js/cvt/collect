@@ -7,6 +7,11 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
+{% if site_industry %}
+py("set", "site", {
+    "industry" : "{{site_industry}}"
+});
+{% endif %}
 py('event','collect','{itemId}');
 py('send','visit','collect');
 py('send','track','collect','{{target_id}}');

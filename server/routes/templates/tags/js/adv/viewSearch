@@ -7,5 +7,10 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
+{% if site_industry %}
+py("set", "site", {
+    "industry" : "{{site_industry}}"
+});
+{% endif %}
 py("event","viewSearch","{keywords}");
 py('send','visit','viewSearch');

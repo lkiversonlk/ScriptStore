@@ -16,13 +16,4 @@ off_time : 商品下架时间
 sold_out : 售空标识 1为不可售，0为可售
 stock : 商品剩余库存数
 brand : 商品品牌名称
-{% if mobile|app %} : 
-mobile_name : 商品名用于移动端模板
-mobile_product_url : 移动端商品链接地址
-mobile_pic_url : 商品图片地址
-mobile_pic_size : 移动端图片尺寸“宽x高”
-{% endif %} : 
-{% if app %} : 
-ios_schema_url : IOS启动URL
-android_schema_url : Android启动URL
-{% endif %} : 
+

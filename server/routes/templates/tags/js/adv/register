@@ -7,7 +7,6 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
-
 py("event","register" ,{
     "id":"{userId}",
     "data":{

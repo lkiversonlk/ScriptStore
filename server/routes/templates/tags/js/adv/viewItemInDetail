@@ -7,6 +7,11 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
+{% if site_industry %}
+py("set", "site", {
+    "industry" : "{{site_industry}}"
+});
+{% endif %}
 py("event","viewItem",{
 	"product_no":"{product_no}",
 	"spu_id":"{spu_id}",
@@ -23,16 +28,6 @@ py("event","viewItem",{
 	"off_time":"{off_time}",
 	"sold_out":"{sold_out}",
 	"stock":"{stock}",
-	"brand":"{brand}",
-	{% if mobile|app %}
-	"mobile_name":"{mobile_name}",
-	"mobile_product_url":"{mobile_product_url}",
-	"mobile_pic_url":"{mobile_pic_url}",
-	"mobile_pic_size":"{mobile_pic_size}", {image width}x{image height}
-	{% endif %}
-	{% if app %}
-	"ios_schema_url":"{ios_schema_url}",
-	"android_schema_url":"{android_schema_url}"
-	{% endif %}
+	"brand":"{brand}"
 });
 py('send','visit','viewItem');
