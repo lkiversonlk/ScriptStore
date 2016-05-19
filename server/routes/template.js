@@ -122,7 +122,12 @@ router.post('/:type/:class/:model', function (req, res, next) {
                     logger.log("fail to load data of category " + category + ": " + err.message);
                     return callback();
                 } else {
-                    ret[category] = data;
+                    try{
+                        ret[category] = swig.compile(data)(req.body);
+                    }catch (error){
+                        logger.log("error", "err in compile " + type + ", " + model);
+                    }
+
                     return callback();
                 }
             })
