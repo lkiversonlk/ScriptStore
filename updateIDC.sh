@@ -7,6 +7,5 @@ do
 ssh "$idc" << EOF
     cd ScriptStore
     git pull
-    logout
 EOF
 done
