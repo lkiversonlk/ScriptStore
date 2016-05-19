@@ -7,7 +7,5 @@
 {% if domain %}
 py("set", "domain", "{{domain}}");
 {% endif %}
-py("set","user",{
-    "category":"{{usercategory}}"
-});
+py("set","user",{"category":"{{usercategory}}"});
 py('send','visit');
