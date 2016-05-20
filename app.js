@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+//var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var winston = require("winston");
@@ -77,9 +77,22 @@ options.server.socketOptions =
 
 mongoose.connect(connectString, options);
 
+winston.add(require("winston-daily-rotate-file"),
+    {
+        filename: (path.join(".", "logs", "pyscript.")),
+        level: "debug",
+        datePattern: "yyyy-MM-dd.log",
+        maxsize: 1024 * 1024 * 1024 * 1
+    });
+
+process.on('uncaughtException', function (err) {
+    winston.log("error", err.stacktrace);
+    process.exit(-1);
+});
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('tiny'));
+//app.use(logger('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -89,10 +102,14 @@ var SsiData = require("./server/SsiData");
 /**
  * disable Nagle algorithm to speed up traffic
  */
+
 app.use(function(req, res, next){
     req.connection.setNoDelay(true);
     next();
 });
+
+require("http").globalAgent.maxSockets = Infinity;
+
 
 app.get("/", function(req, res, next){
     res.render("index", {title : "Smart Pixel"});
