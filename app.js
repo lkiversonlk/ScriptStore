@@ -79,8 +79,8 @@ mongoose.connect(connectString, options);
 
 winston.add(require("winston-daily-rotate-file"),
     {
-        filename: (path.join(".", "logs", "pyscript.")),
-        level: "debug",
+        filename: (path.join(".", "logs", "pyscript." + process.pid + ".")),
+        level: "info",
         datePattern: "yyyy-MM-dd.log",
         maxsize: 1024 * 1024 * 1024 * 1
     });
