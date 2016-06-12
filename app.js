@@ -108,14 +108,13 @@ var template = require("./server/routes/template");
 app.use("/template", template, middlewares.presentation.present, middlewares.presentation.presentError);
 
 app.use(middlewares.parameters);
-app.use('/rest', restRouter);
-app.use('/manage', manage);
 
+var operationStack = express.Router();
+operationStack.use(middlewares.operation, middlewares.presentation.present);
 
+app.use('/rest', restRouter, operationStack);
+app.use('/manage', manage, operationStack);
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(middlewares.operation);
-app.use(middlewares.presentation.present);
 app.use(middlewares.presentation.presentError);
 
 module.exports = app;
