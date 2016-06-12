@@ -5,9 +5,9 @@ manageTest
 ----------
 广告主ID "testAd"
 
-## test configuration interface
+#### test configuration interface
 
-#### draft CURD
+###### draft CURD
 
 * create an empty draft
 调用/manage/export接口,测试是否生成对应广告主的一条草稿记录.
@@ -31,7 +31,7 @@ manageTest
 第二是是发布草稿新生成的版本,也应该有一个tag,一个trigger
 第一个是最早的版本,就一个trigger
 
-#### export test
+###### export test
 
 * export version 0 with overwrite
 将第一个版本导出成草稿,with overwrite true,因此原有草稿会被覆盖.
@@ -46,7 +46,7 @@ manageTest
 * export version 1 without overwrite
 再次将版本1到出成草稿,检测trigger tag长度,此时版本总数应该为4
 
-#### cookie test
+###### cookie test
 
 * debug draft
 请求/debug/draft,验证返回头部set-cookie,pyscript项json对象应该有设置广告主ID,内容为""
@@ -56,6 +56,36 @@ manageTest
 
 manageTest2
 -----------
+
+#### manage test suite
+
+###### create first draft
+###### update the draft
+###### check the draft
+###### now publish the draft
+###### validate the release
+###### validate version
+###### update the draft again
+###### check the draft again
+###### save the draft to version
+###### check the versions
+###### publish this version
+###### check the release
+###### check the versions
+###### export version1 to draft with overwrite
+###### check the versions
+###### check the draft
+###### export version2 to draft without overwrite
+###### check the draft
+###### check the versions
+###### check all the configurations
+###### debug version1
+###### check the debug version1 works
+###### debug draft
+###### check the debug draft works
+###### undebug advertiser
+
+
 modelTest
 ---------
 operationBuilderTest
