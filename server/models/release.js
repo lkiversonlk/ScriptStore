@@ -54,6 +54,8 @@ var activeSchema = new Schema({
     }
 });
 
+activeSchema.index({advid : 1});
+
 var release = mongoose.model("release", activeSchema);
 
 module.exports = release;

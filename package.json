@@ -19,13 +19,16 @@
     "jsen": "^0.6.0",
     "mongoose": "^4.4.5",
     "morgan": "~1.6.1",
+    "on-finished": "^2.3.0",
     "q": "^1.4.1",
     "serve-favicon": "~2.3.0",
     "swig": "^1.4.2",
-    "winston": "^2.2.0"
+    "winston": "^2.2.0",
+    "winston-daily-rotate-file": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "mocha": "^2.5.3",
     "querystring": "^0.2.0",
     "supertest": "^1.2.0",
     "underscore": "^1.8.3"
