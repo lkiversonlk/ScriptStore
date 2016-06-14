@@ -8,7 +8,7 @@ RUN mkdir -p /data/pyscript
 
 WORKDIR /data/pyscript
 ADD . /data/pyscript
-RUN mkidr /data/pyscript/logs
+RUN mkdir /data/pyscript/logs; exit 0
 RUN npm install --registry=https://registry.npm.taobao.org
 
 ENTRYPOINT node bin/www
