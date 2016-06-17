@@ -252,6 +252,7 @@ describe("test configuration interface", function(){
                         .end(function(err, res){
                             if(err) done(err);
                             res.body.code.should.equal(0, res.body.data);
+                            res.body.data.length.should.equal(1);
                             done();
                         });
 
@@ -293,7 +294,9 @@ describe("test configuration interface", function(){
                                 currentVersions[2].tags.length.should.equal(1);
                                 currentVersions[2].triggers.length.should.equal(1);
                                 currentVersions[1].tags.length.should.equal(1);
+                                currentVersions[1].triggers.length.should.equal(1);
                                 currentVersions[0].tags.length.should.equal(0);
+                                currentVersions[0].triggers.length.should.equal(1);
                                 getRelease(testadvid, function(err, res){
                                     if(err) done(err);
                                     res.body.code.should.equal(0);
