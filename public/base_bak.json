@@ -1,0 +1,23 @@
+{
+	"events":[
+		{"event":"viewHome","name":"访问首页","name_en":"Visit HomePage","index":1,"desc":""},
+		{"event":"viewList","name":"访问列表页","name_en":"Visit List Page","index":2,"desc":""},
+		{"event":"viewSearch","name":"访问搜索页","name_en":"Visit Search Page","index":3,"desc":""},
+		{"event":"viewActivity","name":"访问活动页","name_en":"Visit Activity Page","index":4,"desc":""},
+		{"event":"viewChannel","name":"访问频道页","name_en":"Visit Channel Page","index":5,"desc":""},
+		{"event":"viewUserIndex","name":"访问用户中心","name_en":"Visit UserCenter Page","index":6,"desc":""},
+		{"event":"viewItem","name":"访问单品","name_en":"Visit Item Page","index":7,"desc":""},
+		{"event":"viewCart","name":"访问购物车","name_en":"Visit Shopping Cart Page","index":8,"desc":""},
+		{"event":"register","name":"注册提交","name_en":"Register Form Data Submit","index":9,"desc":""},
+		{"event":"leads","name":"Leads提交","name_en":"Leads Form Data Submit","index":10,"desc":""},
+		{"event":"collect","name":"单品收藏","name_en":"Item Collect","index":11,"desc":""},
+		{"event":"addCart","name":"添加购物车","name_en":"Item Add To Cart","index":12,"desc":""},
+		{"event":"order","name":"提交订单","name_en":"Submit Order","index":13,"desc":""},
+		{"event":"custom","name":"自定义","name_en":"Custom Event","index":14,"desc":""}
+	],
+	"industries":[
+		{"industry":"product","name":"电商","name_en":"E-commerce","index":1,"desc":""}
+		,{"industry":"hotel","name":"酒店","name_en":"Hotel","index":2,"desc":""}
+		,{"industry":"building","name":"房产","name_en":"Building","index":3,"desc":""}
+	]
+}
