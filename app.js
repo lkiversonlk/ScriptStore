@@ -61,6 +61,7 @@ var options = {
 
 mongoose.connect(connectString, options);
 
+mongoose.mongo
 winston.add(require("winston-daily-rotate-file"),
     {
         filename: (path.join(".", "logs", "pyscript." + process.pid + ".")),
