@@ -6,7 +6,5 @@
 	],
 	"industries":[
 		{"industry":"product","name":"电商","name_en":"E-commerce","index":1,"desc":""}
-		,{"industry":"hotel","name":"酒店","name_en":"Hotel","index":2,"desc":""}
-		,{"industry":"building","name":"房产","name_en":"Building","index":3,"desc":""}
 	]
 }
