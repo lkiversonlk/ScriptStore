@@ -12,6 +12,7 @@ ssh "$idc" << EOF
     cd ScriptStore
     git pull
     kill $(ps aux | grep 'node bin/www' | awk '{print $2}')
+    npm install
     sh run.sh &
 EOF
 done
