@@ -1,1 +1,1 @@
-<img src='//{% if domain %}{{domain}}{% endif %}/adv.gif?a={{ad_id}}&pv={{usercategory}}&e='/>
+<img src='//{% if domain %}{{domain}}{% endif %}adv.gif?a={{ad_id}}&pv={{usercategory}}&e='/>

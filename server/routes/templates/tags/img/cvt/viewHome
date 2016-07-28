@@ -1,1 +1,1 @@
-<img src='//{% if domain %}{{domain}}{% endif %}/cvt.gif?a={{ target_id }}&e=ev%3Dvh' style='display:none;'/>
+<img src='//{% if domain %}{{domain}}{% endif %}cvt.gif?a={{ target_id }}&e=ev%3Dvh' style='display:none;'/>

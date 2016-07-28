@@ -1,1 +1,1 @@
-<img src='//{% if domain %}{{domain}}{% endif %}/adv.gif?a={{ ad_id }}&e=ev%3Dvc%26ep%3D{"mn":"{money}","pl":"{item.id},{item.count},{item.price};{item.id},{item.count},{item.price};"}' style='display:none;'/>
+<img src='//{% if domain %}{{domain}}{% endif %}adv.gif?a={{ ad_id }}&e=ev%3Dvc%26ep%3D{"mn":"{money}","pl":"{item.id},{item.count},{item.price};{item.id},{item.count},{item.price};"}' style='display:none;'/>

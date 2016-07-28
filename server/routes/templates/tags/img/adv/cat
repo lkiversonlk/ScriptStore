@@ -1,1 +1,1 @@
-<img src='//stats.ipinyou.com/adv.gif?a=p..isBAGmNFG7OA-krFCLCq3P&pv={{usercategory}}&e='/>
+<img src='//{% if domain %}{{domain}}{% endif %}adv.gif?a={{ ad_id }}&e=vc%3Dcl%26ep%3D{item.id}' style='display:none;'/>
