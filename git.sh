@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git pull gitlab master:master
-git push origin
+git push origin master:master
 
 
 idcs=(idc50 idc51 idc52)
@@ -11,8 +11,6 @@ do
 ssh "$idc" << EOF
     cd ScriptStore
     git pull
-    kill $(ps aux | grep 'node bin/www' | awk '{print $2}')
     npm install
-    sh run.sh &
 EOF
 done

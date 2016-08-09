@@ -125,7 +125,7 @@ router.post('/:type/:class/:model', function (req, res, next) {
                     try{
                         ret[category] = swig.compile(data)(req.body);
                     }catch (error){
-                        logger.log("error", "err in compile " + type + ", " + model);
+                        logger.log("error", "err in compile " + type + ", " + model);   
                     }
 
                     return callback();

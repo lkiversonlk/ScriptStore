@@ -1,4 +1,4 @@
-<script type="javascript/text">
+<script type="text/javascript">
 (function(w,d,s,l,a){
     w._CommandName_=l;w[l]=w[l]||function(){(w[l].q=w[l].q||[]).push(arguments);
 	w[l].track = function(){(w[l].q[w[l].q.length-1].t=[]).push(arguments)};return w[l]},w[l].a=a,w[l].l=1*new Date();
